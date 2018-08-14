@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Tabs,Select,DatePicker,Table,Menu,Cascader,Modal ,Layout,Row, Col ,Popconfirm,InputNumber,Form,Input,Dropdown} from 'antd';
+import {  Icon, Button,Tabs,Select,DatePicker,Table,Menu,Cascader,Modal ,Layout,Row, Col ,Popconfirm,InputNumber,Form,Input,message} from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { querydevicelist,gets,queryhistorylist,updatestatus ,deleterecord} from '../axios';
@@ -7,6 +7,10 @@ import './../mock/mock';
 import moment from 'moment';
 import './lowalarm.css';
 import statustext from './../status'
+import statusnum from './../statusnum'
+import adminTypeConst from '../config/adminTypeConst';
+import Layouts from '../component/layout';
+
 
 
 
@@ -32,24 +36,12 @@ const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 
 
 const data = [];
-const number=15;
-for (let i = 0; i < number; i++) {
+const number=0;
+for (let i = 0; i < 0; i++) {
     data.push({
-      key: i,
-      flow:i,
-      equipment: `行政楼${i}楼饮水点`,
-      age: '张三',
-      liuliang:`${i}`,
-      address: `London ${i}`,
-      status:'正在处理',
-      jibie:'6',
-      jd:'正在处理'
     });
   }
  
-function callback(key) {
-    console.log(key);
-  }
   const FormItem = Form.Item;
   const EditableContext = React.createContext();
   const EditableRow = ({ form, index, ...props }) => (
@@ -185,6 +177,10 @@ class lowalarm extends Component {
     },{
       title: '处理阶段',
       dataIndex: 'process',
+      render: (text, record, index) =>   
+      <Select defaultValue={[text]}   onChange={this.handleChange}  disabled={this.state.statustype} > 
+      {statusOptions}
+      </Select>
     }, {
       title: '责任人',
       dataIndex: 'resPerson.name',
@@ -197,7 +193,7 @@ class lowalarm extends Component {
     >详情</a>
       <Modal
         title="联系方式"
-        maskStyle={{background:"black",opacity:'0.1'}}
+        // maskStyle={{background:"black",opacity:'0.1'}}
         visible={this.state.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
@@ -214,20 +210,40 @@ class lowalarm extends Component {
       title: '总流量',
       dataIndex: 'totalFlow',
     }, {
-      title: '编辑状态',
-      dataIndex: 'process', 
-      keys: 'x', 
-      render: (text, record, index) =>   
-      <Select
-      showSearch
-      optionFilterProp="children"
-      onChange={() => this.handleChange(index)}
-      defaultValue={statustext[text]}
-    >
-    {statusOptions}
-
-    </Select>,
-    }];  
+      title: '操作',
+      dataIndex: 'operation',
+      width:'15%',
+      render: (text, record,index) => {
+        const editable = this.isEditing(record);
+        return (
+          <div>
+            {editable ? (
+              <span>
+                <EditableContext.Consumer>
+                  {form => (
+                    <a
+                      href="javascript:;"
+                      onClick={() => this.save(form, record.key,index)}
+                      style={{ marginRight: 8 }}
+                    >
+                      保存
+                    </a>
+                  )}
+                </EditableContext.Consumer>
+                <Popconfirm
+                  title="确认要取消吗?"
+                  onConfirm={() => this.cancel(record.key)}
+                >
+                  <a>取消</a>
+                </Popconfirm>
+              </span>
+            ) : (
+              <a onClick={(index) => this.edit(record.key,index)}>编辑状态</a>
+            )}
+          </div>
+        );
+      },
+        }];  
     
     this.columns= [{
       title: '设备位置',
@@ -270,69 +286,15 @@ class lowalarm extends Component {
   }, {
     title: '总流量',
     dataIndex: 'totalFlow',
-  }, {
-    title: '编辑状态',
-    dataIndex: 'operation',
-    width:'10%',
-    render: (text, record) => {
-      const editable = this.isEditing(record);
-      return (
-        <div>
-          {editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <a
-                    href="javascript:;"
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    保存
-                  </a>
-                )}
-              </EditableContext.Consumer>
-              <Popconfirm
-                title="确认要取消吗?"
-                onConfirm={() => this.cancel(record.key)}
-              >
-                <a>取消</a>
-              </Popconfirm>
-            </span>
-          ) : (
-            <a onClick={() => this.edit(record.key)}>编辑</a>
-          )}
-          <span style={{marginLeft:'10px'}}>
-          {data.length > 1 ?
-          (
-            <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
-              <a href="javascript:;">删除</a>
-            </Popconfirm>
-          ) : null}
-          </span>
-        </div>
-      );
-    },
-      }];
+  }];
   }
 
-
-  handleChange = (index) =>{ 
-    console.log(index) 
-    this.props.form.validateFields({ force: true }, (error) => {
-      if (!error) {
-        updatestatus([
-          index
-        ]).then(res => {
-          if (res.data && res.data.status === 1) {
-             alert("提交信息成功");
-          } else {
-            alert("提交信息失败");            
-          }
-        });
-      } else {
-        alert("请填好所有选项");
-                   
-      }
+  handleChange = (date, dateString) =>{ 
+    console.log(date)
+    this.setState({
+      statustext:date,
+      statusnum:statustext[date],
+      selecttype:statusnum[date],
     });
   }
   getdqlist = () => {
@@ -366,19 +328,17 @@ class lowalarm extends Component {
               if(res.data.alertEventList[i].alertStatus === 2){
                 res.data.alertEventList[i].alertStatus ="报警"
               }
-              this.setState({
-                datas:res.data.alertEventList,
-                num1:res.data.alertEventList.length,
-              }); 
             }
-
+            this.setState({
+              datas:res.data.alertEventList,
+              num1:res.data.alertEventList.length,
+            }); 
           } else {
-            alert("提交信息失败");           
+            message.error("获取信息失败");           
           }
         });
       } else {
-        alert("请填好所有选项");
-                   
+        message.error("获取接口失败");             
       }
     });
   }
@@ -397,7 +357,6 @@ class lowalarm extends Component {
           lsbh,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-
             for(var i=0;i<res.data.alertEventList.length;i++){
               if(res.data.alertEventList[i].process === 0){
                 res.data.alertEventList[i].process = "未处理"
@@ -408,7 +367,9 @@ class lowalarm extends Component {
               if(res.data.alertEventList[i].process === 3){
                 res.data.alertEventList[i].process = "处理完成"
               }
-
+              if(res.data.alertEventList[i].alertStatus === 0){
+                res.data.alertEventList[i].alertStatus = "预报警"
+              }
               if(res.data.alertEventList[i].alertStatus === 1){
                 res.data.alertEventList[i].alertStatus = "预报警"
               }
@@ -424,53 +385,99 @@ class lowalarm extends Component {
 
 
           } else {
-            alert("提交信息失败");           
+            message.error("获取信息失败");           
           }
         });
       } else {
-        alert("请填好所有选项");          
+        message.error("获取接口失败");          
       }
     });
   }
 
-    isEditing = (record) => {
-      return record.key === this.state.editingKey;
-    };
-    edit(key) {
-      this.setState({ editingKey: key });
+  edit(key,text,record,index) {
+    console.log(key)
+    for(var i=0;i<this.state.datas.length;i++){
+      if(this.state.datas[i].key===key){
+        console.log(this.state.datas[i].process)
+        console.log(statusnum[this.state.datas[i].process])
+        this.setState({
+            selecttype:statusnum[this.state.datas[i].process],
+        });        
+      }
     }
-    onDelete = (key) => {
-      const data = [...this.state.data];
-      this.setState({ 
-        num:this.state.num-1,
-        data: data.filter(item => item.key !== key)
-      });
-    } 
-    save(form, key) {
-      form.validateFields((error, row) => {
-        if (error) {
-          return;
-        }
-        const newData = [...this.state.data];
-        const index = newData.findIndex(item => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
+    this.setState({
+       editingKey: key,
+       statustype:false,
+    });
+  }
+  isEditing = (record) => {
+    return record.key === this.state.editingKey;
+  };
+
+  save(form, key) {
+    this.setState({
+      statustype:true, 
+     });
+      const newData = [...this.state.datas];
+      const index = newData.findIndex(item => key === item.key);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item
+        });
+        this.setState({ 
+          datas: newData, editingKey: '' ,
+          email:newData[index].email,
+        },()=>{
+          console.log(newData[0])
+          this.props.form.validateFields({ force: true }, (error) => {
+            if (!error) {
+              updatestatus([
+                key,
+                0,
+                this.state.selecttype,
+              ]).then(res => {
+                if (res.data && res.data.status === 1) {
+                  message.success("信息编辑成功");
+                   this.setState({
+                    statustype:true,
+                  });  
+                } else {
+                  message.error("信息编辑失败"); 
+                  this.setState({
+                    statustype:false,
+                  });         
+                }
+              });
+            } else {
+              message.error("获取接口失败");
+              this.setState({
+                statustype:false,
+              });           
+            }
           });
-          this.setState({ data: newData, editingKey: '' });
-        } else {
-          newData.push(data);
-          this.setState({ data: newData, editingKey: '' });
-        }
-      });
-    }
-    cancel = () => {
-      this.setState({ editingKey: '' });
-    }; 
+            
+        });
+      } else {
+        newData.push(this.state.datas);
+        this.setState({ datas: newData, editingKey: '' });
+      }
+  }
+  cancel = () => {
+    this.setState({ 
+      editingKey: '' ,
+      statustype:true,
+    });
+  }; 
+
   componentWillMount = () => {
-    console.log(moment().startOf('month'))
+    console.log(localStorage.getItem('type'))
+    console.log(data.cascadedlocation)
+    if(data.cascadedlocation === undefined){
+      this.setState({
+        
+      }); 
+    }
     document.title = "流量报警";
     function showTime(){
       let nowtime=new Date();
@@ -487,6 +494,7 @@ class lowalarm extends Component {
       datas:'',
       size: 'small',
       num: number,
+      selecttype:'',
       num1: number,
       name:'1',
       email:'2',
@@ -495,6 +503,7 @@ class lowalarm extends Component {
       selectedRowKeys: [],
       selectedRowKeys1: [],
       time:myDate,
+      statustype:true,
       data, editingKey: '',
       begintime:myDate,
       lsbegin:begtime,
@@ -505,7 +514,6 @@ class lowalarm extends Component {
       area:'',
       school:'',
       disabledpro:true,
-      IMEI:'',
       display1:'',
       display2:'',
       display3:'',
@@ -519,7 +527,7 @@ class lowalarm extends Component {
     }; 
 
     this.props.form.validateFields({ force: true }, (error) => {
-    
+
       if (!error) {
         gets([
           localStorage.getItem('token'),
@@ -568,11 +576,11 @@ class lowalarm extends Component {
    
 
                   } else {
-                    alert("提交信息失败");           
+                    message.error("获取信息失败");           
                   }
                 });
               } else {
-                alert("请填好所有选项");                
+                message.error("获取接口失败");                
               }
             });
 
@@ -588,10 +596,11 @@ class lowalarm extends Component {
                 '',
               ]).then(res => {
                 if (res.data && res.data.status === 1) {
-      
+     
                   for(var i=0;i<res.data.alertEventList.length;i++){
                     if(res.data.alertEventList[i].process === 0){
                       res.data.alertEventList[i].process = "未处理"
+                      
                     }
                     if(res.data.alertEventList[i].process === 2){
                       res.data.alertEventList[i].process = "正在处理"
@@ -612,15 +621,22 @@ class lowalarm extends Component {
                     }); 
                   }
                 } else {
-                  alert("提交信息失败");           
+                  message.error("获取信息失败");           
                 }
               });
             } else {
-              alert("请填好所有选项");          
+              message.error("获取接口失败");          
             }
           
-
-            if(localStorage.getItem('type')=== '1'){
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
+              this.setState({
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                disabled:true,
+              });    
+            }
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
               this.setState({
                 display2:'none',
                 display3:'none',
@@ -633,15 +649,8 @@ class lowalarm extends Component {
                 disabled:true,
               });    
             }
-            if(localStorage.getItem('type')=== '2'){
-              this.setState({
-                display2:'none',
-                display6:'none',
-                display9:'none',
-                disabled:true,
-              });    
-            }
-            if(localStorage.getItem('type')=== '3'){
+
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
               this.setState({
                 disabled:false,
                 display3:'none',
@@ -652,7 +661,7 @@ class lowalarm extends Component {
                 qpower:true,
               });    
             }
-            if(localStorage.getItem('type')=== '4'){
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
               this.setState({
                 disabled:false,
                 display1:'none',
@@ -664,17 +673,19 @@ class lowalarm extends Component {
                 qpower:true,
               });    
             }
-            if(localStorage.getItem('type')=== '8'){
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
               this.setState({
                 disabled:false,
               });    
             }
+
+            
           } else {
-            alert("提交信息失败");           
+            message.error("获取信息失败");           
           }
         });
       } else {
-        alert("请填好所有选项");
+        message.error("获取接口失败");
                    
       }
     });
@@ -697,87 +708,13 @@ class lowalarm extends Component {
       collapsed: !this.state.collapsed,
     });
   }
-  moredelete = (key) => {
-    key = this.state.selectedRowKeys;
-    const len = key.length;
-    const dataSource = [...this.state.data];
-    this.props.form.validateFields({ force: true }, (error) => {
-      if (!error) {
-        deleterecord([
-          this.state.keylist,
-        ]).then(res => {
-          if (res.data && res.data.status === 1) {
-            console.log("提交信息成功");
-            this.setState({
-              selectedRowKeys: [],
-              num: this.state.num - len,
-              dataSource:
-                dataSource.filter((item) => {
-                  for (let i = 0; i < key.length; i++) {
-                    if (item.key === key[i]) {
-                      return false
-                    }
-                  }
-                  return true
-                })
-            });
-          } else {
-            alert("提交信息失败");
-          }
-        });
-      } else {
-        alert("请填好所有选项");
-      }
-    });
+  out = () => {
+    localStorage.clear()
+    window.location.href = "/login/login";
   }
-  
-
   render() {
-
-    const options = [{
-      value: '浙江',
-      label: '浙江',
-      disabled:this.state.shpower,
-      children: [{
-        value: '杭州',
-        label: '杭州',
-        disabled:this.state.spower,
-        children: [{
-          value: '西湖区',
-          label:  '西湖区', 
-          disabled:this.state.qpower,
-          children:[{
-            value:"学军中学",
-            label:"学军中学",
-            disabled:this.state.xpower,
-          }]     
-        },{
-          value: '上城区',
-          label:  '上城区',
-          disabled:this.state.qpower,
-          children:[{
-            value:'杭州十一中',
-            label:'杭州十一中',
-            disabled:this.state.xpower,
-          },{
-            value:'杭州市十中',
-            label:"杭州市十中",
-            disabled:this.state.xpower,
-          },{
-            value:'凤凰小学',
-            label:"凤凰小学",
-            disabled:this.state.xpower,
-          },{
-            value:'胜利小学',
-            label:"胜利小学",
-            disabled:this.state.xpower,
-          }]
-        }],
-      }],
-    }];
-
-
-
+    console.log()
+    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
     const { selectedRowKeys } = this.state;
     const {
       dataSource,
@@ -862,25 +799,24 @@ class lowalarm extends Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
-            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
-            <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
-                <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
-                <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
-                <Menu.Item key="3" style={{display:this.state.display3}}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
-                <Menu.Item key="4" style={{display:this.state.display4}}><Link to="/management">设备管理</Link></Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
-                <Menu.Item key="5" style={{display:this.state.display5}}><Link to="/process">流程查询</Link></Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">学校管理</Link></Menu.Item>
-                <Menu.Item key="7" style={{display:this.state.display7}}><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                <Menu.Item key="8" style={{display:this.state.display8}}><Link to="/journal">操作日志查询</Link></Menu.Item>
-                <Menu.Item key="9" style={{display:this.state.display9}}><Link to="/highset">高级设置</Link></Menu.Item>
-            </SubMenu>
+      <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+      <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
+          <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
+          <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
+      </SubMenu>
+      <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+          <Menu.Item key="3" style={{display:this.state.display3}}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+          <Menu.Item key="4" style={{display:this.state.display4}}><Link to="/management">设备管理</Link></Menu.Item>
+      </SubMenu>
+      <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
+          <Menu.Item key="5" style={{display:this.state.display5}}><Link to="/process">流程查询</Link></Menu.Item>
+      </SubMenu>
+      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+          <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">学校管理</Link></Menu.Item>
+          <Menu.Item key="7" style={{display:this.state.display7}}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+          <Menu.Item key="8" style={{display:this.state.display8}}><Link to="/journal">操作日志查询</Link></Menu.Item>
+          <Menu.Item key="9" style={{display:this.state.display9}}><Link to="/highset">高级设置</Link></Menu.Item>
+      </SubMenu> 
             </Menu>
            </div>
       </Sider>
@@ -893,14 +829,14 @@ class lowalarm extends Component {
               type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
             />
               </Button>
-              
             </div>
-            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
+            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
             <div className="Administrator">
-              <Icon type="search" />
-                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
-            </div>        
+            </div>   
+            
         </Header>
         <div className="nav">
       流程监控 / 流量报警
@@ -911,7 +847,7 @@ class lowalarm extends Component {
         <Content style={{ margin: '24px 16px', background: '#fff', minHeight: 280,marginTop:'10px' }}>
         <div className="current">
                 <div className="curr">
-                <Tabs onChange={callback} type="card">
+                <Tabs onChange={this.tabchange} type="card">
                     <TabPane tab="当前" key="1">
                         <div className="current_text">
                             <div className="current_textt">
@@ -935,7 +871,7 @@ class lowalarm extends Component {
                             </div>
                             <div className="derive">
                             <Icon type="info-circle-o" />                                
-                               &nbsp; &nbsp;已加载<span style={{ marginLeft: 8 ,color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>
+                               &nbsp; &nbsp;已选择<span style={{ marginLeft: 8 ,color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>
                                {hasSelecteds ? `   ${selectedRowKeys1.length}  ` : ''}
                                 </span>条记录
                                 列表记录总计： <span style={{color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>{this.state.num1}</span> 条
@@ -962,10 +898,6 @@ class lowalarm extends Component {
                                 />  
                               设备编号:<Input placeholder="1234567890" style={{width:'10%',marginLeft:'10px'}}  id="lsimei"/>
                               <span style={{float:'right'}}>
-                              <Popconfirm title="确定要删除吗?" onConfirm={() => this.moredelete()}>
-                                      <Button  style={{background:"rgba(204, 0, 0, 1)",color:'white',border:'none',marginRight:'20px'}} >
-                                      批量删除</Button>  
-                                      </Popconfirm>
                               <Button type="primary" onClick={this.getlslist} style={{marginRight:'10px'}}>查询</Button>  
                                 <Button onClick={this.get}>重置</Button>
                                 </span>

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Input,Layout,Popconfirm,Cascader,Modal,Form,InputNumber} from 'antd';
+import {  Icon, Button,Select,Table,Menu,Input,Layout,Popconfirm,Cascader,Modal,Form,InputNumber,message} from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { userupdate,userdelete,conactget,gets} from '../axios';
 import './contact.css';
+import adminTypeConst from '../config/adminTypeConst';
 
 import typetext from './../type'
 import typenum from './../types'
@@ -14,18 +15,6 @@ const SubMenu = Menu.SubMenu;
 const Option = Select.Option;
 const accounttype = [ "不限",'学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
 const accounttypes = ['学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
-
-const data = [];
-const number=15;
-for (let i = 0; i < number; i++) {
-  data.push({
-      key: i,
-      phoneNumber:'13578545528',
-      email:"854585109@qq.com",
-      userName:'张三',
-      password:'123',
-    });
-  }
 
 
   const FormItem = Form.Item;
@@ -146,6 +135,10 @@ class contact extends Component {
         selectnum:typenum[date],
       });
   }
+  out = () => {
+    localStorage.clear()
+    window.location.href = "/login/login";
+  }
   usersChange=(date, dateString) =>{
       this.setState({
         typenum: typenum[date],
@@ -172,15 +165,15 @@ class contact extends Component {
               num:res.data.userList.length,
             });             
           } else if (res.data && res.data.status === 0){
-            alert("鉴权失败，需要用户重新登录");            
+            message.error("鉴权失败，需要用户重新登录");            
           }else if(res.data && res.data.status === 2){
-            alert("参数提取失败");   
+            message.error("参数提取失败");   
           }else if(res.data && res.data.status === 3){
-            alert("服务器故障，请刷新再试"); 
+            message.error("服务器故障，请刷新再试"); 
           }
         });
       } else {
-        alert("请填好所有选项");           
+        message.error("获取接口失败");           
       }
     });  
   } 
@@ -190,8 +183,9 @@ class contact extends Component {
    this.columns = [{
     title: '用户类别',
     dataIndex: 'userType',
+    width:'20%',
     render: (text, record, index) =>   
-    <Select defaultValue={ typetext[text]}   className="one" onChange={this.typeChange} style={{width:'80%'}} disabled={this.state.typedisabled}> 
+    <Select defaultValue={ typetext[text]}   className="one" onChange={this.typeChange} style={{width:'80%'}} disabled={this.state.typedisabled} > 
     {typeOptions}
     </Select>
   }, {
@@ -220,10 +214,10 @@ class contact extends Component {
     >详情</a>
     <Modal
       title="联系方式"
-      maskStyle={{background:"black",opacity:'0.1'}}
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
+      mask={false}
     >
       <p>所属学校:{this.state.organization}</p>
       <p>备注:{this.state.content}</p>
@@ -237,14 +231,6 @@ class contact extends Component {
       const editable = this.isEditing(record);
       return (
         <div>
-          <span style={{marginRight:'10px'}}>
-          {data.length > 1 ?
-          (
-            <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
-              <a href="javascript:;">删除</a>
-            </Popconfirm>
-          ) : null}
-          </span>
           {editable ? (
             <span>
               <EditableContext.Consumer>
@@ -266,22 +252,34 @@ class contact extends Component {
               </Popconfirm>
             </span>
           ) : (
-            <a onClick={() => this.edit(record.key,index)}>修改资料</a>
+            <a onClick={(index) => this.edit(record.key,index)}   disabled={this.state.amend}>修改资料</a>
           )}
+
+
+         <span style={{marginLeft:'10px'}}>
+          {this.state.data.length > 1 ?
+          (
+            <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
+              <a href="javascript:;">删除</a>
+            </Popconfirm>
+          ) : null}
+          </span>
         </div>
       );
     },
       }];
       this.state = {
-        num:number,
+        num:'',
         collapsed: false,
         size: 'small',
         province:'',
+        amend:true,
         city:'',
         area:'',
         school:'',
+        data:'', 
         selectedRowKeys: [],
-        data, editingKey: '',
+        editingKey: '',
         typetext:typetext[localStorage.getItem('type')],
         typenum:localStorage.getItem('type'),
         phoneNumber:'',
@@ -298,8 +296,17 @@ class contact extends Component {
   }
 
 
-  edit(key,index) {
-    console.log(index)
+  edit(key,text,record,index) {
+    console.log(this.state.data.length)
+    for(var i=0;i<this.state.data.length;i++){
+      if(this.state.data[i].key===key){
+        document.getElementsByClassName('one')[i].disabled=false;
+        console.log(document.getElementsByClassName('one')[i])
+        this.setState({
+            selecttype:typetext[this.state.data[i].userType],
+        });        
+      }
+    }
     this.setState({
        editingKey: key,
        typedisabled:false,
@@ -309,8 +316,7 @@ class contact extends Component {
     return record.key === this.state.editingKey;
   };
 
-  save(form, key,index) {
-    console.log(index)
+  save(form, key) {
     this.setState({
       typedisabled:true, 
      });
@@ -320,7 +326,8 @@ class contact extends Component {
       }
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
-      console.log(newData[0])
+     
+      
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -334,10 +341,11 @@ class contact extends Component {
           phoneNumber:newData[index].phone,
           email:newData[index].email,
         },()=>{
+          console.log(newData[0])
           this.props.form.validateFields({ force: true }, (error) => {
             if (!error) {
               userupdate([
-                index,
+                key,
                 this.state.province,
                 this.state.city,
                 this.state.area,
@@ -346,24 +354,22 @@ class contact extends Component {
                 this.state.password,
                 this.state.phoneNumber,
                 this.state.email,
-                this.state.selecttype,
+                typenum[this.state.selecttype]
               ]).then(res => {
                 if (res.data && res.data.status === 1) {
-                   alert("信息编辑成功");
-                    setTimeout(() => {
-                      this.setState({
-                        typedisabled:true,
-                      });                  
-                    }, 2000);
+                  message.success("信息编辑成功");
+                   this.setState({
+                    typedisabled:true,
+                  });  
                 } else {
-                  alert("信息编辑失败");
+                  message.error("信息编辑失败"); 
                   this.setState({
                     typedisabled:true,
-                  });             
+                  });         
                 }
               });
             } else {
-              alert("请填好所有选项");
+              message.error("信息保存失败");
               this.setState({
                 typedisabled:true,
               });           
@@ -372,14 +378,10 @@ class contact extends Component {
             
         });
       } else {
-        newData.push(data);
+        newData.push(this.state.data);
         this.setState({ data: newData, editingKey: '' });
       }
     });
-
-
-    
-
   }
   cancel = () => {
     this.setState({ 
@@ -392,32 +394,31 @@ class contact extends Component {
       if (!error) {
         userdelete([
           key,
-          this.state.begintime,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-             console.log("身份验证成功");
-             console.log(dataSource)
-             const dataSource = [...this.state.dataSource];
+             const dataSource = [...this.state.data];
              this.setState({ 
                num:dataSource.length,
                dataSource: dataSource.filter(item => item.key !== key)
              });
              if (res.data && res.data.deleteResult === 1){
-               alert('信息删除成功')
-             }if (res.data && res.data.deleteResult === 1){
-               alert('信息删除失败')
-               console.log('删除失败，后端回滚，前端重试');
+              message.success('信息删除成功');
+              setTimeout(() => {
+                window.location.href = "/contact/contact";
+              }, 1000);             
              }
           } else if (res.data && res.data.status === 0){
-            alert("鉴权失败，需要用户重新登录");            
+            message.error("鉴权失败，需要用户重新登录");            
           }else if(res.data && res.data.status === 2){
-            alert("参数提取失败");   
+            message.error("参数提取失败");   
           }else if(res.data && res.data.status === 3){
-            alert("服务器故障，请刷新再试"); 
+            message.error("服务器故障，请刷新再试"); 
+          }else if(res.data && res.data.status === 4){
+            message.error("用户名已存在"); 
           }
         });
       } else {
-        alert("请填好所有选项");        
+        message.error("获取接口失败");        
       }
     });  
   } 
@@ -425,7 +426,12 @@ class contact extends Component {
   
 
   componentWillMount = () => {
-    
+    // if(localStorage.getItem('type')==='8'){
+    //   this.setState({
+    //     typetext:  typetext['0'],
+    //     typenum:localStorage.getItem('type')
+    //   });
+    // }
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
         gets([
@@ -439,8 +445,6 @@ class contact extends Component {
               school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
             
-            let username=document.getElementById('username').value;
-            let tel=document.getElementById('tel').value;
             this.props.form.validateFields({ force: true }, (error) => {
               if (!error) {
                 conactget([
@@ -448,8 +452,8 @@ class contact extends Component {
                   res.data.cascadedlocation[0].children[0].value,
                   res.data.cascadedlocation[0].children[0].children[0].value,
                   res.data.cascadedlocation[0].children[0].children[0].children[0].value,
-                  username,
-                  tel,
+                  '',
+                  '',
                   this.state.typenum,
                 ]).then(res => {
                   if (res.data && res.data.status === 1) {
@@ -458,77 +462,79 @@ class contact extends Component {
                       num:res.data.userList.length,
                     });  
                   } else if (res.data && res.data.status === 0){
-                    alert("鉴权失败，需要用户重新登录");            
+                    message.error("鉴权失败，需要用户重新登录");            
                   }else if(res.data && res.data.status === 2){
-                    alert("参数提取失败");   
+                    message.error("参数提取失败");   
                   }else if(res.data && res.data.status === 3){
-                    alert("服务器故障，请刷新再试"); 
+                    message.error("服务器故障，请刷新再试"); 
                   }
                 });
               } else {
-                alert("请填好所有选项");   
+                message.error("获取接口失败");   
               }
             });  
 
 
-                    if(localStorage.getItem('type')=== '1'){
-                      this.setState({
-                        display2:'none',
-                        display3:'none',
-                        display4:'none',
-                        display5:'none',
-                        display6:'none',
-                        display7:'none',
-                        display8:'none',
-                        display9:'none',
-                        disabled:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== '2'){
-                      this.setState({
-                        display2:'none',
-                        display6:'none',
-                        display9:'none',
-                        disabled:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== '3'){
-                      this.setState({
-                        disabled:false,
-                        display3:'none',
-                        display4:'none',
-                        display9:'none',
-                        shpower:true,
-                        spower:true,
-                        qpower:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== '4'){
-                      this.setState({
-                        disabled:false,
-                        display1:'none',
-                        display2:'none',
-                        display6:'none',
-                        display9:'none',
-                        shpower:true,
-                        spower:true,
-                        qpower:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== '8'){
-                      this.setState({
-                        disabled:false,
-                      });    
-                    }
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
+              this.setState({
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                disabled:true,
+              });    
+            }
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+              this.setState({
+                display2:'none',
+                display3:'none',
+                display4:'none',
+                display5:'none',
+                display6:'none',
+                display7:'none',
+                display8:'none',
+                display9:'none',
+                disabled:true,
+              });    
+            }
+
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+              this.setState({
+                disabled:false,
+                display3:'none',
+                display4:'none',
+                display9:'none',
+                shpower:true,
+                spower:true,
+                qpower:true,
+              });    
+            }
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+              this.setState({
+                disabled:false,
+                display1:'none',
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                shpower:true,
+                spower:true,
+                qpower:true,
+              });    
+            }
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+              this.setState({
+                disabled:false,
+                amend:false,
+              });    
+            }
           } else {
-            alert("提交信息失败");           
+            message.error("获取信息失败");           
           }
         });
       } else {
-        alert("请填好所有选项");
-                   
+        message.error("获取接口失败");           
       }
     });
+
 
     document.title = "区域联系人管理";
     function showTime(){
@@ -538,7 +544,6 @@ class contact extends Component {
       let date=nowtime.getDate();
       document.getElementById("mytime").innerText=year+"年"+month+"月"+date+" "+nowtime.toLocaleTimeString();
     }
-    
     setInterval(showTime,1000);
   }
   onSelectChange = (selectedRowKeys) => {
@@ -553,47 +558,7 @@ class contact extends Component {
 
   render() {
 
-    const options = [{
-      value: '浙江',
-      label: '浙江',
-      disabled:this.state.shpower,
-      children: [{
-        value: '杭州',
-        label: '杭州',
-        disabled:this.state.spower,
-        children: [{
-          value: '西湖区',
-          label:  '西湖区', 
-          disabled:this.state.qpower,
-          children:[{
-            value:"学军中学",
-            label:"学军中学",
-            disabled:this.state.xpower,
-          }]     
-        },{
-          value: '上城区',
-          label:  '上城区',
-          disabled:this.state.qpower,
-          children:[{
-            value:'杭州十一中',
-            label:'杭州十一中',
-            disabled:this.state.xpower,
-          },{
-            value:'杭州市十中',
-            label:"杭州市十中",
-            disabled:this.state.xpower,
-          },{
-            value:'凤凰小学',
-            label:"凤凰小学",
-            disabled:this.state.xpower,
-          },{
-            value:'胜利小学',
-            label:"胜利小学",
-            disabled:this.state.xpower,
-          }]
-        }],
-      }],
-    }];
+    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
 
 
     const provinceOptions = accounttype.map(province => <Option key={province}>{province}</Option>);
@@ -642,8 +607,7 @@ class contact extends Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
-            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
+           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -674,10 +638,10 @@ class contact extends Component {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
+            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
             <div className="Administrator">
-              <Icon type="search" />
-                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>
@@ -710,7 +674,7 @@ class contact extends Component {
                     </div>
                     <div className="derive">
                     <Icon type="info-circle-o" />                                
-                        &nbsp; &nbsp;已加载<span style={{ marginLeft: 8 ,color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>
+                        &nbsp; &nbsp;已选择<span style={{ marginLeft: 8 ,color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>
                         {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
                         </span>条记录
                         列表记录总计： <span style={{color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>{this.state.num}</span> 条

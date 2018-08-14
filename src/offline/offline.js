@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Input,Layout,Popconfirm,InputNumber,Form,Breadcrumb,Cascader,Modal } from 'antd';
+import {  Icon, Button,Select,Table,Menu,Input,Layout,Popconfirm,InputNumber,Form,Breadcrumb,Cascader,Modal,message } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { userupdate,equipmentget,gets} from '../axios';
 import './offline.css';
+import adminTypeConst from '../config/adminTypeConst';
 
 
 
@@ -86,9 +87,19 @@ class devInfo extends Component {
       }, {
         title: '状态',
         dataIndex: 'status',
-        render: (text) => <div>
-        <a style={{color:'red'}}>{text}</a>
-      </div>
+        render: (text, record, index) => {
+          if (text === "离线") {
+            return (
+              <div>
+                <span style={{
+                  display: 'inline-block', width: "10px",
+                  height: "10px", borderRadius: '50%', background: "red", marginRight: '8px'
+                }}></span>
+                <span>{text}</span>
+              </div>
+            )
+          }
+        }
       }, {
         title: '所属地址',
         dataIndex: 'siteName',
@@ -107,7 +118,7 @@ class devInfo extends Component {
       >详情</a>
           <Modal
             title="联系方式"
-            maskStyle={{ background: "black", opacity: '0.1' }}
+            // maskStyle={{ background: "black", opacity: '0.1' }}
             visible={this.state.visible}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
@@ -155,18 +166,15 @@ class devInfo extends Component {
                 num:res.data.deviceList.length,
               });  
             } else if (res.data && res.data.status === 0) {
-              alert("鉴权失败，需要用户重新登录");
+              message.error("鉴权失败，需要用户重新登录");
             } else if (res.data && res.data.status === 2) {
-              alert("参数提取失败");
+              message.error("参数提取失败");
             } else if (res.data && res.data.status === 3) {
-              alert("服务器故障，请刷新再试");
+              message.error("服务器故障，请刷新再试");
             }
           });
         } else {
-          alert("请填好所有选项");
-          this.setState({
-            btn_disabled: false,
-          });
+          message.error("接口获取失败");
         }
       });
     }
@@ -243,81 +251,76 @@ class devInfo extends Component {
 
 
                 } else if (res.data && res.data.status === 0) {
-                  alert("鉴权失败，需要用户重新登录");
+                  message.error("鉴权失败，需要用户重新登录");
                 } else if (res.data && res.data.status === 2) {
-                  alert("参数提取失败");
+                  message.error("参数提取失败");
                 } else if (res.data && res.data.status === 3) {
-                  alert("服务器故障，请刷新再试");
+                  message.error("服务器故障，请刷新再试");
                 }
               });
             } else {
-              alert("请填好所有选项");
+              message.error("接口获取失败");
             }
 
 
-            if (localStorage.getItem('type') === '1') {
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
               this.setState({
-                display2: 'none',
-                display3: 'none',
-                display4: 'none',
-                display5: 'none',
-                display6: 'none',
-                display7: 'none',
-                display8: 'none',
-                display9: 'none',
-                disabled: true,
-              });
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                disabled:true,
+              });    
             }
-            if (localStorage.getItem('type') === '2') {
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
               this.setState({
-                display2: 'none',
-                display6: 'none',
-                display9: 'none',
-                disabled: true,
-              });
+                display2:'none',
+                display3:'none',
+                display4:'none',
+                display5:'none',
+                display6:'none',
+                display7:'none',
+                display8:'none',
+                display9:'none',
+                disabled:true,
+              });    
             }
-            if (localStorage.getItem('type') === '3') {
+
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
               this.setState({
-                disabled: false,
-                display3: 'none',
-                display4: 'none',
-                display9: 'none',
-                shpower: true,
-                spower: true,
-                qpower: true,
-              });
+                disabled:false,
+                display3:'none',
+                display4:'none',
+                display9:'none',
+                shpower:true,
+                spower:true,
+                qpower:true,
+              });    
             }
-            if (localStorage.getItem('type') === '4') {
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
               this.setState({
-                disabled: false,
-                display1: 'none',
-                display2: 'none',
-                display6: 'none',
-                display9: 'none',
-                shpower: true,
-                spower: true,
-                qpower: true,
-              });
+                disabled:false,
+                display1:'none',
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                shpower:true,
+                spower:true,
+                qpower:true,
+              });    
             }
-            if (localStorage.getItem('type') === '8') {
+            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
               this.setState({
-                disabled: false,
-              });
+                disabled:false,
+              });    
             }
 
 
           } else {
-            alert("提交信息失败");
-            this.setState({
-              btn_disabled: false,
-            });
+            message.error("获取信息失败");
           }
         });
       } else {
-        alert("请填好所有选项");
-        this.setState({
-          btn_disabled: false,
-        });
+        message.error("请填好所有选项");
       }
     });
   }
@@ -327,6 +330,10 @@ class devInfo extends Component {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
   }  
+  out = () => {
+    localStorage.clear()
+    window.location.href = "/login/login";
+  }
   toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed,
@@ -420,8 +427,7 @@ class devInfo extends Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
-            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
+           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -452,10 +458,10 @@ class devInfo extends Component {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
+            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
+            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
             <div className="Administrator">
-              <Icon type="search" />
-                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>

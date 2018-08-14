@@ -133,3 +133,16 @@
     line-height: 50px;
     margin-top: 50px;
 }
+.supermanager{
+    float: left;
+    width: 40%;
+    text-align: left;
+    text-indent: 28px;
+    border:1px solid rgba(24, 144, 255, 1);
+    border-radius: 10px;
+    padding:10px;
+    margin-bottom: 20px;
+}
+.supermanager p{
+    margin-bottom: 0;
+}

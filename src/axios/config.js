@@ -1,7 +1,7 @@
 
 //请求配置
 
-export const requestIp = '/api'; 
+export const requestIp = '/api';
 
 
 

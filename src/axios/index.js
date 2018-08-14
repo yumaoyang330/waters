@@ -23,14 +23,15 @@ export const querydevicelist = (params) => http.post('http://112.124.6.31:9090' 
 	city: params[3],
 	county: params[4],
 	school: params[5],
-	IMEI: params[6],
+	deviceId: params[6],
 });
 
 //2.1.2编辑当前事件处理状态
 export const updatestatus = (params) => http.post('http://112.124.6.31:9090' + '/alertmonitor/instantalertlist/update', {
 	token: localStorage.getItem('token'),
 	key: params[0],
-	process: params[1],
+	alertStatus:params[1],
+	process:params[2],
 });
 
 
@@ -43,7 +44,7 @@ export const queryhistorylist = (params) => http.post('http://112.124.6.31:9090'
 	city: params[3],
 	county: params[4],
 	school: params[5],
-	IMEI: params[6],
+	deviceId: params[6],
 });
 
 
@@ -58,7 +59,7 @@ export const querydevicelists = (params) => http.post('http://112.124.6.31:9090'
 	city: params[1],
 	county: params[2],
 	school: params[3],
-	IMEI: params[4],
+	deviceId: params[4],
 });
 
 //2.2.2编辑设备列表的报警参数
@@ -80,7 +81,7 @@ export const equipmentget = (params) => http.post('http://112.124.6.31:9090' + '
 	city: params[1],
 	county: params[2],
 	school: params[3],
-	IMEI: params[4],
+	deviceId: params[4],
 	offline: params[5],
 });
 
@@ -93,29 +94,19 @@ export const equipmentgets = (params) => http.post('http://112.124.6.31:9090' + 
 	city: params[1],
 	county: params[2],
 	school: params[3],
-	IMEI: params[4],
+	deviceId: params[4],
 });
 
 //3.2.2 删除设备
 export const equipmentdelete = (params) => http.post('http://112.124.6.31:9090' + '/devicemanage/devicelist/delete', {
 	token: localStorage.getItem('token'),
-	key: params[0],
+	keyList: params[0],
 });
 
 //3.2.3 新增设备
 export const equipmentadd = (params) => http.post('http://112.124.6.31:9090' + '/devicemanage/devicelist/add', {
-	token: localStorage.getItem('token'),
-	province: params[0],
-	city: params[1],
-	county: params[2],
-	school: params[3],
-	location: params[4],
-	type: params[5],
-	content: params[6],
-	preAlertThreshold: params[7],
-	alertThreshold: params[8],
-	initFlow: params[9],
-	IMEI: params[10],
+		token: localStorage.getItem('token'),
+		deviceInsertDTO: params,
 });
 
 //3.2.4 新增设备页面通过本批设备所属单位查询设备报警通知用户的信息以及维修通知用户的信息
@@ -127,6 +118,11 @@ export const getrespersoninfo = (params) => http.post('http://112.124.6.31:9090'
 	school: params[3],
 });
 
+
+//3.3 移动端页面接口
+export const getdevicepropsbydeviceid = (params) => http.post('http://112.124.6.31:9090' + '/mobile/getdevicepropsbydeviceid', {
+	deviceId:params[0],
+});
 
 //4.查询管理
 //4.1.0 获取该用户管辖内级联数据
@@ -140,7 +136,7 @@ export const processget = (params) => http.post('http://112.124.6.31:9090' + '/q
 	city: params[3],
 	county: params[4],
 	school: params[5],
-	IMEI: params[6],
+	deviceId: params[6],
 });
 
 //4.1.2 批量删除
@@ -216,7 +212,7 @@ export const schoolget = (params) => http.post('http://112.124.6.31:9090' + '/sc
 //5.2.2 删除目前已有的学校网点
 export const schooldelete = (params) => http.post('http://112.124.6.31:9090' + '/schoolmanage/schoollist/delete', {
 	token: localStorage.getItem('token'),
-	key: params[0],
+	keyList: params[0],
 });
 
 //5.2.3 新增学校网点
@@ -252,7 +248,7 @@ export const querylogs = (params) => http.post('http://112.124.6.31:9090' + '/ac
 //5.3.2 删除日志
 export const deletes = (params) => http.post('http://112.124.6.31:9090' + '/accountmanage/logquery/delete', {
 	token: localStorage.getItem('token'),
-	key: params[0],
+	keyList: params[0],
 });
 
 
