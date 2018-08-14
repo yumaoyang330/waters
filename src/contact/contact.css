@@ -1,0 +1,129 @@
+#contactbody .ant-menu-root{
+    height: 950px;
+}
+#contactbody .Lowalar-left{
+    margin-top: 24px;
+}
+#contactbody .Administrator{
+    float: right;
+    height: 50px;
+    line-height: 40px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+}
+#contactbody .Administrator i{
+    margin-right: 25px;
+}
+#contactbody .ant-cascader-picker{
+    display: inline-block;
+    width: 50%;
+    margin-right: 20px;
+}
+#contactbody .Administrator  span{
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+}
+#contactbody .indent-level-0{
+    display: none;
+}
+#contactbody .top{
+    height: 50px;
+    background: #00284D;
+    width: 100%;
+    line-height: 36px;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+    padding: 7px;
+    font-size: 13px;
+}
+#contactbody .switch-btn{
+    float: left;
+}
+#contactbody .Lowalar-right{
+    float: left;
+    margin-top: 24px;
+    width: 77%;
+}
+#contactbody .Lowalar-rt{
+    border-bottom: 1px solid #999;
+    height: 50px;
+    width: 100%;
+    padding-left: 20px;
+}
+#contactbody .nav{
+    height:30px;
+    line-height: 30px;
+    padding-left: 20px;
+    background: white;
+}
+#contactbody .tit{
+    font-size: 20px;
+    background: white;
+    height: 50px;
+    line-height: 50px;
+    color: rgba(0, 0, 0, 0.847058823529412);
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+/*当前/历史*/
+#contactbody .current{
+    float: left;
+    width: 100%;
+    background: #F0F2F5;
+}
+#contactbody .ant-tabs-bar{
+    border:none;
+}
+#contactbody .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab{
+    float: left;
+    margin-right: 0;
+    border:none;
+    border-radius: 0;
+}
+#contactbody .ant-tabs-tab-active{
+    color: white !important;
+    background: #1890ff !important;
+}
+#contactbody .current_text{
+    background: white;
+    width: 100%;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+#contactbody .ant-select{
+    width: 110px ;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/*起始时间*/
+#contactbody .current-time{
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+}
+/*导出*/
+#contactbody .derive{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background:rgba(230, 247, 255, 1);
+    border:1px solid rgba(186, 231, 255, 1);
+    margin-top: 10px;
+    padding-left: 15px;
+    border-radius: 5px;
+    padding-right: 5px;
+}
+#contactbody .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    padding: 5px 10px;
+    text-align: center
+}

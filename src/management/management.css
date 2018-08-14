@@ -1,0 +1,146 @@
+#managementbody .ant-menu-root{
+    height: 950px;
+}
+#managementbody .Lowalar-left{
+    margin-top: 24px;
+}
+#managementbody .Administrator{
+    float: right;
+    height: 50px;
+    line-height: 40px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+}
+#managementbody .ant-cascader-picker{
+    display: inline-block;
+    width: 50%;
+    margin-right: 20px;
+}
+#managementbody .newadd{
+    float: right;
+}
+#managementbody .current_textt{
+    padding-top: 10px;
+}
+#managementbody .current_textt:after{
+    visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+#managementbody .Administrator i{
+    margin-right: 25px;
+}
+#managementbody .Administrator  span{
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+}
+#managementbody .mangbtn{
+    margin-top: 10px;
+}
+.ant-modal{
+    width:300px !important;
+}
+#managementbody .top{
+    height: 50px;
+    background: #00284D;
+    width: 100%;
+    line-height: 36px;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+    padding: 7px;
+    font-size: 13px;
+}
+#managementbody .switch-btn{
+    float: left;
+}
+#managementbody .Lowalar-right{
+    float: left;
+    margin-top: 24px;
+    width: 77%;
+}
+#managementbody .Lowalar-rt{
+    border-bottom: 1px solid #999;
+    height: 50px;
+    width: 100%;
+    padding-left: 20px;
+}
+#managementbody .nav{
+    height:30px;
+    line-height: 30px;
+    padding-left: 20px;
+    background: white;
+}
+#managementbody .tit{
+    font-size: 20px;
+    background: white;
+    height: 50px;
+    line-height: 50px;
+    color: rgba(0, 0, 0, 0.847058823529412);
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+/*当前/历史*/
+#managementbody .current{
+    float: left;
+    width: 100%;
+    background: #F0F2F5;
+}
+#managementbody .ant-tabs-bar{
+    border:none;
+}
+#managementbody .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab{
+    float: left;
+    margin-right: 0;
+    border:none;
+    border-radius: 0;
+}
+#managementbody .ant-tabs-tab-active{
+    color: white !important;
+    background: #1890ff !important;
+}
+#managementbody .current_text{
+    background: white;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-top: 0;
+}
+#managementbody .ant-select{
+    width: 110px ;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/*起始时间*/
+#managementbody .current-time{
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+}
+/*导出*/
+#managementbody .derive{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background:rgba(230, 247, 255, 1);
+    border:1px solid rgba(186, 231, 255, 1);
+    margin-top: 10px;
+    padding-left: 15px;
+    border-radius: 5px;
+    padding-right: 5px;
+}
+#managementbody .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    padding: 5px 10px;
+    text-align: center
+}
