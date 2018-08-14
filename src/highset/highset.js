@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Input,Layout,Row, Col,message } from 'antd';
+import {  Icon, Button,Select,Table,Menu,Input,Layout,Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { changeplatformaddress} from '../axios';
 import './highset.css';
-import adminTypeConst from '../config/adminTypeConst';
 
 
 
@@ -31,16 +30,9 @@ class journal extends Component {
     
     setInterval(showTime,1000);
 
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
+    if(localStorage.getItem('type')=== '1'){
       this.setState({
-        display2:'none',
-        display6:'none',
-        display9:'none',
-        disabled:true,
-      });    
-    }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
-      this.setState({
+        disabled:false,
         display2:'none',
         display3:'none',
         display4:'none',
@@ -49,34 +41,34 @@ class journal extends Component {
         display7:'none',
         display8:'none',
         display9:'none',
-        disabled:true,
       });    
     }
-
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+    if(localStorage.getItem('type')=== '2'){
+      this.setState({
+        disabled:false,
+        display2:'none',
+        display6:'none',
+        display9:'none',
+      });    
+    }
+    if(localStorage.getItem('type')=== '3'){
       this.setState({
         disabled:false,
         display3:'none',
         display4:'none',
         display9:'none',
-        shpower:true,
-        spower:true,
-        qpower:true,
       });    
     }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+    if(localStorage.getItem('type')=== '4'){
       this.setState({
         disabled:false,
         display1:'none',
         display2:'none',
         display6:'none',
         display9:'none',
-        shpower:true,
-        spower:true,
-        qpower:true,
       });    
     }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+    if(localStorage.getItem('type')=== '8'){
       this.setState({
         disabled:false,
       });    
@@ -91,36 +83,29 @@ class journal extends Component {
       collapsed: !this.state.collapsed,
     });
   }
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
+
   addresschange = (key) => {
     var address=document.getElementById('address').value;
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
-        if(address===""){
-          message.error("请输入要修改的地址"); 
-        }else{
-          changeplatformaddress([
-            address,
-           ]).then(res => {
-             if (res.data && res.data.status === 1) {
-                console.log("身份验证成功");
-               if(res.data && res.data.updateResult === 1){
-                 message.success('地址修改成功')
-               }
-             } else if (res.data && res.data.status === 0){
-               message.error("鉴权失败，需要用户重新登录");            
-             }else if(res.data && res.data.status === 2){
-               message.error("参数提取失败");   
-             }else if(res.data && res.data.status === 3){
-               message.error("服务器故障，请刷新再试"); 
-             }
-           });          
-        }
+        changeplatformaddress([
+         address,
+        ]).then(res => {
+          if (res.data && res.data.status === 1) {
+             console.log("身份验证成功");
+            if(res.data && res.data.updateResult === 1){
+              alert('地址修改成功')
+            }
+          } else if (res.data && res.data.status === 0){
+            alert("鉴权失败，需要用户重新登录");            
+          }else if(res.data && res.data.status === 2){
+            alert("参数提取失败");   
+          }else if(res.data && res.data.status === 3){
+            alert("服务器故障，请刷新再试"); 
+          }
+        });
       } else {
-        message.error("获取接口失败");        
+        alert("请填好所有选项");        
       }
     });
   }  
@@ -144,7 +129,8 @@ class journal extends Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -175,10 +161,10 @@ class journal extends Component {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
             <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>

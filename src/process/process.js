@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Cascader,Select,DatePicker,Table,Menu,Input,Layout,Row, Col,Popconfirm,Modal,message } from 'antd';
+import {  Icon, Button,Cascader,Select,DatePicker,Table,Menu,Input,Layout,Row, Col,Popconfirm,Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import moment from 'moment';
 import { processget,deleterecord,gets} from '../axios';
 import './process.css';
-import adminTypeConst from '../config/adminTypeConst';
 
 
 
@@ -57,10 +56,7 @@ class processbody extends Component {
       visible: false,
     });
   }
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
+
   constructor(props) {
     super(props);
    this.columns = [{
@@ -84,7 +80,7 @@ class processbody extends Component {
     >详情</a>
     <Modal
       title="联系方式"
-      // maskStyle={{background:"black",opacity:'0.1'}}
+      maskStyle={{background:"black",opacity:'0.1'}}
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
@@ -165,15 +161,7 @@ class processbody extends Component {
                       num:res.data.processList.length,
                     });  
 
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-                      this.setState({
-                        display2:'none',
-                        display6:'none',
-                        display9:'none',
-                        disabled:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+                    if(localStorage.getItem('type')=== '1'){
                       this.setState({
                         display2:'none',
                         display3:'none',
@@ -186,8 +174,15 @@ class processbody extends Component {
                         disabled:true,
                       });    
                     }
-        
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+                    if(localStorage.getItem('type')=== '2'){
+                      this.setState({
+                        display2:'none',
+                        display6:'none',
+                        display9:'none',
+                        disabled:true,
+                      });    
+                    }
+                    if(localStorage.getItem('type')=== '3'){
                       this.setState({
                         disabled:false,
                         display3:'none',
@@ -198,7 +193,7 @@ class processbody extends Component {
                         qpower:true,
                       });    
                     }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+                    if(localStorage.getItem('type')=== '4'){
                       this.setState({
                         disabled:false,
                         display1:'none',
@@ -210,26 +205,39 @@ class processbody extends Component {
                         qpower:true,
                       });    
                     }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+                    if(localStorage.getItem('type')=== '8'){
                       this.setState({
                         disabled:false,
                       });    
                     }
+
                   } else {
-                    message.error("获取信息失败");            
+                    alert("提交信息失败");
+                    this.setState({
+                      btn_disabled:false,
+                    });               
                   }
                 });
               } else {
-                message.error("接口获取失败");      
+                alert("请填好所有选项");
+                this.setState({
+                  btn_disabled:false,
+                });           
               }
             });
 
           } else {
-            message.error("获取信息失败");             
+            alert("提交信息失败");
+            this.setState({
+              btn_disabled:false,
+            });               
           }
         });
       } else {
-        message.error("接口获取失败");     
+        alert("请填好所有选项");
+        this.setState({
+          btn_disabled:false,
+        });           
       }
     });
   }
@@ -294,6 +302,8 @@ class processbody extends Component {
   }
 
   moredelete = (key) =>{
+    key=this.state.selectedRowKeys;
+    const len=key.length;
     const dataSource = [...this.state.dataSource];
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
@@ -304,7 +314,7 @@ class processbody extends Component {
              console.log("提交信息成功");
              this.setState({ 
               selectedRowKeys: [],
-              num:this.state.dataSource.length,
+              num:this.state.num-len,
               dataSource: 
               dataSource.filter((item) => {
               for (let i = 0; i < key.length; i++) {
@@ -316,11 +326,11 @@ class processbody extends Component {
               })
             });
           } else {
-            message.error("获取信息失败");           
+            alert("提交信息失败");           
           }
         });
       } else {
-        message.error("接口获取失败");         
+        alert("请填好所有选项");         
       }
     });
   }   
@@ -346,18 +356,64 @@ class processbody extends Component {
               num:res.data.processList.length,
             });  
           } else {
-            message.error("获取信息失败");          
+            alert("提交信息失败");
+            this.setState({
+              btn_disabled:false,
+            });               
           }
         });
       } else {
-        message.error("接口获取失败");       
+        alert("请填好所有选项");
+        this.setState({
+          btn_disabled:false,
+        });           
       }
     });
   }
   
   render() {
 
-    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
+    const options = [{
+      value: '浙江',
+      label: '浙江',
+      disabled:this.state.shpower,
+      children: [{
+        value: '杭州',
+        label: '杭州',
+        disabled:this.state.spower,
+        children: [{
+          value: '西湖区',
+          label:  '西湖区', 
+          disabled:this.state.qpower,
+          children:[{
+            value:"学军中学",
+            label:"学军中学",
+            disabled:this.state.xpower,
+          }]     
+        },{
+          value: '上城区',
+          label:  '上城区',
+          disabled:this.state.qpower,
+          children:[{
+            value:'杭州十一中',
+            label:'杭州十一中',
+            disabled:this.state.xpower,
+          },{
+            value:'杭州市十中',
+            label:"杭州市十中",
+            disabled:this.state.xpower,
+          },{
+            value:'凤凰小学',
+            label:"凤凰小学",
+            disabled:this.state.xpower,
+          },{
+            value:'胜利小学',
+            label:"胜利小学",
+            disabled:this.state.xpower,
+          }]
+        }],
+      }],
+    }];
 
 
 
@@ -386,7 +442,8 @@ class processbody extends Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -418,10 +475,10 @@ class processbody extends Component {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
             <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>
@@ -452,7 +509,7 @@ class processbody extends Component {
                           <Button type="primary" style={{marginRight:'20px'}}  onClick={this.processbtn}>查询</Button>  
                           <Button>重置</Button>
                           <Popconfirm title="确定要删除吗?" onConfirm={() => this.moredelete()}>
-                          <Button  style={{background:"rgba(204, 0, 0, 1)",color:'white',border:'none',marginLeft:'20px'}} >
+                          <Button  style={{background:"rgba(204, 0, 0, 1)",color:'white',border:'none',marginLeft:'20px'}} onClick={this.deletes}>
                           批量删除</Button>  
                           </Popconfirm>
                           </div>

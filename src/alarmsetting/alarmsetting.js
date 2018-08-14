@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Input,Layout,Cascader,Popconfirm,InputNumber,Form,Modal,message} from 'antd';
+import {  Icon, Button,Select,Table,Menu,Input,Layout,Cascader,Popconfirm,InputNumber,Form,Modal} from 'antd';
 import { Link } from 'react-router-dom';
 import { updatealarm,querydevicelists,gets} from '../axios';
 import { createForm } from 'rc-form';
 import './alarmsetting.css';
-import adminTypeConst from '../config/adminTypeConst';
 
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -42,7 +41,7 @@ const options = [{
   }],
 }];
 const data = [];
-const number=0;
+const number=15;
 for (let i = 0; i < number; i++) {
     data.push({
       key: i,
@@ -116,11 +115,11 @@ class alarmsetting extends Component {
   showModal = (index) => {
     this.setState({
       visible: true,
-      phone:this.state.data[index].resPerson.phone,
-      name:this.state.data[index].resPerson.name,
-      email:this.state.data[index].resPerson.email,
-      organization:this.state.data[index].resPerson.organization,
-      content:this.state.data[index].resPerson.content,
+      phone:this.state.dataSource[index].resPerson.phone,
+      name:this.state.dataSource[index].resPerson.name,
+      email:this.state.dataSource[index].resPerson.email,
+      organization:this.state.dataSource[index].resPerson.organization,
+      content:this.state.dataSource[index].resPerson.content,
     });
   }
   handleOk = (e) => {
@@ -181,6 +180,7 @@ class alarmsetting extends Component {
       collapsed: false,
       size: 'small',
       selectedRowKeys: [],
+      dataSource:'',
       data: data,
       editingKey: '',
       num:number,
@@ -224,6 +224,7 @@ class alarmsetting extends Component {
   >详情</a>
     <Modal
       title="联系方式"
+      maskStyle={{background:"black",opacity:'0.1'}}
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
@@ -277,11 +278,11 @@ class alarmsetting extends Component {
     return record.key === this.state.editingKey;
   };
   edit(key) {
-    this.setState({ 
-      editingKey: key 
-    });
+    this.setState({ editingKey: key });
   }
 
+
+  
   save(form, key) {
     form.validateFields((error, row) => {
       if (error) {
@@ -289,6 +290,7 @@ class alarmsetting extends Component {
       }
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
+     
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -297,8 +299,8 @@ class alarmsetting extends Component {
         });
         this.setState({ 
           data: newData, editingKey: '' ,
-          preAlertThreshold:newData[index].preAlertThreshold,
-          alertThreshold:newData[index].alertThreshold,
+          preAlertThreshold:newData[key].preAlertThreshold,
+          alertThreshold:newData[key].alertThreshold,
         },()=>{
           this.props.form.validateFields({ force: true }, (error) => {
             if (!error) {
@@ -309,16 +311,16 @@ class alarmsetting extends Component {
               ]).then(res => {
                 if (res.data && res.data.status === 1) {
                   if(res.data.updateResult===1){
-                      message.success("信息编辑成功");
+                      alert("信息编辑成功");
                   }else{
-                    message.error("信息编辑失败");    
+                    alert("信息编辑失败");    
                   }  
                 } else {
-                  message.error("加载失败");         
+                  alert("加载失败");         
                 }
               });
             } else {
-              message.error("请填好所有选项");     
+              alert("请填好所有选项");     
             }
           });
             
@@ -346,6 +348,7 @@ cancel = () => {
               area:res.data.cascadedlocation[0].children[0].children[0].value,
               school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });    
+
             this.props.form.validateFields({ force: true }, (error) => {
               if (!error) {
                 querydevicelists([
@@ -358,20 +361,12 @@ cancel = () => {
                   if (res.data && res.data.status === 1) {
                     console.log(res.data.deviceList[0])
                     this.setState({
-                      data:res.data.deviceList,
+                      dataSource:res.data.deviceList,
                       num:res.data.deviceList.length,
                     });  
 
 
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-                      this.setState({
-                        display2:'none',
-                        display6:'none',
-                        display9:'none',
-                        disabled:true,
-                      });    
-                    }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+                    if(localStorage.getItem('type')=== '1'){
                       this.setState({
                         display2:'none',
                         display3:'none',
@@ -384,8 +379,15 @@ cancel = () => {
                         disabled:true,
                       });    
                     }
-        
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+                    if(localStorage.getItem('type')=== '2'){
+                      this.setState({
+                        display2:'none',
+                        display6:'none',
+                        display9:'none',
+                        disabled:true,
+                      });    
+                    }
+                    if(localStorage.getItem('type')=== '3'){
                       this.setState({
                         disabled:false,
                         display3:'none',
@@ -396,7 +398,7 @@ cancel = () => {
                         qpower:true,
                       });    
                     }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+                    if(localStorage.getItem('type')=== '4'){
                       this.setState({
                         disabled:false,
                         display1:'none',
@@ -408,25 +410,25 @@ cancel = () => {
                         qpower:true,
                       });    
                     }
-                    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+                    if(localStorage.getItem('type')=== '8'){
                       this.setState({
                         disabled:false,
                       });    
                     }
                   } else {
-                    message.error("获取信息失败");           
+                    alert("提交信息失败");           
                   }
                 });
               } else {
-                message.error("获取接口失败");          
+                alert("请填好所有选项");          
               }
             });
           } else {
-            message.error("获取信息失败");           
+            alert("提交信息失败");           
           }
         });
       } else {
-        message.error("获取接口失败");
+        alert("请填好所有选项");
                    
       }
     });
@@ -451,10 +453,7 @@ cancel = () => {
     });
   }
   
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
+
   querybtn = () => {
     const imei= document.getElementById('imei').value;
     this.props.form.validateFields({ force: true }, (error) => {
@@ -469,22 +468,62 @@ cancel = () => {
           if (res.data && res.data.status === 1) {
             console.log(res.data.deviceList[0])
             this.setState({
-              data:res.data.deviceList,
+              dataSource:res.data.deviceList,
               num:res.data.deviceList.length,
             });  
           } else {
-            message.error("获取信息失败");           
+            alert("提交信息失败");           
           }
         });
       } else {
-        message.error("获取接口失败");          
+        alert("请填好所有选项");          
       }
     });
   }
 
   render() {
 
-    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
+    const options = [{
+      value: '浙江',
+      label: '浙江',
+      disabled:this.state.shpower,
+      children: [{
+        value: '杭州',
+        label: '杭州',
+        disabled:this.state.spower,
+        children: [{
+          value: '西湖区',
+          label:  '西湖区', 
+          disabled:this.state.qpower,
+          children:[{
+            value:"学军中学",
+            label:"学军中学",
+            disabled:this.state.xpower,
+          }]     
+        },{
+          value: '上城区',
+          label:  '上城区',
+          disabled:this.state.qpower,
+          children:[{
+            value:'杭州十一中',
+            label:'杭州十一中',
+            disabled:this.state.xpower,
+          },{
+            value:'杭州市十中',
+            label:"杭州市十中",
+            disabled:this.state.xpower,
+          },{
+            value:'凤凰小学',
+            label:"凤凰小学",
+            disabled:this.state.xpower,
+          },{
+            value:'胜利小学',
+            label:"胜利小学",
+            disabled:this.state.xpower,
+          }]
+        }],
+      }],
+    }];
 
 
 
@@ -532,7 +571,8 @@ cancel = () => {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-            <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -563,10 +603,10 @@ cancel = () => {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>  
+            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
             <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>
@@ -600,7 +640,7 @@ cancel = () => {
                             <Table
                                     rowSelection={rowSelection}
                                     components={components}
-                                    dataSource={this.state.data}
+                                    dataSource={this.state.dataSource}
                                     columns={columns}
                                     rowClassName="editable-row"
 

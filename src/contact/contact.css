@@ -28,9 +28,6 @@
     background: red;
     display: inline-block;
 }
-#contactbody .indent-level-0{
-    display: none;
-}
 #contactbody .top{
     height: 50px;
     background: #00284D;

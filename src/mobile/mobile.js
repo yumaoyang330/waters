@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './mobile.css';
 import {Toast } from 'antd-mobile';
-import { getdevicepropsbyimei } from '../axios';
+import { getdevicepropsbydeviceid } from '../axios';
 
 export default class Devicedisplay extends Component{
 
@@ -27,9 +27,9 @@ export default class Devicedisplay extends Component{
     componentWillMount=() => {
         document.title="设备信息展示";
         let url = window.location.href;
-        url = url.split('=', 7);
+        url = url.split('=', 8);
         console.log(url)
-        getdevicepropsbyimei([
+        getdevicepropsbydeviceid([
             url[1]
         ]).then(res => {
             if (res.data && res.data.status === 1) {

@@ -20,7 +20,6 @@ import addschool from './addschool/addschool';
 import offline from './offline/offline';
 import home from './home/home';
 import homepage from './homepage/homepage';
-import mobile from './mobile/mobile';
 
 
 require('./mock/mock.js')
@@ -45,7 +44,6 @@ ReactDOM.render(  <Router>
       <Route path="/offline" component={offline} />
       <Route path="/home" component={home} />
       <Route path="/homepage" component={homepage} />
-      <Route path="/mobile" component={mobile} />
     </Switch>
   </Router>,
     document.getElementById('root'));

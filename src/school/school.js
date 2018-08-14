@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Layout,Popconfirm,Cascader,Modal,message} from 'antd';
+import {  Icon, Button,Select,Table,Menu,Layout,Popconfirm,Cascader,Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import './school.css';
 import { schooldelete,querylog,schoolget,gets} from '../axios';
-import adminTypeConst from '../config/adminTypeConst';
 
 
 
@@ -107,13 +106,11 @@ constructor(props) {
 
 
     this.props.form.validateFields({ force: true }, (error) => {
-      
       if (!error) {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-              localStorage.setItem('cascadedlocation',JSON.stringify(res.data.cascadedlocation))
              this.setState({
               province:res.data.cascadedlocation[0].value,
               city:res.data.cascadedlocation[0].children[0].value,
@@ -132,27 +129,19 @@ constructor(props) {
                       num:res.data.schoolList.length,
                     });    
                   } else if (res.data && res.data.status === 0){
-                    message.error("鉴权失败，需要用户重新登录");            
+                    alert("鉴权失败，需要用户重新登录");            
                   }else if(res.data && res.data.status === 2){
-                    message.error("参数提取失败");   
+                    alert("参数提取失败");   
                   }else if(res.data && res.data.status === 3){
-                    message.error("服务器故障，请刷新再试"); 
+                    alert("服务器故障，请刷新再试"); 
                   }
                 });
               } else {
-                message.error("接口获取失败");        
+                alert("请填好所有选项");        
               }
 
 
-              if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-                this.setState({
-                  display2:'none',
-                  display6:'none',
-                  display9:'none',
-                  disabled:true,
-                });    
-              }
-              if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+              if(localStorage.getItem('type')=== '1'){
                 this.setState({
                   display2:'none',
                   display3:'none',
@@ -165,8 +154,15 @@ constructor(props) {
                   disabled:true,
                 });    
               }
-  
-              if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+              if(localStorage.getItem('type')=== '2'){
+                this.setState({
+                  display2:'none',
+                  display6:'none',
+                  display9:'none',
+                  disabled:true,
+                });    
+              }
+              if(localStorage.getItem('type')=== '3'){
                 this.setState({
                   disabled:false,
                   display3:'none',
@@ -177,7 +173,7 @@ constructor(props) {
                   qpower:true,
                 });    
               }
-              if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+              if(localStorage.getItem('type')=== '4'){
                 this.setState({
                   disabled:false,
                   display1:'none',
@@ -189,17 +185,17 @@ constructor(props) {
                   qpower:true,
                 });    
               }
-              if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+              if(localStorage.getItem('type')=== '8'){
                 this.setState({
                   disabled:false,
                 });    
               }
           } else {
-            message.error("获取信息失败");           
+            alert("提交信息失败");           
           }
         });
       } else {
-        message.error("接口获取失败");
+        alert("请填好所有选项");
                    
       }
     });
@@ -225,58 +221,37 @@ constructor(props) {
       collapsed: !this.state.collapsed,
     });
   }
-  onDelete = (key) => {
+  onDelete = (key,index) => {
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
         schooldelete([
-         key
+         index,
+          this.state.begintime,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-            
-            this.props.form.validateFields({ force: true }, (error) => {
-              if (!error) {
-                gets([
-                  localStorage.getItem('token'),
-                ]).then(res => {
-                  if (res.data && res.data.status === 1) {
-                    localStorage.setItem('cascadedlocation',JSON.stringify(res.data.cascadedlocation));
-                    setTimeout(() => {
-                      window.location.href = "/school/school";
-                    }, 1000);   
-                   
-                  }
-                  })
-                }
-              })
-
-
-              message.success("信息删除成功");
+             alert("提交信息成功");
              console.log(dataSource)
              const dataSource = [...this.state.dataSource];
              this.setState({ 
-              num:dataSource.length,
-              dataSource: dataSource.filter(item => item.key !== key)
-            });
+               num:this.state.num-1,
+               dataSource: dataSource.filter(item => item.key !== key)
+             });
           } else if (res.data && res.data.status === 0){
-            message.error("鉴权失败，需要用户重新登录");            
+            alert("鉴权失败，需要用户重新登录");            
           }else if(res.data && res.data.status === 2){
-            message.error("参数提取失败");   
+            alert("参数提取失败");   
           }else if(res.data && res.data.status === 3){
-            message.error("服务器故障，请刷新再试"); 
+            alert("服务器故障，请刷新再试"); 
           }
         });
       } else {
-        message.error("获取信息失败");       
+        alert("请填好所有选项");
+        this.setState({
+          btn_disabled:false,
+        });           
       }
     });
   }  
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
-
-
-
   onChange=(date, dateString) =>{
     let arr=[];
     for(var i in dateString){  
@@ -322,22 +297,40 @@ constructor(props) {
               num:res.data.schoolList.length,
             });    
           } else if (res.data && res.data.status === 0){
-            message.error("鉴权失败，需要用户重新登录");            
+            alert("鉴权失败，需要用户重新登录");            
           }else if(res.data && res.data.status === 2){
-            message.error("参数提取失败");   
+            alert("参数提取失败");   
           }else if(res.data && res.data.status === 3){
-            message.error("服务器故障，请刷新再试"); 
+            alert("服务器故障，请刷新再试"); 
           }
         });
       } else {
-        message.error("获取信息失败");        
+        alert("请填好所有选项");        
       }
     });
   }
 
   render() {
 
-    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
+    const options = [{
+      value: '浙江',
+      label: '浙江',
+      disabled:this.state.shpower,
+      children: [{
+        value: '杭州',
+        label: '杭州',
+        disabled:this.state.spower,
+        children: [{
+          value: '西湖区',
+          label:  '西湖区', 
+          disabled:this.state.qpower,
+        },{
+          value: '上城区',
+          label:  '上城区',
+          disabled:this.state.qpower,
+        }],
+      }],
+    }];
 
 
     const { dataSource } = this.state;
@@ -365,7 +358,8 @@ constructor(props) {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -396,10 +390,10 @@ constructor(props) {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
             <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>
@@ -418,7 +412,7 @@ constructor(props) {
                             <span style={{float:'right'}}>
                                 <Button type="primary" style={{marginRight:'10px',marginLeft:'20px'}} onClick={this.schoolbtn}>查询</Button>  
                                   <Button>重置</Button>
-                                  <Button type="primary" style={{border:'none',marginLeft:'20px'}}><Link to="/addschool">新建</Link></Button> 
+                                  <Button type="primary" style={{background:"rgba(204, 0, 0, 1)",color:'white',border:'none',marginLeft:'20px'}}><Link to="/addschool">新建</Link></Button> 
                                   </span>
                             </div>
                             <div className="derive" >

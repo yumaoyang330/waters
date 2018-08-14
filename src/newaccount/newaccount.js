@@ -1,47 +1,29 @@
 import React, { Component } from 'react';
-import {  Icon, Button,Select,Table,Menu,Input,Layout,Cascader,message} from 'antd';
+import {  Icon, Button,Select,Table,Menu,Input,Layout,Cascader} from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
-import { insert,gets } from "../axios";
+import { insert } from "../axios";
 import './newaccount.css';
-import adminTypeConst from '../config/adminTypeConst';
 
 
 
 
-import typetext from './../type'
-import typenum from './../types'
-
-
-if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
-  var accounttype = ['学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
-  }
-if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-    var accounttype = ['学校滤芯维护人员'];
-  }
-  if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
-    var accounttype = ['学校管理员','学校滤芯维护人员'];
-    }  
-if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
-  var accounttype = ['学校管理员','学校滤芯维护人员','区级管理员'];
-  }     
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 const Option = Select.Option;
 const { TextArea } = Input;
-
-
+const accounttype = ['学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
 
 class contact extends Component {
   state = {
     collapsed: false,
     size: 'small',
-    province:'浙江',
+    province:'',
     city:'',
     area:'',
     school:'',
     name_value:'',
-    usertype:'学校管理员',
+    usertype:'',
     remake:'',
     }
 
@@ -53,43 +35,13 @@ class contact extends Component {
       let month=nowtime.getMonth()+1;
       let date=nowtime.getDate();
       document.getElementById("mytime").innerText=year+"年"+month+"月"+date+" "+nowtime.toLocaleTimeString();
-    }  
+    }
+    
     setInterval(showTime,1000);
 
 
-    this.props.form.validateFields({ force: true }, (error) => {
-      if (!error) {
-        gets([
-          localStorage.getItem('token'),
-        ]).then(res => {
-          if (res.data && res.data.status === 1) {
-             this.setState({
-              province:res.data.cascadedlocation[0].value,
-              city:res.data.cascadedlocation[0].children[0].value,
-              area:res.data.cascadedlocation[0].children[0].children[0].value,
-              school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
-            });   
-          } else {
-            message.error("获取信息失败");           
-          }
-        });
-      } else {
-        message.error("获取接口失败");             
-      }
-    });
 
-
-
-
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-      this.setState({
-        display2:'none',
-        display6:'none',
-        display9:'none',
-        disabled:true,
-      });    
-    }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+    if(localStorage.getItem('type')=== '1'){
       this.setState({
         display2:'none',
         display3:'none',
@@ -102,8 +54,15 @@ class contact extends Component {
         disabled:true,
       });    
     }
-
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+    if(localStorage.getItem('type')=== '2'){
+      this.setState({
+        display2:'none',
+        display6:'none',
+        display9:'none',
+        disabled:true,
+      });    
+    }
+    if(localStorage.getItem('type')=== '3'){
       this.setState({
         disabled:false,
         display3:'none',
@@ -114,7 +73,7 @@ class contact extends Component {
         qpower:true,
       });    
     }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+    if(localStorage.getItem('type')=== '4'){
       this.setState({
         disabled:false,
         display1:'none',
@@ -126,7 +85,7 @@ class contact extends Component {
         qpower:true,
       });    
     }
-    if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+    if(localStorage.getItem('type')=== '8'){
       this.setState({
         disabled:false,
       });    
@@ -143,49 +102,19 @@ class contact extends Component {
     for(var i in dateString){  
      arr.push(dateString[i].label);
     }
-    if(arr[1] === undefined){
-      this.setState({
-        province: arr[0],
-        city:'',
-        area:'',
-        school:'',
-      })
-    }else{
-      if(arr[2] === undefined){
-        this.setState({
-          province: arr[0],
-          city:arr[1],
-          area:'',
-          school:'',
-        })
-      }else{
-        if(arr[3] === undefined){
-          this.setState({
-            province: arr[0],
-            city:arr[1],
-            area:arr[2],
-            school:'',
-          });
-        }else{
-          this.setState({
-            province: arr[0],
-            city:arr[1],
-            area:arr[2],
-            school:arr[3],   
-            });  
-          };
-        }
-      }   
-    }
+    this.setState({
+      province: arr[0],
+      city:arr[1],
+      area:arr[2],
+      school:arr[3],
+    });
+  }
   toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
   }
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
+  
   submit = () => {
     console.log
     let phone = document.getElementById('phone_num').value;
@@ -197,16 +126,16 @@ class contact extends Component {
     console.log(phone)
     this.props.form.validateFields({ force: true }, (error, fieldsValue) => {
       if (!telrule.test(phone)) {
-        message.error('您输入的手机号码不合法');
+        alert('您输入的手机号码不合法');
         return;
       }
       if (!namerule.test(nameval)) {
-        message.error('请输入您的真实姓名');
+        alert('请输入您的真实姓名');
         return;
       }
       if (!error) {
         insert([
-          typenum[this.state.usertype],
+          this.state.usertype,
           this.state.province,
           this.state.city,
           this.state.area,
@@ -219,24 +148,74 @@ class contact extends Component {
           remake,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-            message.success('账号创建成功');
-            setTimeout(() => {
-              window.location.href = "/contact/contact";
-            }, 1000);     
+             alert("提交信息成功");
+              setTimeout(() => {
+                this.setState({
+                  btn_disabled:false,
+                });                  
+              }, 2000);
           } else {
-            message.error('账号创建失败');            
+            alert("提交信息失败");
+            this.setState({
+              btn_disabled:false,
+            });               
           }
         });
       } else {
-        message.error('账号创建失败');   
+        alert("请填好所有选项");
+        this.setState({
+          btn_disabled:false,
+        });           
       }
     });
   }
   
 
   render() {
-    console.log(localStorage.getItem('cascadedlocation'))
-    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
+
+    const options = [{
+      value: '浙江',
+      label: '浙江',
+      disabled:this.state.shpower,
+      children: [{
+        value: '杭州',
+        label: '杭州',
+        disabled:this.state.spower,
+        children: [{
+          value: '西湖区',
+          label:  '西湖区', 
+          disabled:this.state.qpower,
+          children:[{
+            value:"学军中学",
+            label:"学军中学",
+            disabled:this.state.xpower,
+          }]     
+        },{
+          value: '上城区',
+          label:  '上城区',
+          disabled:this.state.qpower,
+          children:[{
+            value:'杭州十一中',
+            label:'杭州十一中',
+            disabled:this.state.xpower,
+          },{
+            value:'杭州市十中',
+            label:"杭州市十中",
+            disabled:this.state.xpower,
+          },{
+            value:'凤凰小学',
+            label:"凤凰小学",
+            disabled:this.state.xpower,
+          },{
+            value:'胜利小学',
+            label:"胜利小学",
+            disabled:this.state.xpower,
+          }]
+        }],
+      }],
+    }];
+
+
     const provinceOptions = accounttype.map(province => <Option key={province}>{province}</Option>);
     const { getFieldProps, getFieldError, getFieldDecorator } = this.props.form;
     return (   
@@ -251,13 +230,14 @@ class contact extends Component {
         <div className="logo" />
          <div className="Lowalar-left">
          <Menu
-            defaultSelectedKeys={['7']}
+            defaultSelectedKeys={['6']}
             defaultOpenKeys={['sub4']}
             mode="inline"
             theme="dark"
             inlineCollapsed={this.state.collapsed}
             >   
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+            <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+            <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
             <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1"><Link to="/Lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2"><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -288,10 +268,10 @@ class contact extends Component {
             />
               </Button>
             </div>
-            <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+            <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
             <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>        
         </Header>
@@ -307,7 +287,7 @@ class contact extends Component {
                 <div className="explain">
                   <div>
                     <span style={{color:'#000000'}}>尊敬的 </span>
-                    <span style={{color:"#1890FF"}}>{typetext[localStorage.getItem('type')]}</span>
+                    <span style={{color:"#1890FF"}}>区域管理员</span>
                     <span style={{color:"#000000"}}> 你好，依据平台设定，您具有以下账号管理权限：</span>
                   </div>
                   <div className='explaintext'>
@@ -328,11 +308,7 @@ class contact extends Component {
                   </div> 
                   <div  className='addinput'>
                         <span>所属单位：</span> 
-                        <Cascader
-                        value={[this.state.province, this.state.city, this.state.area, this.state.school]}
-                        changeOnSelect options={options} onChange={this.onChange}
-                        style={{ display: 'inline-block', width: '60%', textAlign: 'left' }}
-                      />
+                        <Cascader defaultValue={['浙江']} options={options} onChange={this.onChange} changeOnSelect style={{width:"60%"}}/>
                   </div> 
                   <div  className='addinput'>
                         <span>姓名：</span> 

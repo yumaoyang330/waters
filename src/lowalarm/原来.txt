@@ -1,0 +1,272 @@
+import React, { Component } from 'react';
+import {  Icon, Button,Tabs,Select,DatePicker,Table,Menu,Cascader ,Layout,Row, Col } from 'antd';
+import { Link } from 'react-router-dom';
+import { createForm } from 'rc-form';
+
+import moment from 'moment';
+import './lowalarm.css';
+
+
+const myDate = new Date();
+const { Header, Sider, Content } = Layout;
+const SubMenu = Menu.SubMenu;
+const TabPane = Tabs.TabPane;
+const Option = Select.Option;
+const {RangePicker } = DatePicker;
+const dateFormat = 'YYYY/MM/DD';
+const options = [{
+  value: 'zhejiang',
+  label: '浙江省',
+  children: [{
+    value: 'hangzhou',
+    label: '杭州市',
+    children: [{
+      value: 'xihu',
+      label: '西湖区',
+      children:[{
+        value: 'xuejun',
+        label: '学军中学',
+      }]
+    }],
+  }],
+}, {
+  value: 'jiangsu',
+  label: '江苏省',
+  children: [{
+    value: 'nanjing',
+    label: '南京市',
+    children: [{
+      value: 'zhonghuamen',
+      label: '中华门',
+    }],
+  }],
+}];
+const columns = [{
+    title: '设备位置',
+    dataIndex: 'equipment',
+  }, {
+    title: '流量大小',
+    dataIndex: 'flow',
+  }, {
+    title: '报警级别',
+    dataIndex: '报警级别',
+  },{
+    title: '处理阶段',
+    dataIndex: '处理阶段',
+  }, {
+    title: '责任人',
+    dataIndex: 'age',
+  }, {
+    title: '责任人联系方式',
+    dataIndex: '', 
+    key: 'x', 
+    render: () => <a href="http://www.baidu.com" target="_blank">详情</a>
+  },{
+    title: '报警时间',
+    dataIndex: 'address',
+  }, {
+    title: '总流量',
+    dataIndex: 'liuliang',
+  }, {
+    title: '编辑状态',
+    dataIndex: '', 
+    key: 'x', 
+    render: () =>    
+    <Button style={{ marginLeft: 8 }} disabled>
+      正在处理 <Icon type="down" />
+    </Button>
+  }];
+const data = [];
+const number=15;
+for (let i = 0; i < number; i++) {
+    data.push({
+      key: i,
+      flow:i,
+      equipment: `行政楼${i}楼饮水点`,
+      age: '张三',
+      liuliang:`${i}`,
+      address: `London ${i}`,
+      status:'正在处理'
+    });
+  }
+function callback(key) {
+    console.log(key);
+  }
+  function onChange(date, dateString) {
+    console.log(date, dateString);
+  }
+class lowalarm extends Component {
+  state = {
+    collapsed: false,
+    size: 'small',
+    num: number,
+    selectedRowKeys: [],
+    time:myDate,
+    }
+
+  componentWillMount = () => {
+    document.title = "流量报警";
+  }
+  onSelectChange = (selectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys });
+  }  
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    });
+  } 
+  
+
+  render() {
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+    return ( 
+      <div id="lowalarmbody" >
+      <Layout>
+      <Sider 
+        trigger={null}
+        collapsible
+        collapsed={this.state.collapsed}
+      >
+        <div className="logo" />
+         <div className="lowalar-left">
+         <Menu
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            mode="inline"
+            theme="dark"
+            inlineCollapsed={this.state.collapsed}
+            >   
+            <div className="top"></div>
+            <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
+                <Menu.Item key="1"><Link to="/lowalarm">流量报警</Link></Menu.Item>
+                <Menu.Item key="2"><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
+            </SubMenu>
+            <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+                <Menu.Item key="3"><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+                <Menu.Item key="4"><Link to="/management">设备管理</Link></Menu.Item>
+            </SubMenu>
+            <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
+                <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
+            </SubMenu>
+            <SubMenu key="sub4" title={<span><Icon type="warning" /><span>账号管理</span></span>}>
+                <Menu.Item key="6"><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                <Menu.Item key="7"><Link to="/journal">操作日志查询</Link></Menu.Item>
+                <Menu.Item key="8"><Link to="/highset">高级设置</Link></Menu.Item>
+            </SubMenu>
+            </Menu>
+           </div>
+      </Sider>
+      <Layout>
+        <Header style={{ background: '#fff', padding: 0 }}>
+            <div className="switch-btn">
+                <Button type="primary"  onClick={this.toggle} style={{ marginLeft:"16px",  }}>
+                <Icon
+              className="trigger"
+              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+            />
+              </Button>
+            </div>
+            <div className="Administrator">
+              <Icon type="search" />
+                <Icon type="bell" />
+                <span></span>管理员
+            </div>        
+        </Header>
+        <div className="nav">
+      流程监控 / 流量报警
+        </div>
+        <div className="tit">
+          报警查询
+        </div>
+        <Content style={{ margin: '24px 16px', background: '#fff', minHeight: 280,marginTop:'10px' }}>
+        <div className="current">
+                <div className="curr">
+                <Tabs onChange={callback} type="card">
+                    <TabPane tab="当前" key="1">
+                        <div className="current_text">
+                            <div className="current_textt">
+                            位置选择:<Cascader defaultValue={['zhejiang', 'hangzhou', 'xihu','xuejun']} options={options} onChange={onChange}  style={{marginLeft:'20px'}}/>
+                            </div>
+                            <div className="current-time">
+                            <Row gutter={16}>
+                              <Col className="gutter-row" span={18}>
+                              时间选择:
+                              <RangePicker 
+                                style={{marginLeft:'20px'}}  
+                                defaultValue={[moment(this.state.time, dateFormat), moment(this.state.time, dateFormat)]}
+                                format={dateFormat}
+                                  ranges={{ 今天: [moment(), moment()], '本月': [moment().startOf('month'), moment().endOf('month')] }}
+                                  onChange={onChange}
+                                />  
+                              </Col>
+                              <Col className="gutter-row" span={6}>
+                              <Button type="primary" style={{marginRight:'10px'}}>查询</Button>  
+                                <Button>重置</Button>
+                              </Col>
+                            </Row>
+                            </div>
+                            <div className="derive">
+                            <Icon type="info-circle-o" />                                
+                               &nbsp; &nbsp;已加载<span style={{ marginLeft: 8 ,color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>
+                               {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
+                                </span>条记录
+                                列表记录总计： <span style={{color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>{this.state.num}</span> 条
+                            <Button type="primary" style={{float:'right',marginTop:'3px'}}>数据导出</Button> 
+                            </div>
+                            <div style={{marginTop:'10px'}}>
+                                <Table rowSelection={rowSelection} columns={columns} dataSource={data}  />
+                            </div>
+                        </div>   
+                    </TabPane>
+                    <TabPane tab="历史" key="2">
+                    <div className="current_text">
+                            <div className="current_textt">
+                            位置选择:<Cascader defaultValue={['zhejiang', 'hangzhou', 'xihu','xuejun']} options={options} onChange={onChange}  style={{marginLeft:'20px'}}/>
+                            </div>
+                            <div className="current-time">
+                            时间选择:
+                              <RangePicker 
+                                style={{marginLeft:'20px'}}  
+                                defaultValue={[moment(this.state.time, dateFormat), moment(this.state.time, dateFormat)]}
+                                format={dateFormat}
+                                  ranges={{ 今天: [moment(), moment()], '本月': [moment().startOf('month'), moment().endOf('month')] }}
+                                  onChange={onChange}
+                                />  
+                                <div style={{float:"right"}}>
+                                <Button type="danger" style={{marginRight:'20px',background:"#f5222d",color:'white',border:'1px solid #f5222d '}}>批量删除</Button>
+                                <Button type="primary" style={{marginRight:'20px'}}>查询</Button>  
+                                <Button>重置</Button>
+                                </div>
+                            </div>
+                            <div className="derive">
+                            <Icon type="info-circle-o" />                                
+                               &nbsp; &nbsp;已加载<span style={{ marginLeft: 8 }}>
+                               {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
+                                </span>条记录
+                                列表记录总计： <span style={{color:'rgba(0, 51, 255, 0.647058823529412)',fontWeight:'bold'}}>{this.state.num}</span> 条
+                            <Button type="primary" style={{float:'right',marginTop:'3px'}}>数据导出</Button> 
+                            </div>
+                            <div style={{marginTop:'10px'}}>
+                                <Table rowSelection={rowSelection} columns={columns} dataSource={data}  />
+                            </div>
+                        </div>   
+                    </TabPane>
+                </Tabs>
+                </div>
+           </div>      
+        </Content>
+      </Layout>
+    </Layout>   
+</div>    
+    )
+  }
+}
+
+export default lowalarm = createForm()(lowalarm);
+

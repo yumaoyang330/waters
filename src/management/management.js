@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal,message } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { deleterecord, equipmentdelete, equipmentgets,gets } from '../axios';
 import './management.css';
-import adminTypeConst from '../config/adminTypeConst';
-import QRCode from 'qrcode-react';
 
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -90,27 +88,16 @@ class management extends Component {
       content:this.state.dataSource[index].resPerson.content,
     });
   }
-  state = { visibles: false }
-  showcode = (index) => {
-    localStorage.setItem('erweima','http://192.168.31.72:3000/mobile?imei='+this.state.IMEI)
-    this.setState({
-      visibles: true,
-      IMEI:this.state.dataSource[index].IMEI,
-    });
-    
-  }
   handleOk = (e) => {
     console.log(e);
     this.setState({
       visible: false,
-      visibles: false,
     });
   }
   handleCancel = (e) => {
     console.log(e);
     this.setState({
       visible: false,
-      visibles: false,
     });
   }
   constructor(props) {
@@ -127,72 +114,24 @@ class management extends Component {
       city:'',
       area:'',
       school:'',
-      IMEI:'666',
     };
     this.columns = [{
       title: '设备编号',
-      dataIndex: 'IMEI',
+      dataIndex: 'deviceId',
+      editable: true,
     }, {
       title: '设备位置',
       dataIndex: 'location',
+      editable: true,
     }, {
       title: '所属地址',
       dataIndex: 'siteName',
+      editable: true,
     }, {
-      title: 'IMSI',
-      dataIndex: 'imsi',
+      title: '责任人',
+      dataIndex: 'resPerson.name',
+      editable: true,
     }, {
-      title: '信号强度',
-      dataIndex: 'rssi',
-      render: (text, record, index) => {
-        if (20<parseInt(text)) {
-          return (
-            <div>
-              <span style={{color:'green'}}>{text}</span>
-            </div>
-          )
-        }
-        if (parseInt(text)<=20) {
-          return (
-            <div>
-              <span style={{color:'red'}}>{text}</span>
-            </div>
-          )
-        }
-      }
-
-    },  {
-      title: '运行状态',
-      dataIndex: 'runningstate',
-      render: (text, record, index) => {
-        if (text === 0) {
-          return (
-            <div>
-              <span style={{
-                display: 'inline-block', width: "10px",
-                height: "10px", borderRadius: '50%', background: "red", marginRight: '8px'
-              }}></span>
-              <span>停止</span>
-            </div>
-          )
-        }
-        if (text === 1) {
-          return (
-            <div>
-              <span style={{
-                display: 'inline-block', width: "10px",
-                height: "10px", borderRadius: '50%', background: "green", marginRight: '8px'
-              }}></span>
-              <span>运行</span>
-            </div>
-          )
-        }
-      }
-
-    },{
-      title: '运营商',
-      dataIndex: 'apn',
-    },{
       title: '责任人联系方式',
       dataIndex: '',
       key: 'x',
@@ -202,11 +141,10 @@ class management extends Component {
     >详情</a>
         <Modal
           title="联系方式"
-          // maskStyle={{ background: "black", opacity: '0.1' }}
+          maskStyle={{ background: "black", opacity: '0.1' }}
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          mask={false}
         >
       <p>姓名:{this.state.name}</p>
       <p>电话:{this.state.phone}</p>
@@ -218,34 +156,23 @@ class management extends Component {
     }, {
       title: '初始流量值',
       dataIndex: 'initFlow',
+      editable: true,
     }, {
       title: '当前流量',
       dataIndex: 'totalFlow',
+      editable: true,
     }, {
       title: '安装时间',
       dataIndex: 'activiteTime',
-      width:'10%'
+      editable: true,
     }, {
       title: '操作',
       dataIndex: 'operation',
-      render: (text, record,index) => {
+      width: '10%',
+      render: (text, record) => {
+        const editable = this.isEditing(record);
         return (
           <div>
-          <a onClick={() => this.showcode(index)} style={{color:'#1890ff'}}
-    >生成二维码</a>
-        <Modal
-          title="生成二维码"
-          visible={this.state.visibles}
-          // maskStyle={{ background: "black", opacity: '0.1' }}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          mask={false}
-          style={{textAlign:'center'}}
-        >
-        {/* <QRCode value={'http://192.168.31.72:3000/mobile'}/> */}
-        <QRCode value={'http://192.168.31.72:3000/mobile?imei='+this.state.IMEI}/>
-        <div style={{fontSize:"20px",fontWeight:"bold",color:'#000'}}>{this.state.IMEI}</div>
-        </Modal>
             <span style={{ marginLeft: '10px' }}>
               {dataSource.length > 1 ?
                 (
@@ -323,15 +250,18 @@ class management extends Component {
               num:res.data.deviceList.length,
             });  
           } else if (res.data && res.data.status === 0) {
-            message.error("鉴权失败，需要用户重新登录");
+            alert("鉴权失败，需要用户重新登录");
           } else if (res.data && res.data.status === 2) {
-            message.error("参数提取失败");
+            alert("参数提取失败");
           } else if (res.data && res.data.status === 3) {
-            message.error("服务器故障，请刷新再试");
+            alert("服务器故障，请刷新再试");
           }
         });
       } else {
-        message.error("获取接口失败");
+        alert("请填好所有选项");
+        this.setState({
+          btn_disabled: false,
+        });
       }
     });
   }
@@ -343,7 +273,7 @@ class management extends Component {
           this.state.begintime,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-            message.success("信息删除成功");
+            alert("提交信息成功");
             console.log(dataSource)
             const dataSource = [...this.state.dataSource];
             this.setState({
@@ -351,15 +281,15 @@ class management extends Component {
               dataSource: dataSource.filter(item => item.key !== key)
             });
           } else if (res.data && res.data.status === 0) {
-            message.error("鉴权失败，需要用户重新登录");
+            alert("鉴权失败，需要用户重新登录");
           } else if (res.data && res.data.status === 2) {
-            message.error("参数提取失败");
+            alert("参数提取失败");
           } else if (res.data && res.data.status === 3) {
-            message.error("服务器故障，请刷新再试");
+            alert("服务器故障，请刷新再试");
           }
         });
       } else {
-        message.error("获取接口失败");
+        alert("请填好所有选项");
       }
     });
   }
@@ -377,15 +307,7 @@ class management extends Component {
               school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });   
             
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-              this.setState({
-                display2:'none',
-                display6:'none',
-                display9:'none',
-                disabled:true,
-              });    
-            }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+            if(localStorage.getItem('type')=== '1'){
               this.setState({
                 display2:'none',
                 display3:'none',
@@ -398,8 +320,15 @@ class management extends Component {
                 disabled:true,
               });    
             }
-
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if(localStorage.getItem('type')=== '2'){
+              this.setState({
+                display2:'none',
+                display6:'none',
+                display9:'none',
+                disabled:true,
+              });    
+            }
+            if(localStorage.getItem('type')=== '3'){
               this.setState({
                 disabled:false,
                 display3:'none',
@@ -410,7 +339,7 @@ class management extends Component {
                 qpower:true,
               });    
             }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+            if(localStorage.getItem('type')=== '4'){
               this.setState({
                 disabled:false,
                 display1:'none',
@@ -422,7 +351,7 @@ class management extends Component {
                 qpower:true,
               });    
             }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if(localStorage.getItem('type')=== '8'){
               this.setState({
                 disabled:false,
               });    
@@ -444,11 +373,11 @@ class management extends Component {
                     num:res.data.deviceList.length,
                   });  
                 } else if (res.data && res.data.status === 0) {
-                  message.error("鉴权失败，需要用户重新登录");
+                  alert("鉴权失败，需要用户重新登录");
                 } else if (res.data && res.data.status === 2) {
-                  message.error("参数提取失败");
+                  alert("参数提取失败");
                 } else if (res.data && res.data.status === 3) {
-                  message.error("服务器故障，请刷新再试");
+                  alert("服务器故障，请刷新再试");
                 }
               });
 
@@ -456,7 +385,7 @@ class management extends Component {
 
 
             } else {
-              message.error("获取接口失败");
+              alert("请填好所有选项");
             }           
 
             if(localStorage.getItem('type')=== '1' || localStorage.getItem('type') === '2'){
@@ -465,11 +394,11 @@ class management extends Component {
               });    
             }
           } else {
-            message.error("获取信息失败");           
+            alert("提交信息失败");           
           }
         });
       } else {
-        message.error("获取接口失败");             
+        alert("请填好所有选项");             
       }
     });
 
@@ -493,51 +422,90 @@ class management extends Component {
       keylist: selectedRowKeys,
     });
   }
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login/login";
-  }
   toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
   }
-  // moredelete = (key) =>{
-  //   const dataSource = [...this.state.dataSource];
-  //   this.props.form.validateFields({ force: true }, (error) => {
-  //     if (!error) {
-  //       equipmentdelete([
-  //         JSON.stringify(this.state.keylist)
-  //       ]).then(res => {
-  //         if (res.data && res.data.status === 1) {
-  //            console.log("信息删除成功");
-  //            this.setState({ 
-  //             selectedRowKeys: [],
-  //             num:this.state.dataSource.length,
-  //             dataSource: 
-  //             dataSource.filter((item) => {
-  //             for (let i = 0; i < key.length; i++) {
-  //             if (item.key === key[i]) {
-  //             return false
-  //             }
-  //             }
-  //             return true
-  //             })
-  //           });
-  //         } else {
-  //           alert("信息删除失败");           
-  //         }
-  //       });
-  //     } else {
-  //       alert("删除失败");         
-  //     }
-  //   });
-  // }   
+  moredelete = (key) => {
+    key = this.state.selectedRowKeys;
+    const len = key.length;
+    const dataSource = [...this.state.data];
+    this.props.form.validateFields({ force: true }, (error) => {
+      if (!error) {
+        deleterecord([
+          this.state.keylist,
+        ]).then(res => {
+          if (res.data && res.data.status === 1) {
+            console.log("提交信息成功");
+            this.setState({
+              selectedRowKeys: [],
+              num: this.state.num - len,
+              dataSource:
+                dataSource.filter((item) => {
+                  for (let i = 0; i < key.length; i++) {
+                    if (item.key === key[i]) {
+                      return false
+                    }
+                  }
+                  return true
+                })
+            });
+          } else {
+            alert("提交信息失败");
+          }
+        });
+      } else {
+        alert("请填好所有选项");
+      }
+    });
+  }
 
 
   render() {
 
-    const options =JSON.parse(localStorage.getItem('cascadedlocation'))
+    const options = [{
+      value: '浙江',
+      label: '浙江',
+      disabled:this.state.shpower,
+      children: [{
+        value: '杭州',
+        label: '杭州',
+        disabled:this.state.spower,
+        children: [{
+          value: '西湖区',
+          label:  '西湖区', 
+          disabled:this.state.qpower,
+          children:[{
+            value:"学军中学",
+            label:"学军中学",
+            disabled:this.state.xpower,
+          }]     
+        },{
+          value: '上城区',
+          label:  '上城区',
+          disabled:this.state.qpower,
+          children:[{
+            value:'杭州十一中',
+            label:'杭州十一中',
+            disabled:this.state.xpower,
+          },{
+            value:'杭州市十中',
+            label:"杭州市十中",
+            disabled:this.state.xpower,
+          },{
+            value:'凤凰小学',
+            label:"凤凰小学",
+            disabled:this.state.xpower,
+          },{
+            value:'胜利小学',
+            label:"胜利小学",
+            disabled:this.state.xpower,
+          }]
+        }],
+      }],
+    }];
+
 
     const { selectedRowKeys } = this.state;
     const rowSelection = {
@@ -584,7 +552,8 @@ class management extends Component {
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
               >
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+                <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
+                <div className="homepage"><Link to="/homepage" style={{color:'white'}}>总体信息预览</Link></div>
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                 <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                 <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -615,10 +584,10 @@ class management extends Component {
                   />
                 </Button>
               </div>
-              <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+              <span  id="mytime" style={{height:"100%",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
               <div className="Administrator">
+                <Icon type="search" />
+                <Icon type="bell" />
                 <span></span>{localStorage.getItem('realname')}
             </div>
             </Header>
@@ -638,10 +607,10 @@ class management extends Component {
                       <Button>重置</Button>
                       <div className="newadd">
                         <Button type="primary" style={{ marginRight: '20px' }}><Link to="/newadd">新增设备</Link></Button>
-                        {/* <Popconfirm title="确定要删除吗?" onConfirm={() => this.moredelete()}>
+                        <Popconfirm title="确定要删除吗?" onConfirm={() => this.moredelete()}>
                           <Button style={{ background: "rgba(204, 0, 0, 1)", color: 'white', border: 'none', }}>
                             批量删除</Button>
-                        </Popconfirm> */}
+                        </Popconfirm>
                       </div>
                       <div style={{marginTop:'10px',marginBottm:'10px'}}>
                             设备编号:<Input placeholder="1234567890" style={{width:'15%',marginLeft:'20px'}}  id="querynumber"/>
