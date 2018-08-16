@@ -332,7 +332,7 @@ class devInfo extends Component {
   }  
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   toggle = () => {
     this.setState({

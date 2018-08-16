@@ -3,6 +3,7 @@ import './mobile.css';
 import {Toast } from 'antd-mobile';
 import { getdevicepropsbydeviceid } from '../axios';
 
+
 export default class Devicedisplay extends Component{
 
     constructor(props) {
@@ -19,6 +20,9 @@ export default class Devicedisplay extends Component{
             city:'',
             area:'',
             school:'',
+            lastTime:'',
+            instantFlow:'',
+            alertThreshold:'',
             IMEI:'666',
           };
 
@@ -43,7 +47,20 @@ export default class Devicedisplay extends Component{
                 name:res.data.mobileInfo.resPerson.name,
                 organization:res.data.mobileInfo.resPerson.organization,
                 phone:res.data.mobileInfo.resPerson.phone,
-              });   
+                alertThreshold:res.data.mobileInfo.alertThreshold,
+                instantFlow:res.data.mobileInfo.instantFlow,
+                lastTime:res.data.mobileInfo.lastTime,
+                alertStatus:res.data.mobileInfo.alertStatus,
+              },function(){
+                  if(this.state.alertStatus===2){
+                     this.setState({
+                        color:'red',
+                        weight:"bold",
+                        size:'18px'
+                     })
+                  }
+              });  
+               
             } else if (res.data && res.data.status === 0) {
             Toast.fail("鉴权失败，需要用户重新登录");
             } else if (res.data && res.data.status === 2) {
@@ -71,14 +88,15 @@ export default class Devicedisplay extends Component{
                         <li>品牌编号：  <span  style={{float:"right"}}>{this.state.imei}</span></li>
                         <li>位置信息：  <span  style={{float:"right"}}>{this.state.location}</span></li>
                         <li>供应商&nbsp;&nbsp;&nbsp;：  <span  style={{float:"right"}}>{this.state.filterProvider}</span></li>
+                        <li>额定总进水量：  <span  style={{float:"right"}}>{this.state.alertThreshold}</span></li>
                     </div>
                     <div className="title">
                         <img src={require('./tit2.png')} alt="" style={{width:'8%',verticalAlign:"center",marginRight:'.1rem'}}/>
-                        滤芯状况
+                        滤芯更换状况
                     </div>
                     <div className="list">
-                        <li>滤芯上次维护时间：  <span  style={{float:"right"}}></span></li>
-                        <li>预计下次维护时间：<span  style={{float:"right"}}></span></li>
+                        <li>滤芯上次维护时间：  <span  style={{float:"right"}}>{this.state.lastTime}</span></li>
+                        <li>目前用水量：<span  style={{float:"right",color:this.state.color,fontWeight:this.state.weight,fontSize:this.state.size}}>{this.state.instantFlow}</span></li>
                     </div>
                     <div className="title">
                         <img src={require('./tit3.png')} alt="" style={{width:'8%',verticalAlign:"center",marginRight:'.1rem'}}/>

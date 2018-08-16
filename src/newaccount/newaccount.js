@@ -184,7 +184,7 @@ class contact extends Component {
   }
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   submit = () => {
     console.log
@@ -427,7 +427,7 @@ class contact extends Component {
                   <div className="btn">
                         <Button type="primary" style={{marginRight:'20px'}}  onClick={this.submit}>提交</Button>  
                          <Button><a href="">重置</a></Button>
-                        </div>                                                                            
+                  </div>                                                                            
                 </div>
             </div>   
           </div>                                        

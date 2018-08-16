@@ -528,10 +528,10 @@ class newadd extends Component {
 
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   reset = () => {
-    window.location.href = "/newadd/newadd";
+    window.location.href = "/newadd";
   }
   equipmentsubmit = () => {
    console.log(parseInt(document.getElementsByClassName('deviceId')[0].value))

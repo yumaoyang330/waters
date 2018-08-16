@@ -59,7 +59,7 @@ class processbody extends Component {
   }
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   constructor(props) {
     super(props);

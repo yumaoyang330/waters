@@ -307,7 +307,7 @@ class journal extends Component {
                 }
               })
               message.success("创建学校成功");
-              window.location.href = "/school/school";
+              window.location.href = "/school";
             } else {
               message.error("创建学校失败");
             }

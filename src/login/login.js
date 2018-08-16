@@ -72,9 +72,9 @@ class logins extends Component {
             localStorage.setItem('realname',res.data.realName);
             localStorage.setItem('cascadedlocation',JSON.stringify(res.data.cascadedlocation));
             if(res.data.type===4){
-              window.location.href = "/devInfo/devInfo";
+              window.location.href = "/devInfo";
             }else{
-              window.location.href = "/lowalarm/lowalarm";
+              window.location.href = "/lowalarm";
             }
             
           }else{

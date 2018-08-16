@@ -227,6 +227,7 @@ class alarmsetting extends Component {
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
+      mask={false}
     >
       <p>姓名:{this.state.name}</p>
       <p>电话:{this.state.phone}</p>

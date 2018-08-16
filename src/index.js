@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch,Redirect } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -21,14 +21,18 @@ import offline from './offline/offline';
 import home from './home/home';
 import homepage from './homepage/homepage';
 import mobile from './mobile/mobile';
+import NoaMatch from './NoaMatch/NoaMatch';
 
 
 require('./mock/mock.js')
 
 
-ReactDOM.render(  
-<Router>
+ReactDOM.render(
+  <Router>
     <Switch>
+      <Route path="/" exact render={() => (
+        <Redirect to={'/login'} />)} />
+      <Route path="/login" component={login} />
       <Route path='/app' component={App} />
       <Route path="/lowalarm" component={lowalarm} />
       <Route path="/alarmsetting" component={alarmsetting} />
@@ -39,7 +43,6 @@ ReactDOM.render(
       <Route path="/journal" component={journal} />
       <Route path="/newadd" component={newadd} />
       <Route path="/highset" component={highset} />
-      <Route path="/login" component={login} />
       <Route path="/newaccount" component={newaccount} />
       <Route path="/school" component={school} />
       <Route path="/addschool" component={addschool} />
@@ -47,7 +50,8 @@ ReactDOM.render(
       <Route path="/home" component={home} />
       <Route path="/homepage" component={homepage} />
       <Route path="/mobile" component={mobile} />
+      <Route component={NoaMatch}/>
     </Switch>
   </Router>,
-    document.getElementById('root'));
+  document.getElementById('root'));
 registerServiceWorker();

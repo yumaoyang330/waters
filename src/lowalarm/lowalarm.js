@@ -197,6 +197,7 @@ class lowalarm extends Component {
         visible={this.state.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
+        mask={false}
       >
       <p>姓名:{this.state.name}</p>
       <p>电话:{this.state.phone}</p>
@@ -274,6 +275,7 @@ class lowalarm extends Component {
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
+      mask={false}
     >
       <p>姓名:{this.state.name}</p>
       <p>电话:{this.state.phone}</p>
@@ -710,7 +712,7 @@ class lowalarm extends Component {
   }
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   render() {
     console.log()

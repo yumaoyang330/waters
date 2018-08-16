@@ -93,7 +93,7 @@ class journal extends Component {
   }
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   addresschange = (key) => {
     var address=document.getElementById('address').value;
