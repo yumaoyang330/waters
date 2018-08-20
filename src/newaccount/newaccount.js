@@ -14,16 +14,16 @@ import typenum from './../types'
 
 
 if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
-  var accounttype = ['学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
+  var accounttype = ['单位管理员','单位滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
   }
 if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
-    var accounttype = ['学校滤芯维护人员'];
+    var accounttype = ['单位滤芯维护人员'];
   }
   if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
-    var accounttype = ['学校管理员','学校滤芯维护人员'];
+    var accounttype = ['单位管理员','单位滤芯维护人员'];
     }  
 if(localStorage.getItem('type')===adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
-  var accounttype = ['学校管理员','学校滤芯维护人员','区级管理员'];
+  var accounttype = ['单位管理员','单位滤芯维护人员','区级管理员'];
   }     
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -41,7 +41,7 @@ class contact extends Component {
     area:'',
     school:'',
     name_value:'',
-    usertype:'学校管理员',
+    usertype:'单位管理员',
     remake:'',
     }
 
@@ -94,7 +94,6 @@ class contact extends Component {
         display2:'none',
         display3:'none',
         display4:'none',
-        display5:'none',
         display6:'none',
         display7:'none',
         display8:'none',
@@ -270,7 +269,7 @@ class contact extends Component {
                 <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                <Menu.Item key="6"><Link to="/school">学校管理</Link></Menu.Item>
+                <Menu.Item key="6"><Link to="/school">单位管理</Link></Menu.Item>
                 <Menu.Item key="7"><Link to="/contact">区域联系人管理</Link></Menu.Item>
                 <Menu.Item key="8"><Link to="/journal">操作日志查询</Link></Menu.Item>
                 <Menu.Item key="9"><Link to="/highset">高级设置</Link></Menu.Item>

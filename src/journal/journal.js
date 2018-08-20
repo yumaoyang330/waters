@@ -13,7 +13,7 @@ import typenum from './../types'
 const myDate = new Date();
 const {RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
-const accounttype = [ "不限",'学校管理员','学校滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
+const accounttype = [ "不限",'单位管理员','单位滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
 const dataSource = [];
 for (let i = 0; i < 15; i++) {
   dataSource.push({
@@ -185,7 +185,6 @@ class journal extends React.Component {
                 display2:'none',
                 display3:'none',
                 display4:'none',
-                display5:'none',
                 display6:'none',
                 display7:'none',
                 display8:'none',
@@ -356,10 +355,10 @@ class journal extends React.Component {
                 res.data.logList[i].resPerson.type="超级管理员"
               }
               if(res.data.logList[i].resPerson.type===1){
-                res.data.logList[i].resPerson.type="学校管理员"
+                res.data.logList[i].resPerson.type="单位管理员"
               }
               if(res.data.logList[i].resPerson.type===2){
-                res.data.logList[i].resPerson.type="学校滤芯维护人员"
+                res.data.logList[i].resPerson.type="单位滤芯维护人员"
               }
               if(res.data.logList[i].resPerson.type===3){
                 res.data.logList[i].resPerson.type="区级管理员"
@@ -429,7 +428,7 @@ class journal extends React.Component {
                 <Menu.Item key="5" style={{display:this.state.display5}}><Link to="/process">流程查询</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">学校管理</Link></Menu.Item>
+                <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">单位管理</Link></Menu.Item>
                 <Menu.Item key="7" style={{display:this.state.display7}}><Link to="/contact">区域联系人管理</Link></Menu.Item>
                 <Menu.Item key="8" style={{display:this.state.display8}}><Link to="/journal">操作日志查询</Link></Menu.Item>
                 <Menu.Item key="9" style={{display:this.state.display9}}><Link to="/highset">高级设置</Link></Menu.Item>

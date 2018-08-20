@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
+import moment from 'moment';
 import { deleterecord, equipmentdelete, equipmentgets, gets } from '../axios';
 import './management.css';
 import adminTypeConst from '../config/adminTypeConst';
 import QRCode from 'qrcode-react';
 import Layouts from '../component/layout';
 
+
+const TabPane = Tabs.TabPane;
+const confirm = Modal.confirm;
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
+const myDate = new Date();
+const components = {
+  body: {
+    row: EditableFormRow,
+    cell: EditableCell,
+  },
+};
 const Option = Select.Option;
+const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const dataSource = [];
 const number = 15;
 for (let i = 0; i < number; i++) {
@@ -25,6 +37,7 @@ for (let i = 0; i < number; i++) {
     jd: '正在处理'
   });
 }
+
 
 
 
@@ -91,9 +104,26 @@ class management extends Component {
       content: this.state.dataSource[index].resPerson.content,
     });
   }
+  state = { lookshow: false }
+  lookModal = (index) => {
+    this.setState({
+      lookshow: true,
+      // phone: this.state.dataSource[index].resPerson.phone,
+      // name: this.state.dataSource[index].resPerson.name,
+      // email: this.state.dataSource[index].resPerson.email,
+    });
+  }
+  state = { reportshow: false }
+  addreport = (index) => {
+    this.setState({
+      reportshow: true,
+      // phone: this.state.dataSource[index].resPerson.phone,
+      // name: this.state.dataSource[index].resPerson.name,
+      // email: this.state.dataSource[index].resPerson.email,
+    });
+  }
   state = { visibles: false }
   showcode = (index) => {
-    localStorage.setItem('erweima', 'http://192.168.31.72:3000/mobile?imei=' + this.state.IMEI)
     this.setState({
       visibles: true,
       deviceId: this.state.dataSource[index].deviceId,
@@ -105,15 +135,65 @@ class management extends Component {
     this.setState({
       visible: false,
       visibles: false,
+      lookshow: false,
+      reportshow: false,
     });
+  }
+  showConfirm = () => {
+    this.props.form.validateFields({ force: true }, (error) => {
+      if (!error) {
+        equipmentgets([
+          this.state.province,
+          this.state.city,
+          this.state.area,
+          this.state.school,
+          '',
+        ]).then(res => {
+          if (res.data && res.data.status === 1) {
+            console.log(res.data)
+            this.setState({
+              dataSource: res.data.deviceList,
+              num: res.data.deviceList.length,
+            });
+          } else if (res.data && res.data.status === 0) {
+            message.error("鉴权失败，需要用户重新登录");
+          } else if (res.data && res.data.status === 2) {
+            message.error("参数提取失败");
+          } else if (res.data && res.data.status === 3) {
+            message.error("服务器故障，请刷新再试");
+          }
+        });
+      } else {
+        message.error("获取接口失败");
+      }
+    });
+    this.setState({
+      reportshow: false,
+    });
+    // confirm({
+    //   title: '请确认您要添加的信息是否正确？',
+    //   content: '一旦添加不得修改',
+    //   onOk() {
+    //     console.log('确认');
+    //     this.setState({
+    //       reportshow: false,
+    //     });
+    //   },
+    //   onCancel() {
+    //     console.log('Cancel');
+    //   },
+    // });
   }
   handleCancel = (e) => {
     console.log(e);
     this.setState({
       visible: false,
       visibles: false,
+      lookshow: false,
+      reportshow: false,
     });
   }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -128,8 +208,20 @@ class management extends Component {
       city: '',
       area: '',
       school: '',
+      time: myDate,
       imsi: '',
+      report: [{
+        title: '检测时间',
+        dataIndex: '',
+      }, {
+        title: '检测结果',
+        dataIndex: '',
+      }, {
+        title: '检测单位',
+        dataIndex: '',
+      }]
     };
+
     this.columns = [{
       title: '设备编号',
       dataIndex: 'deviceId',
@@ -226,6 +318,57 @@ class management extends Component {
       title: '安装时间',
       dataIndex: 'activiteTime',
       width: '10%'
+    }, {
+      title: '检测报告',
+      dataIndex: 'activiteTime',
+      render: (text, record, index) =>
+
+        <div>
+          <a onClick={() => this.lookModal(index)} style={{ marginRight: '10px' }}
+          >查看</a>
+          <Modal
+            title="检测报告"
+            visible={this.state.lookshow}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            mask={false}
+          >
+            <Tabs type="card">
+              <TabPane tab="最新报告" key="1">
+                <p>最新一次检测时间:</p>
+                <p>检测结果:</p>
+                <p>检测单位:</p>
+              </TabPane>
+              <TabPane tab="历史报告" key="2">
+                <Table
+                  components={components}
+                  dataSource={this.state.dataSource}
+                  columns={this.state.report}
+                  rowClassName="editable-row"
+                />
+              </TabPane>
+            </Tabs>
+          </Modal>
+          <a onClick={() => this.addreport(index)}
+          >添加</a>
+          <Modal
+            title="添加检测报告"
+            // maskStyle={{ background: "black", opacity: '0.1' }}
+            style={{ width: '600px' }}
+            visible={this.state.reportshow}
+            onOk={
+              this.showConfirm
+            }
+            onCancel={this.handleCancel}
+            mask={false}
+          >
+            <p style={{ color: 'red' }}>*注：请仔细填写，一旦提交不得修改!!</p>
+            最新一次检测时间:
+            <DatePicker defaultValue={moment(this.state.time, dateFormat)} format={dateFormat} style={{ marginTop: '10px', marginBottom: '10px', width: '100%' }} />
+            检测结果:<Input placeholder="请输入结果" className="jcresult" style={{ marginTop: '10px', marginBottom: '10px' }} />
+            检测单位:<Input placeholder="请输入检测单位" className="jccompany" style={{ marginTop: '10px', marginBottom: '10px' }} />
+          </Modal>
+        </div>
     }, {
       title: '操作',
       dataIndex: 'operation',
@@ -391,7 +534,6 @@ class management extends Component {
                 display2: 'none',
                 display3: 'none',
                 display4: 'none',
-                display5: 'none',
                 display6: 'none',
                 display7: 'none',
                 display8: 'none',
@@ -545,12 +687,6 @@ class management extends Component {
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
-    const components = {
-      body: {
-        row: EditableFormRow,
-        cell: EditableCell,
-      },
-    };
     const columns = this.columns.map((col) => {
       if (!col.editable) {
         return col;
@@ -601,7 +737,7 @@ class management extends Component {
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">学校管理</Link></Menu.Item>
+                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
                   <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
                   <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
                   <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>

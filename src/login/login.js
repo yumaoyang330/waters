@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Checkbox,Modal} from 'antd';
+import { Form, Icon, Input, Button, Checkbox,Modal,message} from 'antd';
 import { login } from "../axios";
 import { createForm } from 'rc-form';
 import { Link } from 'react-router-dom';
@@ -47,6 +47,12 @@ class logins extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      if(values.userName===""){
+        message.error("请输入账号");
+      }
+      else if(values.password===""){
+        message.error("请输入密码");
+      }
       if (!err) {
         login([
           values.userName,
@@ -54,10 +60,6 @@ class logins extends Component {
         ]).then(res => {
           if (res.data && res.data.status === 1) {
             console.log(res.data)
-            // console.log(res.data.cascadedlocation[0])
-            // console.log(res.data.cascadedlocation[0].value)
-            // console.log(res.data.cascadedlocation[0].children[0].value)
-            // console.log(res.data.cascadedlocation[0].children[0].children[0].value)
             if(res.data.cascadedlocation[0].value===undefined){
               res.data.cascadedlocation[0].value=""
             }
@@ -76,16 +78,15 @@ class logins extends Component {
             }else{
               window.location.href = "/lowalarm";
             }
-            
-          }else{
-            if (res.data.status === 0) {
-              alert("不存在此用户");
+          }
+          else{
+            if (res.data &&res.data.status === 0) {
+              message.error("不存在此用户");
             }
-          if (res.data.status === 1) {
-              alert("密码错误");
+            if (res.data &&res.data.status === 2) {
+              message.error("密码错误");
             } 
           }
-
         });
       }
     });

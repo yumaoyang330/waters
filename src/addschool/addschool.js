@@ -66,7 +66,7 @@ class journal extends Component {
   }
 
   componentWillMount = () => {
-    document.title = "添加学校";
+    document.title = "添加单位";
     function showTime() {
       let nowtime = new Date();
       let year = nowtime.getFullYear();
@@ -109,7 +109,6 @@ class journal extends Component {
         display2: 'none',
         display3: 'none',
         display4: 'none',
-        display5: 'none',
         display6: 'none',
         display7: 'none',
         display8: 'none',
@@ -213,7 +212,7 @@ class journal extends Component {
   }
   out = () => {
     localStorage.clear()
-    window.location.href = "/login/login";
+    window.location.href = "/login";
   }
   addschool = () => {
     let schoolname = document.getElementById('schoolname').value;
@@ -267,13 +266,13 @@ class journal extends Component {
                   })
                 }
               })
-              message.success("创建学校成功");
+              message.success("创建单位成功");
               setTimeout(() => {
                 window.location.href = "/school/school";
               }, 1000);    
               
             } else {
-              message.error("创建学校失败");
+              message.error("创建单位失败");
             }
           });
         } else {
@@ -306,10 +305,10 @@ class journal extends Component {
                   })
                 }
               })
-              message.success("创建学校成功");
+              message.success("创建单位成功");
               window.location.href = "/school";
             } else {
-              message.error("创建学校失败");
+              message.error("创建单位失败");
             }
           });
         }
@@ -436,7 +435,7 @@ class journal extends Component {
                   <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6"><Link to="/school">学校管理</Link></Menu.Item>
+                  <Menu.Item key="6"><Link to="/school">单位管理</Link></Menu.Item>
                   <Menu.Item key="7"><Link to="/contact">区域联系人管理</Link></Menu.Item>
                   <Menu.Item key="8"><Link to="/journal">操作日志查询</Link></Menu.Item>
                   <Menu.Item key="9"><Link to="/highset">高级设置</Link></Menu.Item>
@@ -462,10 +461,10 @@ class journal extends Component {
               </div>
             </Header>
             <div className="nav">
-              账号管理 / 添加学校
+              账号管理 / 添加单位
           </div>
             <div className="tit">
-              添加学校
+              添加单位
           </div>
             <Content style={{ margin: '24px 16px', background: '#fff', minHeight: 280, marginTop: '10px' }}>
               <div className="current">
@@ -480,15 +479,18 @@ class journal extends Component {
                       <span style={{ color: '#000000' }}>尊敬的 </span>
                       <span style={{ color: "#1890FF" }}>{typetext[localStorage.getItem('type')]}</span>
                       <span style={{ color: "#000000" }}> 你好，依据平台设定，您具有以下账号管理权限：</span>
-                      <p>平台中涉及到的学校都是根据需要而添加，所以请超级管理员根据后期需求，将新增网点的地址添加进来，以方便其他角色进行其他操作！！
+                      <p>平台中涉及到的单位都是根据需要而添加，所以请超级管理员根据后期需求，将新增网点的地址添加进来，以方便其他角色进行其他操作！！
                         <span style={{ color: 'red', marginLeft: "10px" }}>注:</span>
                         <span style={{ color: "#1890FF" }}>省市区的格式请做好统一的规范！！</span>
                       </p>
                     </div>
                   </div>
                   <div className="clearfix">
-                    <div style={{ width: 560, height: 400, float: 'left' }} id="container">
-                      {/* <input type="text" id="facilityLocation"  placeholder="请输入关键字"  style={{border:'1px solid #333',}}/> */}
+                    <div style={{ width: 560, height: 400, float: 'left',position:'relative' }} id="container">
+                      <input type="text" id="facilityLocation"  placeholder="请输入关键字" 
+                       style={{position:'absolute',zIndex:'99',paddingLeft:'10px',
+                       fontSize:'14px',right:'10px',top:'10px',border:'1px solid #999',borderRadius:'10px',
+                       outline:'none',width:'35%'}}/>
                       <Map
                         version={'1.4.4'}
                         plugins={'AMap.Autocomplete'}
@@ -507,7 +509,7 @@ class journal extends Component {
                       <p style={{ display: this.state.super }}><span>添加省份：</span>  <Input placeholder="添加新的省份" style={{ width: '60%' }} id="creatpro" /></p>
                       <p style={{ display: this.state.super }}><span>添加城市：</span>  <Input placeholder="添加新的城市" style={{ width: '60%' }} id="creatcity" /></p>
                       <p style={{ display: this.state.super }}><span>添加区：</span>  <Input placeholder="添加新的区" style={{ width: '60%' }} id="creatarea" /></p>
-                      <p><span>学校名称：</span> <Input placeholder="请输入学校名称" style={{ width: '60%' }} id="schoolname" /></p>
+                      <p><span>单位名称：</span> <Input placeholder="请输入单位名称" style={{ width: '60%' }} id="schoolname" /></p>
                       <p><span>联系人姓名：</span>  <Input placeholder="请输入联系人姓名" style={{ width: '60%' }} id="contactname" /></p>
                       <p><span>联系人电话：</span> <Input placeholder="请输入联系人电话" style={{ width: '60%' }} id="contacttel" /></p>
                       <p><span>详细地址：</span> <Input placeholder="请输入详细地址" style={{ width: '60%' }} id="address" /></p>

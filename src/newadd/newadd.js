@@ -181,7 +181,6 @@ class newadd extends Component {
                 display2:'none',
                 display3:'none',
                 display4:'none',
-                display5:'none',
                 display6:'none',
                 display7:'none',
                 display8:'none',
@@ -644,7 +643,7 @@ class newadd extends Component {
                   <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6"><Link to="/school">学校管理</Link></Menu.Item>
+                  <Menu.Item key="6"><Link to="/school">单位管理</Link></Menu.Item>
                   <Menu.Item key="7"><Link to="/contact">区域联系人管理</Link></Menu.Item>
                   <Menu.Item key="8"><Link to="/journal">操作日志查询</Link></Menu.Item>
                   <Menu.Item key="9"><Link to="/highset">高级设置</Link></Menu.Item>

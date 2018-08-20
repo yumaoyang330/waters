@@ -31,10 +31,11 @@ export default class Devicedisplay extends Component{
     componentWillMount=() => {
         document.title="设备信息展示";
         let url = window.location.href;
-        url = url.split('=', 8);
-        console.log(url)
+        url = url.split('=', 2);
+        url = url[1].split('&', 2);
+
         getdevicepropsbydeviceid([
-            url[1]
+            url[0]
         ]).then(res => {
             if (res.data && res.data.status === 1) {
             console.log(res.data.mobileInfo)
@@ -74,8 +75,9 @@ export default class Devicedisplay extends Component{
     
     render(){
         return(
-            <div id="mainbody">
-                <div className="main">
+            <div style={{height: document.body.scrollHeight,width:"100%",background:'#47C2FF'}}>
+            <div id="mainbody" >
+                <div className="main" >
                     <div className="banner">
                     </div>
                     <div className="title">
@@ -83,7 +85,7 @@ export default class Devicedisplay extends Component{
                         设备信息
                     </div>
                     <div className="list">
-                        <li>所属学校：  <span  style={{float:"right"}}>{this.state.school}</span></li>
+                        <li>所属单位：  <span  style={{float:"right"}}>{this.state.school}</span></li>
                         <li>品牌型号：  <span  style={{float:"right"}}>{this.state.type}</span></li>
                         <li>品牌编号：  <span  style={{float:"right"}}>{this.state.imei}</span></li>
                         <li>位置信息：  <span  style={{float:"right"}}>{this.state.location}</span></li>
@@ -100,12 +102,12 @@ export default class Devicedisplay extends Component{
                     </div>
                     <div className="title">
                         <img src={require('./tit3.png')} alt="" style={{width:'8%',verticalAlign:"center",marginRight:'.1rem'}}/>
-                        管理员信息
+                        饮用水检测信息
                     </div>
                     <div className="list" style={{borderBottom:'none'}}>
-                        <li>管理员姓名：  <span  style={{float:"right"}}>{this.state.name}</span></li>
-                        <li>联系方式&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>{this.state.phone}</span></li>
-                        <li>所属单位&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>{this.state.organization}</span></li>
+                        <li>最新一次检测时间：  <span  style={{float:"right"}}></span></li>
+                        <li>检测结果&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}></span></li>
+                        <li>检测单位&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>上城区疾控中心</span></li>
                     </div>
                 </div>
                 <div className="footer">
@@ -118,6 +120,7 @@ export default class Devicedisplay extends Component{
                 技术支持:<img src={require('./foot3.png')} alt="" className="footimg"/>钛比科技
                 </div>
                 </div>
+            </div>
             </div>
         )
     }

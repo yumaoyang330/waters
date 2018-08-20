@@ -49,7 +49,7 @@ class journal extends React.Component {
 constructor(props) {
   super(props);
  this.columns = [{
-  title: '学校名称',
+  title: '单位名称',
   dataIndex: 'school',
 }, {
   title: '设备数量',
@@ -157,7 +157,6 @@ constructor(props) {
                   display2:'none',
                   display3:'none',
                   display4:'none',
-                  display5:'none',
                   display6:'none',
                   display7:'none',
                   display8:'none',
@@ -378,7 +377,7 @@ constructor(props) {
                 <Menu.Item key="5" style={{display:this.state.display5}}><Link to="/process">流程查询</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">学校管理</Link></Menu.Item>
+                <Menu.Item key="6" style={{display:this.state.display6}}><Link to="/school">单位管理</Link></Menu.Item>
                 <Menu.Item key="7" style={{display:this.state.display7}}><Link to="/contact">区域联系人管理</Link></Menu.Item>
                 <Menu.Item key="8" style={{display:this.state.display8}}><Link to="/journal">操作日志查询</Link></Menu.Item>
                 <Menu.Item key="9" style={{display:this.state.display9}}><Link to="/highset">高级设置</Link></Menu.Item>
@@ -404,10 +403,10 @@ constructor(props) {
             </div>        
         </Header>
         <div className="nav">
-          系统管理 / 学校管理
+          系统管理 / 单位管理
           </div>
           <div className="tit">
-          学校管理
+          单位管理
           </div>
         <Content style={{ margin: '24px 16px', background: '#fff', minHeight: 280,marginTop:'10px' }}>
         <div className="current">

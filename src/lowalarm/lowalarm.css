@@ -88,6 +88,7 @@
     border-radius: 0;
     background: #F0F2F5;
     color:#333;
+    border:none;
 }
 #lowalarmbody .ant-tabs-tab-active{
     color: #1890ff !important;

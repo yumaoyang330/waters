@@ -1,6 +1,4 @@
-body{
-    background: #47C2FF;
-}
+
 #mainbody{
     background: url(bj2.png) no-repeat; 
     background-size: 100%;
@@ -45,7 +43,7 @@ body{
 #mainbody .footer{
     width: 95%;
     margin:0 auto;
-    font-size: .1rem;
+    font-size: .2rem;
     color:white;
 }
 #mainbody .foot{

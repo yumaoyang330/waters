@@ -46,7 +46,15 @@
     margin-top: 10px;
 }
 .ant-modal{
-    width:300px !important;
+    width:400px !important;
+}
+ .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    text-align: center;
+}
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+    background: #1890ff !important;
+    border-color: #1890ff !important;
+    color: white !important;
 }
 #managementbody .top{
     height: 50px;
@@ -88,7 +96,9 @@
     font-weight: bold;
     padding-left: 20px;
 }
-
+.ant-confirm .ant-confirm-btns{
+    margin-top: 0;
+}
 /*当前/历史*/
 #managementbody .current{
     float: left;
