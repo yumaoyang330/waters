@@ -14,7 +14,7 @@ import Layouts from '../component/layout';
 
 
 
-const statustypes = ['未处理','正在处理','处理完成'];
+const statustypes = ['未处理','处理完成'];
 const myDate = new Date();
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -103,6 +103,14 @@ class lowalarm extends Component {
       phone:this.state.datas[index].resPerson.phone,
       name:this.state.datas[index].resPerson.name,
       email:this.state.datas[index].resPerson.email
+    });
+  }
+  showModals = (index) => {
+    this.setState({
+      visible: true,
+      phone:this.state.data[index].resPerson.phone,
+      name:this.state.data[index].resPerson.name,
+      email:this.state.data[index].resPerson.email
     });
   }
   onChange=(date, dateString) =>{
@@ -267,7 +275,7 @@ class lowalarm extends Component {
     key: 'x', 
     render: (text, record, index) =>
     <div>
-  <a onClick={() => this.showModal(index)}
+  <a onClick={() => this.showModals(index)}
   >详情</a>
     <Modal
       title="联系方式"
@@ -285,9 +293,6 @@ class lowalarm extends Component {
   },{
     title: '报警时间',
     dataIndex: 'gmtCreate',
-  }, {
-    title: '总流量',
-    dataIndex: 'totalFlow',
   }];
   }
 

@@ -80,7 +80,7 @@ class logins extends Component {
             }
           }
           else{
-            if (res.data &&res.data.status === 0) {
+            if (res.data &&res.data.status === 23) {
               message.error("不存在此用户");
             }
             if (res.data &&res.data.status === 2) {

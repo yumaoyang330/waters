@@ -105,8 +105,8 @@ export default class Devicedisplay extends Component{
                         饮用水检测信息
                     </div>
                     <div className="list" style={{borderBottom:'none'}}>
-                        <li>最新一次检测时间：  <span  style={{float:"right"}}></span></li>
-                        <li>检测结果&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}></span></li>
+                        <li>最新一次检测时间：  <span  style={{float:"right"}}>2018-08-11 11:21:24.0</span></li>
+                        <li>检测结果&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>合格</span></li>
                         <li>检测单位&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>上城区疾控中心</span></li>
                     </div>
                 </div>

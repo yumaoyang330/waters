@@ -24,8 +24,8 @@ const components = {
 const Option = Select.Option;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const dataSource = [];
-const number = 15;
-for (let i = 0; i < number; i++) {
+const number = '';
+for (let i = 0; i < 1; i++) {
   dataSource.push({
     key: i,
     flow: i,
@@ -254,35 +254,37 @@ class management extends Component {
         }
       }
 
-    }, {
-      title: '运行状态',
-      dataIndex: 'runningstate',
-      render: (text, record, index) => {
-        if (text === 0) {
-          return (
-            <div>
-              <span style={{
-                display: 'inline-block', width: "10px",
-                height: "10px", borderRadius: '50%', background: "red", marginRight: '8px'
-              }}></span>
-              <span>停止</span>
-            </div>
-          )
-        }
-        if (text === 1) {
-          return (
-            <div>
-              <span style={{
-                display: 'inline-block', width: "10px",
-                height: "10px", borderRadius: '50%', background: "green", marginRight: '8px'
-              }}></span>
-              <span>运行</span>
-            </div>
-          )
-        }
-      }
+    }, 
+    // {
+    //   title: '运行状态',
+    //   dataIndex: 'runningstate',
+    //   render: (text, record, index) => {
+    //     if (text === 0) {
+    //       return (
+    //         <div>
+    //           <span style={{
+    //             display: 'inline-block', width: "10px",
+    //             height: "10px", borderRadius: '50%', background: "red", marginRight: '8px'
+    //           }}></span>
+    //           <span>停止</span>
+    //         </div>
+    //       )
+    //     }
+    //     if (text === 1) {
+    //       return (
+    //         <div>
+    //           <span style={{
+    //             display: 'inline-block', width: "10px",
+    //             height: "10px", borderRadius: '50%', background: "green", marginRight: '8px'
+    //           }}></span>
+    //           <span>运行</span>
+    //         </div>
+    //       )
+    //     }
+    //   }
 
-    }, {
+    // },
+     {
       title: '运营商',
       dataIndex: 'apn',
     }, {

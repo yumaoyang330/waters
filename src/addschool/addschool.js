@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader ,message} from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { schooladd, gets } from '../axios';
 import { Map, Marker } from 'react-amap';
 import './addschool.css';
 import adminTypeConst from '../config/adminTypeConst';
+import Heads from '../component/head'
+import Layouts from '../component/layout'
 
 
 
 import typetext from './../type'
 import typenum from './../types'
 
+
+const AMap = window.AMap;
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 const YOUR_AMAP_KEY = '076cb00b4c9014e47f9b19e1da93daca';
@@ -36,21 +40,21 @@ const mapEvents =
     document.getElementById('latitudetext').innerHTML = position.longitude;
   },
 }
-
 const randomPosition = () => ({
   longitude: 120.29998693261706 * 1,
   latitude: 30.25921745309445 * 1,
 });
 
 
-
 class journal extends Component {
   constructor() {
     super();
     // Good Practice   
-    this.mapCenter = { longitude: 120.201405, latitude: 30.231809 };
-    this.markerPosition = { longitude: 120.201405, latitude: 30.231809 };
-    this.markerPosition1 = { longitude: 120.180313, latitude: 30.24814 };
+    this.mapCenter = { longitude: 120.201316, latitude: 30.236285 };
+    this.markerPosition =  {longitude:120.179335,latitude: 30.219246};
+    this.markerPosition1 = {longitude:120.201316,latitude: 30.236285};
+    this.markerPosition2 = {longitude:120.160833,latitude: 30.302786};
+    this.markerPosition3 = {longitude:120.175573,latitude: 30.25539};
   }
   state = {
     collapsed: false,
@@ -199,6 +203,10 @@ class journal extends Component {
       collapsed: !this.state.collapsed,
     });
   }
+  out = () => {
+    localStorage.clear()
+    window.location.href = "/login";
+  }
   onChange = (date, dateString) => {
     let arr = [];
     for (var i in dateString) {
@@ -209,10 +217,6 @@ class journal extends Component {
       city: arr[1],
       area: arr[2],
     });
-  }
-  out = () => {
-    localStorage.clear()
-    window.location.href = "/login";
   }
   addschool = () => {
     let schoolname = document.getElementById('schoolname').value;
@@ -268,9 +272,9 @@ class journal extends Component {
               })
               message.success("创建单位成功");
               setTimeout(() => {
-                window.location.href = "/school/school";
-              }, 1000);    
-              
+                window.location.href = "/school";
+              }, 1000);
+
             } else {
               message.error("创建单位失败");
             }
@@ -319,83 +323,127 @@ class journal extends Component {
   }
 
   render() {
-  const ZoomCtrl = (props) => {
-    const map = props.__map__;
-    map.plugin('AMap.Autocomplete',function(){//回调函数
-      var autoOptions = {
-        city: '全国',
-        input: "facilityLocation"
+
+
+
+    const plugins = [
+      {
+        name: 'ToolBar',
+        options: {
+          visible: true,  // 不设置该属性默认就是 true
+          onCreated(ins){
+            console.log(ins);
+          },
+        },
       }
-      var autoComplete = new map.Autocomplete(autoOptions);
-      map.event.addListener(autoComplete, "select", function(data){
-        [ {
-           "type": "select",
-           "poi": {
-               "id": "B000A80X4B",
-               "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
-               "district": "北京市西城区",
-               "adcode": "110102",
-               "location": {
-                   "I": 39.873013,
-                   "C": 116.351675,
-                   "lng": 116.351675,
-                   "lat": 39.873013
-               },
-               "address": "广安门南街甲68号",
-               "typecode": "130100"
-           }
-       }]
-       }); //注册监听，当选中某条记录时会触发
+    ]
+
+
+
+
+
+  var windowsArr = [];
+  var marker = [];
+  var map = new AMap.Map("container", {
+          resizeEnable: true,
+          keyboardEnable: false,
+          center: [120.201316,  30.236285],//地图中心点
+          zoom: 20,//地图显示的缩放级别
   });
-}
+  AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
+    var autoOptions = {
+      city: "浙江", //城市，默认全国
+      input: "facilityLocation"//使用联想输入的input的id
+    };
+    var autocomplete= new AMap.Autocomplete(autoOptions);
+    var placeSearch = new AMap.PlaceSearch({
+          city:'浙江',
+          map:map
+    })
+    AMap.event.addListener(autocomplete, "select", function(e){
+       //TODO 针对选中的poi实现自己的功能
+       placeSearch.setCity(e.poi.adcode);
+       placeSearch.search(e.poi.name)
+    });
+  });
 
-
+  
+    // const ZoomCtrl = (props) => {
+    //   const AMap = props.__map__;
+    //   AMap.plugin('AMap.Autocomplete', 
+    //   function () {//回调函数
+    //     var autoOptions = {
+    //       city: '全国',
+    //       input: "facilityLocation"
+    //     }
+    //     var autoComplete = new AMap.Autocomplete(autoOptions);
+    //     AMap.event.addListener(autoComplete, "select", function (data) {
+    //       [{
+    //         "type": "select",
+    //         "poi": {
+    //           "id": "B000A80X4B",
+    //           "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
+    //           "district": "北京市西城区",
+    //           "adcode": "110102",
+    //           "location": {
+    //             "I": 39.873013,
+    //             "C": 116.351675,
+    //             "lng": 116.351675,
+    //             "lat": 39.873013
+    //           },
+    //           "address": "广安门南街甲68号",
+    //           "typecode": "130100"
+    //         }
+    //       }]
+    //     }); //注册监听，当选中某条记录时会触发
+    //   });
+    // }
     // const ZoomCtrl = (props) => {
     //   const map = props.__map__;
     //   if (!map) {
     //     console.log('组件必须作为 Map 的子组件使用');
     //     return;
     //   }
-      // var autoOptions = {
-      //   city: '全国',
-      //   input: "facilityLocation"
-      // }
-      // var autoComplete = new map.Autocomplete(autoOptions);
-      // map.event.addListener(autoComplete, "select", function(data){
-      //  [ {
-      //     "type": "select",
-      //     "poi": {
-      //         "id": "B000A80X4B",
-      //         "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
-      //         "district": "北京市西城区",
-      //         "adcode": "110102",
-      //         "location": {
-      //             "I": 39.873013,
-      //             "C": 116.351675,
-      //             "lng": 116.351675,
-      //             "lat": 39.873013
-      //         },
-      //         "address": "广安门南街甲68号",
-      //         "typecode": "130100"
-      //     }
-      // }]
-      // }); //注册监听，当选中某条记录时会触发
-      // function select(e) {
-      //   if (e.poi && e.poi.location) {
-      //     map.setZoom(20);
-      //     map.setCenter(e.poi.location);
-      //     var marker = new map.Marker({
-      //       position: map.getCenter(),
-      //       draggable: true,
-      //       cursor: 'move',
-      //       raiseOnDrag: true
-      //     });
-      //     marker.setMap(map);
-      //   }
-      // }
+    // var autoOptions = {
+    //   city: '全国',
+    //   input: "facilityLocation"
+    // }
+    // var autoComplete = new map.Autocomplete(autoOptions);
+    // map.event.addListener(autoComplete, "select", function(data){
+    //  [ {
+    //     "type": "select",
+    //     "poi": {
+    //         "id": "B000A80X4B",
+    //         "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
+    //         "district": "北京市西城区",
+    //         "adcode": "110102",
+    //         "location": {
+    //             "I": 39.873013,
+    //             "C": 116.351675,
+    //             "lng": 116.351675,
+    //             "lat": 39.873013
+    //         },
+    //         "address": "广安门南街甲68号",
+    //         "typecode": "130100"
+    //     }
+    // }]
+    // }); //注册监听，当选中某条记录时会触发
+    // function select(e) {
+    //   if (e.poi && e.poi.location) {
+    //     map.setZoom(20);
+    //     map.setCenter(e.poi.location);
+    //     var marker = new map.Marker({
+    //       position: map.getCenter(),
+    //       draggable: true,
+    //       cursor: 'move',
+    //       raiseOnDrag: true
+    //     });
+    //     marker.setMap(map);
+    //   }
+    // }
 
 
-      //为地图注册click事件获取鼠标点击出的经纬度坐标
+    //为地图注册click事件获取鼠标点击出的经纬度坐标
 
 
 
@@ -422,7 +470,7 @@ class journal extends Component {
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
               >
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+                <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a></div>
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1"><Link to="/Lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2"><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -453,16 +501,16 @@ class journal extends Component {
                   />
                 </Button>
               </div>
-              <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
+              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
+              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
               <div className="Administrator">
                 <span></span>{localStorage.getItem('realname')}
               </div>
             </Header>
             <div className="nav">
               账号管理 / 添加单位
-          </div>
+            </div>
             <div className="tit">
               添加单位
           </div>
@@ -486,23 +534,27 @@ class journal extends Component {
                     </div>
                   </div>
                   <div className="clearfix">
-                    <div style={{ width: 560, height: 400, float: 'left',position:'relative' }} id="container">
-                      <input type="text" id="facilityLocation"  placeholder="请输入关键字" 
-                       style={{position:'absolute',zIndex:'99',paddingLeft:'10px',
-                       fontSize:'14px',right:'10px',top:'10px',border:'1px solid #999',borderRadius:'10px',
-                       outline:'none',width:'35%'}}/>
+                    <div style={{ width: 560, height: 400, float: 'left', position: 'relative' }} id="container">
+                      <input type="text" id="facilityLocation" placeholder="请输入关键字"   name="facilityLocation"  onfocus='this.value=""'
+                        style={{
+                          position: 'absolute', zIndex: '99', paddingLeft: '10px',
+                          paddingRight:'10px',
+                          fontSize: '14px', right: '10px', top: '10px', border: '1px solid #999', borderRadius: '10px',
+                          outline: 'none', width: '35%'
+                        }} />
                       <Map
-                        version={'1.4.4'}
-                        plugins={'AMap.Autocomplete'}
+                        plugins={plugins}
                         amapkey={YOUR_AMAP_KEY}
                         events={mapEvents}
                         center={this.mapCenter}
                         zoom={20}
                       >
-                        <ZoomCtrl />
+                        {/* <ZoomCtrl /> */}
 
-                        {/* <Marker position={this.markerPosition} />
-                    <Marker position={this.markerPosition1} /> */}
+                        <Marker position={this.markerPosition} />
+                        <Marker position={this.markerPosition1} />
+                        <Marker position={this.markerPosition2} />
+                        <Marker position={this.markerPosition3} />
                       </Map>
                     </div>
                     <div className="explain">

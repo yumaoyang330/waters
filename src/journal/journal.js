@@ -15,7 +15,7 @@ const {RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const accounttype = [ "不限",'单位管理员','单位滤芯维护人员','区级管理员','教育局检察员','超级管理员'];
 const dataSource = [];
-for (let i = 0; i < 15; i++) {
+for (let i = 0; i < 1; i++) {
   dataSource.push({
     key: i,
     flow: i,
@@ -59,12 +59,15 @@ class journal extends React.Component {
     this.columns = [{
       title: '用户类别',
       dataIndex: 'resPerson.type',
+      width:'10%'
     }, {
       title: '用户名',
       dataIndex: 'username',
+      width:'8%'
     }, {
       title: '用户详情',
       dataIndex: '',
+      width:'5%',
       render: (text, record, index) =>
       <div>
      <a onClick={() => this.showModal(index)}
@@ -89,6 +92,7 @@ class journal extends React.Component {
     }, {
       title: '日志时间',
       dataIndex: 'gmtCreate',
+      width:'10%'
     }]
     
     // {
@@ -106,7 +110,7 @@ class journal extends React.Component {
     //   },
     // };
     this.state = {
-      num: 15,
+      num: '',
       collapsed: false,
       size: 'small',
       time:myDate,

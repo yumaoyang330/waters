@@ -1,13 +1,11 @@
-import React from 'react';
-import { Icon, Tabs, Menu } from 'antd';
+import React,{Component} from 'react';
+import { Icon, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
 
 const SubMenu = Menu.SubMenu;
-const TabPane = Tabs.TabPane;
 
-
-class Layouts extends React.Component {
+class Layouts extends Component {
     state = {
         display1: '',
         display2: '',

@@ -18,7 +18,7 @@ const Option = Select.Option;
 const {RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
 const dataSource = [];
-for (let i = 0; i < 15; i++) {
+for (let i = 0; i < 1; i++) {
     dataSource.push({
       key: i,
       flow:i,
@@ -88,6 +88,7 @@ class processbody extends Component {
       visible={this.state.visible}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
+      mask={false}
     >
       <p>姓名:{this.state.name}</p>
       <p>电话:{this.state.phone}</p>
@@ -106,7 +107,7 @@ class processbody extends Component {
     dataIndex: 'handleTime', 
       }];
       this.state = {
-        num:15,
+        num:'',
         collapsed: false,
         size: 'small',
         selectedRowKeys: [],
@@ -144,7 +145,7 @@ class processbody extends Component {
               province:res.data.cascadedlocation[0].value,
               city:res.data.cascadedlocation[0].children[0].value,
               area:res.data.cascadedlocation[0].children[0].children[0].value,
-              // school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
+              school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });    
 
             this.props.form.validateFields({ force: true }, (error) => {

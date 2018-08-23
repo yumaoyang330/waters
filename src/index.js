@@ -31,7 +31,8 @@ ReactDOM.render(
   <Router>
     <Switch>
       <Route path="/" exact render={() => (
-        <Redirect to={'/login'} />)} />
+        <Redirect to={'/login'} />
+        )} />
       <Route path="/login" component={login} />
       <Route path='/app' component={App} />
       <Route path="/lowalarm" component={lowalarm} />
