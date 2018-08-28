@@ -52,6 +52,9 @@ export default class Devicedisplay extends Component{
                 instantFlow:res.data.mobileInfo.instantFlow,
                 lastTime:res.data.mobileInfo.lastTime,
                 alertStatus:res.data.mobileInfo.alertStatus,
+                gmtcreate: res.data.mobileInfo.reportPO.gmtcreate,
+                testresult: res.data.mobileInfo.reportPO.testresult,
+                testorg: res.data.mobileInfo.reportPO.testorg,
               },function(){
                   if(this.state.alertStatus===2){
                      this.setState({
@@ -105,9 +108,9 @@ export default class Devicedisplay extends Component{
                         饮用水检测信息
                     </div>
                     <div className="list" style={{borderBottom:'none'}}>
-                        <li>最新一次检测时间：  <span  style={{float:"right"}}>2018-08-11 11:21:24.0</span></li>
-                        <li>检测结果&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>合格</span></li>
-                        <li>检测单位&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>上城区疾控中心</span></li>
+                        <li>最新一次检测时间：  <span  style={{float:"right"}}>{this.state.gmtcreate}</span></li>
+                        <li>检测结果&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>{this.state.testresult}</span></li>
+                        <li>检测单位&nbsp;&nbsp;&nbsp;：<span  style={{float:"right"}}>{this.state.testorg}</span></li>
                     </div>
                 </div>
                 <div className="footer">

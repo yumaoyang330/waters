@@ -23,6 +23,11 @@
     background: red;
     display: inline-block;
 }
+#newaddbody .gutter-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #newaddbody .top{
     height: 50px;
     background: #00284D;

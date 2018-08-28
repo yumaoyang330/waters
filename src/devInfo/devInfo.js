@@ -56,6 +56,9 @@ class devInfo extends Component {
       dataIndex: 'deviceId',
       editable: true,
     }, {
+      title: '所属单位',
+      dataIndex: 'siteName',
+    }, {
       title: '设备位置',
       dataIndex: 'location',
       editable: true,
@@ -87,10 +90,6 @@ class devInfo extends Component {
           )
         }
       }
-    }, {
-      title: '所属地址',
-      dataIndex: 'siteName',
-      editable: true,
     }, {
       title: '管理员',
       dataIndex: 'resPerson.name',
@@ -242,6 +241,18 @@ class devInfo extends Component {
               area: res.data.cascadedlocation[0].children[0].children[0].value,
               school: res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
+              this.setState({
+                city: '',
+                area: '',
+                school: '',
+              });
+            }
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
+              this.setState({
+                school: '',
+              });
+            }
             if (!error) {
               equipmentget([
                 this.state.province,
@@ -285,6 +296,7 @@ class devInfo extends Component {
                 display2: 'none',
                 display6: 'none',
                 display9: 'none',
+                display10: 'none',
                 disabled: true,
               });
             }
@@ -297,6 +309,7 @@ class devInfo extends Component {
                 display7: 'none',
                 display8: 'none',
                 display9: 'none',
+                display10: 'none',
                 disabled: true,
               });
             }
@@ -307,21 +320,6 @@ class devInfo extends Component {
                 display3: 'none',
                 display4: 'none',
                 display9: 'none',
-                shpower: true,
-                spower: true,
-                qpower: true,
-              });
-            }
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_EDU_MANAGER) {
-              this.setState({
-                disabled: false,
-                display1: 'none',
-                display2: 'none',
-                display6: 'none',
-                display9: 'none',
-                shpower: true,
-                spower: true,
-                qpower: true,
               });
             }
             if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
@@ -353,7 +351,7 @@ class devInfo extends Component {
 
 
   render() {
-     
+
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
 
     const { selectedRowKeys } = this.state;
@@ -365,6 +363,9 @@ class devInfo extends Component {
     const components = {
 
     };
+    const judgeRenderDataV = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER || localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER
+    }
     const columns = this.columns.map((col) => {
       if (!col.editable) {
         return col;
@@ -397,7 +398,15 @@ class devInfo extends Component {
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
               >
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+                {
+                  judgeRenderDataV() ? (
+                    <div className="homepage" style={{ display: this.state.display10 }}>
+                      <a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7"
+                        style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a>
+                    </div>
+                  ) : null
+                }
+
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
@@ -428,9 +437,9 @@ class devInfo extends Component {
                   />
                 </Button>
               </div>
-              <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
+              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
+              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
               <div className="Administrator">
                 <span></span>{localStorage.getItem('realname')}
               </div>

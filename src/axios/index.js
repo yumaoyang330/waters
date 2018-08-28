@@ -3,8 +3,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom'
 import * as config from './config';
 
-// const url='http://112.124.6.31:9090';
-const url='http://192.168.31.158:9090';
+const url='http://112.124.6.31:9090';
+// const url='http://192.168.31.158:9090';
 
 //1.1登录界面
 export const login = (params) => myapi(url + '/login', {
@@ -127,6 +127,32 @@ export const getrespersoninfo = (params) => myapi(url + '/devicemanage/devicelis
 export const getdevicepropsbydeviceid = (params) => myapi(url + '/mobile/getdevicepropsbydeviceid', {
 	deviceId: params[0],
 });
+
+
+//3.4 检测报告
+//3.4.1 检测报告查看
+export const getlatestreportbydeviceid = (params) => myapi(url + '/report/getlatestreportbydeviceid', {
+	token: localStorage.getItem('token'),
+	deviceId: params[0],
+});
+
+//3.4.2 历史报告查看
+export const gethistoricalreportbydeviceid = (params) => myapi(url + '/report/gethistoricalreportbydeviceid', {
+	token: localStorage.getItem('token'),
+	deviceId: params[0],
+});
+
+
+//3.4.3 检测报告新增
+export const addreportbydeviceid = (params) => myapi(url + '/report/addreportbydeviceid', {
+	token: localStorage.getItem('token'),
+	deviceId: params[0],
+	gmtcreate: params[1],
+	testresult: params[2],
+	testorg: params[3],
+});
+
+
 
 //4.查询管理
 //4.1.0 获取该用户管辖内级联数据

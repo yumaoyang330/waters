@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader,message } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { equipmentadd, getrespersoninfo, gets } from '../axios';
@@ -45,8 +45,8 @@ class newadd extends Component {
       dataIndex: 'deviceId',
       render: (text, record) => {
         return (
-          <div className="gutter-box"  style={{fontSize:'16px'}}>
-            设备编号:<Input type="text" className="deviceId" placeholder="123456789012345" style={{ width: '60%', marginLeft: '10px'}}/>
+          <div className="gutter-box" style={{ fontSize: '16px' }}>
+            设备编号:<Input type="text" className="deviceId" placeholder="123456789012345" style={{ width: '60%', marginLeft: '10px' }} />
           </div>
         );
       },
@@ -55,8 +55,8 @@ class newadd extends Component {
       width: '30%',
       render: (text, record) => {
         return (
-          <div className="gutter-box"  style={{fontSize:'16px'}}>
-            安装地址:<Input placeholder="25L" style={{ width: '60%', marginLeft: '10px'}} className="locations" />
+          <div className="gutter-box" style={{ fontSize: '16px' }}>
+            安装地址:<Input placeholder="安装地址" style={{ width: '60%', marginLeft: '10px' }} className="locations" />
           </div>
         );
       },
@@ -65,8 +65,8 @@ class newadd extends Component {
       width: '20%',
       render: (text, record) => {
         return (
-          <div className="gutter-box"  style={{fontSize:'16px'}}>
-            初始流量:<Input placeholder="20L" style={{ width: '40%', marginLeft: '10px' }} className="initFlow" />
+          <div className="gutter-box" style={{ fontSize: '16px' }}>
+            初始流量:<Input placeholder="0" style={{ width: '40%', marginLeft: '10px' }} className="initFlow"  />
           </div>
         );
       },
@@ -119,7 +119,7 @@ class newadd extends Component {
               province: res.data.cascadedlocation[0].value,
               city: res.data.cascadedlocation[0].children[0].value,
               area: res.data.cascadedlocation[0].children[0].children[0].value,
-              school:res.data.cascadedlocation[0].children[0].children[0].children[0].value,
+              school: res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
             //获取维修和报警人员信息接口      
             getrespersoninfo([
@@ -168,54 +168,56 @@ class newadd extends Component {
               }
             });
 
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER) {
               this.setState({
-                display2:'none',
-                display6:'none',
-                display9:'none',
-                disabled:true,
-              });    
+                display2: 'none',
+                display6: 'none',
+                display9: 'none',
+                display10: 'none',
+                disabled: true,
+              });
             }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SCHOOL_MANTAINER) {
               this.setState({
-                display2:'none',
-                display3:'none',
-                display4:'none',
-                display6:'none',
-                display7:'none',
-                display8:'none',
-                display9:'none',
-                disabled:true,
-              });    
+                display2: 'none',
+                display3: 'none',
+                display4: 'none',
+                display6: 'none',
+                display7: 'none',
+                display8: 'none',
+                display9: 'none',
+                display10: 'none',
+                disabled: true,
+              });
             }
 
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
               this.setState({
-                disabled:false,
-                display3:'none',
-                display4:'none',
-                display9:'none',
-                shpower:true,
-                spower:true,
-                qpower:true,
-              });    
+                disabled: false,
+                display3: 'none',
+                display4: 'none',
+                display9: 'none',
+                shpower: true,
+                spower: true,
+                qpower: true,
+              });
             }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_EDU_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_EDU_MANAGER) {
               this.setState({
-                disabled:false,
-                display1:'none',
-                display2:'none',
-                display6:'none',
-                display9:'none',
-                shpower:true,
-                spower:true,
-                qpower:true,
-              });    
+                disabled: false,
+                display1: 'none',
+                display2: 'none',
+                display6: 'none',
+                display9: 'none',
+                shpower: true,
+                spower: true,
+                qpower: true,
+              });
             }
-            if(localStorage.getItem('type')=== adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
-                disabled:false,
-              });    
+                disabled: false,
+              });
             }
           } else {
             message.error("获取信息失败");
@@ -248,19 +250,19 @@ class newadd extends Component {
       collapsed: !this.state.collapsed,
     });
   }
-    changeVal=(e)=>{
-      var val = e.target.value;
-      if(isNaN(val)){
-          val = _val;
-          this.setState({"info":"只能输入数字!"});
-          setTimeout(function(){
-              this.setState({"info":""});
-          }.bind(this),1000);
-      }else{
-          _val = val; 
-      }
-      this.setState({"val":val});
+  changeVal = (e) => {
+    var val = e.target.value;
+    if (isNaN(val)) {
+      val = _val;
+      this.setState({ "info": "只能输入数字!" });
+      setTimeout(function () {
+        this.setState({ "info": "" });
+      }.bind(this), 1000);
+    } else {
+      _val = val;
     }
+    this.setState({ "val": val });
+  }
   onDelete = (key) => {
     const dataSource = [...this.state.dataSource];
     this.setState({
@@ -533,18 +535,18 @@ class newadd extends Component {
     window.location.href = "/newadd";
   }
   equipmentsubmit = () => {
-   console.log(parseInt(document.getElementsByClassName('deviceId')[0].value))
+    console.log(parseInt(document.getElementsByClassName('deviceId')[0].value))
     let type = document.getElementById('equipmenttype').value;
     let content = document.getElementById('content').value;
     let preAlertThreshold = document.getElementById('preAlertThreshold').value;
     let alertThreshold = document.getElementById('alertThreshold').value;
-    let batteryThreshold = document.getElementById('batteryThreshold').value;
+    let batteryThreshold = 10;
     let filterprovider = document.getElementById('filterprovider').value;
     let reg = /[^\d]/g;
     for (var i = 0; i < this.state.dataSource.length; i++) {
       this.state.dataSource[i].deviceId = document.getElementsByClassName('deviceId')[i].value;
       this.state.dataSource[i].location = document.getElementsByClassName('locations')[i].value;
-      this.state.dataSource[i].initFlow =document.getElementsByClassName('initFlow')[i].value;
+      this.state.dataSource[i].initFlow = document.getElementsByClassName('initFlow')[i].value;
       this.state.dataSource[i].province = this.state.province;
       this.state.dataSource[i].city = this.state.city;
       this.state.dataSource[i].county = this.state.area;
@@ -555,36 +557,34 @@ class newadd extends Component {
       this.state.dataSource[i].preAlertThreshold = preAlertThreshold;
       this.state.dataSource[i].alertThreshold = alertThreshold;
       this.state.dataSource[i].batteryThreshold = batteryThreshold;
-      if(parseInt(preAlertThreshold)===parseFloat(preAlertThreshold)){
-        this.state.dataSource[i].preAlertThreshold=preAlertThreshold+".0"
+      if (parseInt(preAlertThreshold) === parseFloat(preAlertThreshold)) {
+        this.state.dataSource[i].preAlertThreshold = preAlertThreshold + ".0"
       }
-      if(parseInt(alertThreshold)===parseFloat(alertThreshold)){
-        this.state.dataSource[i].alertThreshold=alertThreshold+".0"
+      if (parseInt(alertThreshold) === parseFloat(alertThreshold)) {
+        this.state.dataSource[i].alertThreshold = alertThreshold + ".0"
       }
-      if(parseInt(batteryThreshold)===parseFloat(batteryThreshold)){
-        this.state.dataSource[i].batteryThreshold=batteryThreshold+".0"
+      if (parseInt(batteryThreshold) === parseFloat(batteryThreshold)) {
+        this.state.dataSource[i].batteryThreshold = batteryThreshold + ".0"
       }
-      if(parseInt(document.getElementsByClassName('initFlow')[i].value)===parseFloat(document.getElementsByClassName('initFlow')[i].value)){
-        this.state.dataSource[i].initFlow=document.getElementsByClassName('initFlow')[i].value+".0"
+      if (parseInt(document.getElementsByClassName('initFlow')[i].value) === parseFloat(document.getElementsByClassName('initFlow')[i].value)) {
+        this.state.dataSource[i].initFlow = document.getElementsByClassName('initFlow')[i].value + ".0"
       }
-      if(type===""){
+      if (type === "") {
         message.error('请输入设备型号')
-      }else if(filterprovider===""){
+      } else if (filterprovider === "") {
         message.error('请输入滤芯供应商')
       }
-      else if(preAlertThreshold===""){
+      else if (preAlertThreshold === "") {
         message.error('请输入流量预报警值')
-      }else if(alertThreshold===""){
+      } else if (alertThreshold === "") {
         message.error('请输入流量报警值')
-      }else if(batteryThreshold===""){
-        message.error('请输入电池电量报警值')
-      }else if(this.state.dataSource[i].location===""){
+      } else if (this.state.dataSource[i].location === "") {
         message.error('请输入具体的安装地址')
-      }else if(this.state.dataSource[i].initFlow ===""){
+      } else if (this.state.dataSource[i].initFlow === "") {
         message.error('请输入初始流量')
-      }else if(!reg.test(parseInt(document.getElementsByClassName('deviceId')[i].value))&& document.getElementsByClassName('deviceId')[i].value.length!=8){
+      } else if (!reg.test(parseInt(document.getElementsByClassName('deviceId')[i].value)) && document.getElementsByClassName('deviceId')[i].value.length != 8) {
         message.error("请输入8位的纯数字编号")
-      }else{
+      } else {
         this.props.form.validateFields({ force: true }, (error) => {
           if (!error) {
             equipmentadd(
@@ -613,6 +613,9 @@ class newadd extends Component {
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
     const { dataSource } = this.state;
     const columns = this.columns;
+    const judgeRenderDataV = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER || localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER
+    }
     return (
       <div id="newaddbody" >
         <Layout>
@@ -630,23 +633,31 @@ class newadd extends Component {
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
               >
-           <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{background: '#1890ff', color: 'white',display:"block",width:"100%",borderRadius:'5px'}}>总体信息预览</a></div>
+                {
+                  judgeRenderDataV() ? (
+                    <div className="homepage" style={{ display: this.state.display10 }}>
+                      <a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7"
+                        style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a>
+                    </div>
+                  ) : null
+                }
+
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
-                  <Menu.Item key="1"><Link to="/Lowalarm">流量报警</Link></Menu.Item>
-                  <Menu.Item key="2"><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
+                  <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
+                  <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
-                  <Menu.Item key="3"><Link to="/devInfo">设备在线查询</Link></Menu.Item>
-                  <Menu.Item key="4"><Link to="/management">设备管理</Link></Menu.Item>
+                  <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+                  <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
-                  <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
+                  <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6"><Link to="/school">单位管理</Link></Menu.Item>
-                  <Menu.Item key="7"><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                  <Menu.Item key="8"><Link to="/journal">操作日志查询</Link></Menu.Item>
-                  <Menu.Item key="9"><Link to="/highset">高级设置</Link></Menu.Item>
+                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                  <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                  <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                  <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
                 </SubMenu>
               </Menu>
             </div>
@@ -661,9 +672,9 @@ class newadd extends Component {
                   />
                 </Button>
               </div>
-              <span  id="mytime" style={{height:"100%",lineHeight:"64px",display:"inline-block",float:"left",borderRadius:'5px',color:'#333',marginLeft:'20px'}}></span>
-            <span style={{display:"inline-block",marginLeft:'20%', height:"100%",borderRadius:'5px',fontSize:'25px',fontWeight:'bold'}}>中小学直饮水机卫生监管平台</span>
-            <span style={{float:'right',height:'50px',lineHeight:"50px",marginRight:"2%",color:'red',cursor:'pointer'}} onClick={this.out}>退出</span>   
+              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
+              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
+              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
               <div className="Administrator">
                 <span></span>{localStorage.getItem('realname')}
               </div>
@@ -696,26 +707,26 @@ class newadd extends Component {
                     </div>
                     <div className='bjz'>
                       <Row gutter={16}>
-                        <Col className="gutter-row" span={8}>
-                          <div className="gutter-box">
-                            流量预报警值:<Input placeholder="20L" style={{ width: '50%', marginLeft: '10px' }} id="preAlertThreshold" />
+                        <Col className="gutter-row" span={12}>
+                          <div className="gutter-box"  >
+                            流量预报警值:<Input placeholder="20" style={{ width: '50%', marginLeft: '10px' }} id="preAlertThreshold"  addonAfter="t"/>
                           </div>
                         </Col>
-                        <Col className="gutter-row" span={8}>
+                        <Col className="gutter-row" span={12}>
                           <div className="gutter-box">
-                            流量报警值:<Input placeholder="25L" style={{ width: '40%', marginLeft: '10px' }} id="alertThreshold" />
+                            流量报警值:<Input placeholder="25L" style={{ width: '50%', marginLeft: '10px' }} id="alertThreshold"  addonAfter="t"/>
                           </div>
                         </Col>
-                        <Col className="gutter-row" span={8}>
+                        {/* <Col className="gutter-row" span={8}>
                           <div className="gutter-box">
                             电池电量报警值:<Input placeholder="3Ah" style={{ width: '40%', marginLeft: '10px' }} id="batteryThreshold" />
                           </div>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </div>
                     <div className='number'>
                       <Table dataSource={dataSource} columns={columns} pagination={false} />
-                      <span onClick={this.handleAdd} className="numadd" style={{ color: '#1890FF'}}>新增</span>
+                      <span onClick={this.handleAdd} className="numadd" style={{ color: '#1890FF' }}>新增</span>
                     </div>
                     <div className="inform" >
                       <p>报警通知:<span style={{ display: 'inline-block', width: '60px', textAlign: 'center' }}>{this.state.alertname}</span>

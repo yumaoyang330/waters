@@ -3,7 +3,6 @@ import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, message } f
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { schooladd, gets } from '../axios';
-import { Map, Marker } from 'react-amap';
 import './addschool.css';
 import adminTypeConst from '../config/adminTypeConst';
 import Heads from '../component/head'
@@ -18,7 +17,7 @@ import typenum from './../types'
 const AMap = window.AMap;
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
-const YOUR_AMAP_KEY = '076cb00b4c9014e47f9b19e1da93daca';
+
 
 function onChange(date, dateString) {
   console.log(date, dateString);
@@ -28,33 +27,12 @@ function onChange(date, dateString) {
 const position = { longitude: 120.29998693261706, latitude: 30.25921745309445 }
 
 
-const mapEvents =
-{
-  created: (mapInstance) => {
-    console.log(mapInstance);
-  },
-  click: (longitude) => {
-    position.longitude = longitude.lnglat.Q;
-    position.latitude = longitude.lnglat.N;
-    document.getElementById('longitudetext').innerHTML = position.latitude;
-    document.getElementById('latitudetext').innerHTML = position.longitude;
-  },
-}
-const randomPosition = () => ({
-  longitude: 120.29998693261706 * 1,
-  latitude: 30.25921745309445 * 1,
-});
+
 
 
 class journal extends Component {
   constructor() {
     super();
-    // Good Practice   
-    this.mapCenter = { longitude: 120.201316, latitude: 30.236285 };
-    this.markerPosition =  {longitude:120.179335,latitude: 30.219246};
-    this.markerPosition1 = {longitude:120.201316,latitude: 30.236285};
-    this.markerPosition2 = {longitude:120.160833,latitude: 30.302786};
-    this.markerPosition3 = {longitude:120.175573,latitude: 30.25539};
   }
   state = {
     collapsed: false,
@@ -62,7 +40,7 @@ class journal extends Component {
     selectedRowKeys: [],
     longitude: position.longitude,
     latitude: position.latitude,
-    mapCenter: randomPosition(),
+
     province: '浙江',
     city: '杭州',
     area: '',
@@ -100,6 +78,7 @@ class journal extends Component {
         })
       }
     })
+
     if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER) {
       this.setState({
         display2: 'none',
@@ -220,25 +199,15 @@ class journal extends Component {
   }
   addschool = () => {
     let schoolname = document.getElementById('schoolname').value;
-    let contactname = document.getElementById('contactname').value;
-    let contacttel = document.getElementById('contacttel').value;
+    let contactname = '';
+    let contacttel = '';
     let address = document.getElementById('address').value;
     let creatpro = document.getElementById('creatpro').value;
     let creatcity = document.getElementById('creatcity').value;
     let creatarea = document.getElementById('creatarea').value;
     let longitudetext = document.getElementById('longitudetext').innerHTML;
     let latitudetext = document.getElementById('latitudetext').innerHTML;
-    var telrule = /^[1][3,4,5,7,8][0-9]{9}$/;
-    var namerule = /^[\u4E00-\u9FA5A-Za-z]+$/;
     this.props.form.validateFields({ force: true }, (error) => {
-      if (!namerule.test(contactname)) {
-        message.error('请输入您的真实姓名');
-        return;
-      }
-      if (!telrule.test(contacttel)) {
-        message.error('您输入的手机号码不合法');
-        return;
-      }
       if (!error) {
         if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
           schooladd([
@@ -331,7 +300,7 @@ class journal extends Component {
         name: 'ToolBar',
         options: {
           visible: true,  // 不设置该属性默认就是 true
-          onCreated(ins){
+          onCreated(ins) {
             console.log(ins);
           },
         },
@@ -342,116 +311,40 @@ class journal extends Component {
 
 
 
-  var windowsArr = [];
-  var marker = [];
-  var map = new AMap.Map("container", {
-          resizeEnable: true,
-          keyboardEnable: false,
-          center: [120.201316,  30.236285],//地图中心点
-          zoom: 20,//地图显示的缩放级别
-  });
-  AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
-    var autoOptions = {
-      city: "浙江", //城市，默认全国
-      input: "facilityLocation"//使用联想输入的input的id
-    };
-    var autocomplete= new AMap.Autocomplete(autoOptions);
-    var placeSearch = new AMap.PlaceSearch({
-          city:'浙江',
-          map:map
-    })
-    AMap.event.addListener(autocomplete, "select", function(e){
-       //TODO 针对选中的poi实现自己的功能
-       placeSearch.setCity(e.poi.adcode);
-       placeSearch.search(e.poi.name)
+    var windowsArr = [];
+    var marker = [];
+    var map = new AMap.Map("mapContainer", {
+      resizeEnable: true,
+      keyboardEnable: false,
+      center: [120.201316, 30.236285],//地图中心点
+      zoom: 20,//地图显示的缩放级别
     });
-  });
-
-  
-    // const ZoomCtrl = (props) => {
-    //   const AMap = props.__map__;
-    //   AMap.plugin('AMap.Autocomplete', 
-    //   function () {//回调函数
-    //     var autoOptions = {
-    //       city: '全国',
-    //       input: "facilityLocation"
-    //     }
-    //     var autoComplete = new AMap.Autocomplete(autoOptions);
-    //     AMap.event.addListener(autoComplete, "select", function (data) {
-    //       [{
-    //         "type": "select",
-    //         "poi": {
-    //           "id": "B000A80X4B",
-    //           "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
-    //           "district": "北京市西城区",
-    //           "adcode": "110102",
-    //           "location": {
-    //             "I": 39.873013,
-    //             "C": 116.351675,
-    //             "lng": 116.351675,
-    //             "lat": 39.873013
-    //           },
-    //           "address": "广安门南街甲68号",
-    //           "typecode": "130100"
-    //         }
-    //       }]
-    //     }); //注册监听，当选中某条记录时会触发
-    //   });
-    // }
-    // const ZoomCtrl = (props) => {
-    //   const map = props.__map__;
-    //   if (!map) {
-    //     console.log('组件必须作为 Map 的子组件使用');
-    //     return;
-    //   }
-    // var autoOptions = {
-    //   city: '全国',
-    //   input: "facilityLocation"
-    // }
-    // var autoComplete = new map.Autocomplete(autoOptions);
-    // map.event.addListener(autoComplete, "select", function(data){
-    //  [ {
-    //     "type": "select",
-    //     "poi": {
-    //         "id": "B000A80X4B",
-    //         "name": "北京市建设工程专业劳务发包承包交易中心(西城区政协北)",
-    //         "district": "北京市西城区",
-    //         "adcode": "110102",
-    //         "location": {
-    //             "I": 39.873013,
-    //             "C": 116.351675,
-    //             "lng": 116.351675,
-    //             "lat": 39.873013
-    //         },
-    //         "address": "广安门南街甲68号",
-    //         "typecode": "130100"
-    //     }
-    // }]
-    // }); //注册监听，当选中某条记录时会触发
-    // function select(e) {
-    //   if (e.poi && e.poi.location) {
-    //     map.setZoom(20);
-    //     map.setCenter(e.poi.location);
-    //     var marker = new map.Marker({
-    //       position: map.getCenter(),
-    //       draggable: true,
-    //       cursor: 'move',
-    //       raiseOnDrag: true
-    //     });
-    //     marker.setMap(map);
-    //   }
-    // }
+    AMap.plugin(['AMap.Autocomplete', 'AMap.PlaceSearch'], function () {
+      var autoOptions = {
+        city: "浙江", //城市，默认全国
+        input: "facilityLocation"//使用联想输入的input的id
+      };
+      var autocomplete = new AMap.Autocomplete(autoOptions);
+      var clickEventListener = map.on('click', function (e) {
+        document.getElementById('longitudetext').innerHTML = e.lnglat.getLng();
+        document.getElementById('latitudetext').innerHTML = e.lnglat.getLat();
+        // alert(e.lnglat.getLng() + ',' + e.lnglat.getLat())
+      });
+      var placeSearch = new AMap.PlaceSearch({
+        city: '浙江',
+        map: map
+      })
+      AMap.event.addListener(autocomplete, "select", function (e) {
+        //TODO 针对选中的poi实现自己的功能
+        placeSearch.setCity(e.poi.adcode);
+        placeSearch.search(e.poi.name);
+      });
+    });
 
 
-    //为地图注册click事件获取鼠标点击出的经纬度坐标
-
-
-
-    //   return (<div>
-    //    <Input type="text" id="facilityLocation" />
-    //   </div>);
-    // };
-
+    const judgeRenderDataV = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER || localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER
+    }
     const options = JSON.parse(localStorage.getItem('cascadedlocation'));
     return (
       <div id="addschoolbody" >
@@ -470,23 +363,30 @@ class journal extends Component {
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
               >
-                <div className="homepage" ><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a></div>
+                {
+                  judgeRenderDataV() ? (
+                    <div className="homepage" style={{ display: this.state.display10 }}>
+                      <a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7"
+                        style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a>
+                    </div>
+                  ) : null
+                }
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
-                  <Menu.Item key="1"><Link to="/Lowalarm">流量报警</Link></Menu.Item>
-                  <Menu.Item key="2"><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
+                  <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
+                  <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
-                  <Menu.Item key="3"><Link to="/devInfo">设备在线查询</Link></Menu.Item>
-                  <Menu.Item key="4"><Link to="/management">设备管理</Link></Menu.Item>
+                  <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+                  <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
-                  <Menu.Item key="5"><Link to="/process">流程查询</Link></Menu.Item>
+                  <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6"><Link to="/school">单位管理</Link></Menu.Item>
-                  <Menu.Item key="7"><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                  <Menu.Item key="8"><Link to="/journal">操作日志查询</Link></Menu.Item>
-                  <Menu.Item key="9"><Link to="/highset">高级设置</Link></Menu.Item>
+                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                  <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                  <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                  <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
                 </SubMenu>
               </Menu>
             </div>
@@ -533,37 +433,25 @@ class journal extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="clearfix">
-                    <div style={{ width: 560, height: 400, float: 'left', position: 'relative' }} id="container">
-                      <input type="text" id="facilityLocation" placeholder="请输入关键字"   name="facilityLocation"  onfocus='this.value=""'
+                  <div className="clearfix" >
+                    <div style={{ width: 560, height: 400, float: 'left', position: 'relative' }}>
+                      <input type="text" id="facilityLocation" placeholder="请输入关键字" name="facilityLocation" onfocus='this.value=""'
                         style={{
                           position: 'absolute', zIndex: '99', paddingLeft: '10px',
-                          paddingRight:'10px',
+                          paddingRight: '10px',
                           fontSize: '14px', right: '10px', top: '10px', border: '1px solid #999', borderRadius: '10px',
-                          outline: 'none', width: '35%'
+                          outline: 'none', width: '35%',
                         }} />
-                      <Map
-                        plugins={plugins}
-                        amapkey={YOUR_AMAP_KEY}
-                        events={mapEvents}
-                        center={this.mapCenter}
-                        zoom={20}
-                      >
-                        {/* <ZoomCtrl /> */}
-
-                        <Marker position={this.markerPosition} />
-                        <Marker position={this.markerPosition1} />
-                        <Marker position={this.markerPosition2} />
-                        <Marker position={this.markerPosition3} />
-                      </Map>
+                      <div id="mapContainer" style={{width: 560, height: 400}}>
+                      </div>
                     </div>
+
+
                     <div className="explain">
                       <p style={{ display: this.state.super }}><span>添加省份：</span>  <Input placeholder="添加新的省份" style={{ width: '60%' }} id="creatpro" /></p>
                       <p style={{ display: this.state.super }}><span>添加城市：</span>  <Input placeholder="添加新的城市" style={{ width: '60%' }} id="creatcity" /></p>
                       <p style={{ display: this.state.super }}><span>添加区：</span>  <Input placeholder="添加新的区" style={{ width: '60%' }} id="creatarea" /></p>
                       <p><span>单位名称：</span> <Input placeholder="请输入单位名称" style={{ width: '60%' }} id="schoolname" /></p>
-                      <p><span>联系人姓名：</span>  <Input placeholder="请输入联系人姓名" style={{ width: '60%' }} id="contactname" /></p>
-                      <p><span>联系人电话：</span> <Input placeholder="请输入联系人电话" style={{ width: '60%' }} id="contacttel" /></p>
                       <p><span>详细地址：</span> <Input placeholder="请输入详细地址" style={{ width: '60%' }} id="address" /></p>
                       <p><span> 经度：</span> <span id="longitudetext">{this.state.longitude}</span> </p>
                       <p><span>纬度：</span> <span id="latitudetext">{this.state.latitude}</span></p>
