@@ -9,38 +9,6 @@ import adminTypeConst from '../config/adminTypeConst';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 const Option = Select.Option;
-const options = [{
-  value: '浙江',
-  label: '浙江',
-  children: [{
-    value: '杭州',
-    label: '杭州',
-    children: [{
-      value: '西湖区',
-      label: '西湖区',
-      children: [{
-        value: "学军中学",
-        label: "学军中学"
-      }]
-    }, {
-      value: '上城区',
-      label: '上城区',
-      children: [{
-        value: '杭州十一中',
-        label: '杭州十一中',
-      }, {
-        value: '杭州市十中',
-        label: "杭州市十中"
-      }, {
-        value: '凤凰小学',
-        label: "凤凰小学"
-      }, {
-        value: '胜利小学',
-        label: "胜利小学"
-      }]
-    }],
-  }],
-}];
 const data = [];
 const number = 0;
 for (let i = 0; i < number; i++) {
@@ -113,15 +81,19 @@ class EditableCell extends React.Component {
 }
 class alarmsetting extends Component {
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.data[index].resPerson.phone,
-      name: this.state.data[index].resPerson.name,
-      email: this.state.data[index].resPerson.email,
-      organization: this.state.data[index].resPerson.organization,
-      content: this.state.data[index].resPerson.content,
-    });
+  showModal = (key) => {
+    for (var i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.data[i].resPerson.phone,
+          name: this.state.data[i].resPerson.name,
+          email: this.state.data[i].resPerson.email,
+          organization: this.state.data[i].resPerson.organization,
+          content: this.state.data[i].resPerson.content,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     console.log(e);
@@ -223,7 +195,7 @@ class alarmsetting extends Component {
       key: 'x',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModal(index)}
+          <a onClick={() => this.showModal(record.key)}
           >详情</a>
           <Modal
             title="联系方式"

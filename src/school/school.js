@@ -234,7 +234,7 @@ class journal extends React.Component {
                   if (res.data && res.data.status === 1) {
                     localStorage.setItem('cascadedlocation', JSON.stringify(res.data.cascadedlocation));
                     setTimeout(() => {
-                      window.location.href = "/school/school";
+                      window.location.href = "/school";
                     }, 1000);
 
                   }

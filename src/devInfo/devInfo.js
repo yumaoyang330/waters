@@ -15,15 +15,19 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 class devInfo extends Component {
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.data[index].resPerson.phone,
-      name: this.state.data[index].resPerson.name,
-      email: this.state.data[index].resPerson.email,
-      organization: this.state.data[index].resPerson.organization,
-      content: this.state.data[index].resPerson.content,
-    });
+  showModal = (key) => {
+    for (var i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.data[i].resPerson.phone,
+          name: this.state.data[i].resPerson.name,
+          email: this.state.data[i].resPerson.email,
+          organization: this.state.data[i].resPerson.organization,
+          content: this.state.data[i].resPerson.content,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     console.log(e);
@@ -100,7 +104,7 @@ class devInfo extends Component {
       key: 'x',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModal(index)}
+          <a onClick={() => this.showModal(record.key)}
           >详情</a>
           <Modal
             title="联系方式"

@@ -17,17 +17,17 @@ const Option = Select.Option;
 
 
 
-const accounttypes = ['单位管理员', '单位滤芯维护人员', '区级管理员',  '超级管理员'];
+const accounttypes = ['单位管理员', '单位滤芯维护人员', '区级管理员', '超级管理员'];
 
 
 if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
-  var accounttype = ['不限','单位管理员', '单位滤芯维护人员', '区级管理员', '超级管理员'];
+  var accounttype = ['不限', '单位管理员', '单位滤芯维护人员', '区级管理员', '超级管理员'];
 }
 if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER) {
-  var accounttype = ['不限','单位管理员','单位滤芯维护人员'];
+  var accounttype = ['不限', '单位管理员', '单位滤芯维护人员'];
 }
 if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
-  var accounttype = ['不限','区级管理员','单位管理员', '单位滤芯维护人员'];
+  var accounttype = ['不限', '区级管理员', '单位管理员', '单位滤芯维护人员'];
 }
 
 
@@ -86,13 +86,17 @@ class EditableCell extends React.Component {
 
 class contact extends Component {
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      content: this.state.data[index].detailVO.content,
-      organization: this.state.data[index].detailVO.organization,
-      name: this.state.data[index].detailVO.name,
-    });
+  showModal = (key) => {
+    for (var i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].key === key) {
+        this.setState({
+          visible: true,
+          content: this.state.data[i].detailVO.content,
+          organization: this.state.data[i].detailVO.organization,
+          name: this.state.data[i].detailVO.name,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     this.setState({
@@ -199,10 +203,25 @@ class contact extends Component {
       title: '用户类别',
       dataIndex: 'userType',
       width: '20%',
-      render: (text, record, index) =>
-        <Select defaultValue={typetext[text]} className="one" onChange={this.typeChange} style={{ width: '80%' }} disabled={this.state.typedisabled} >
-          {typeOptions}
-        </Select>
+      render: (text, record, index) => {
+        const editable = this.isEditing(record);
+        return (
+          <div>
+            {editable ? (
+              <Select defaultValue={typetext[text]} className="one" onChange={this.typeChange} style={{ width: '80%' }} disabled={false} >
+                {typeOptions}
+              </Select>
+            ) : (
+                <Select defaultValue={typetext[text]} className="one" onChange={this.typeChange} style={{ width: '80%' }} disabled={true} >
+                  {typeOptions}
+                </Select>
+              )
+            }</div>
+        )
+      }
+    },{
+      title: '所属单位',
+      dataIndex: 'siteName',
     }, {
       title: '用户名',
       dataIndex: 'userName',
@@ -229,7 +248,7 @@ class contact extends Component {
       key: 'x',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModal(index)}
+          <a onClick={() => this.showModal(record.key)}
           >详情</a>
           <Modal
             title="联系方式"
@@ -459,20 +478,20 @@ class contact extends Component {
             });
 
 
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
-                city:'',
-                area:'',
-                school:'',
-                typetext:'不限',
-                typenum:'0',
+                city: '',
+                area: '',
+                school: '',
+                typetext: '不限',
+                typenum: '0',
               });
             }
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
               this.setState({
-                school:'',
-                typetext:'不限',
-                typenum:'0',
+                school: '',
+                typetext: '不限',
+                typenum: '0',
               });
             }
             this.props.form.validateFields({ force: true }, (error) => {

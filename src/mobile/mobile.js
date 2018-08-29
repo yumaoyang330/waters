@@ -93,15 +93,15 @@ export default class Devicedisplay extends Component{
                         <li>品牌编号：  <span  style={{float:"right"}}>{this.state.imei}</span></li>
                         <li>位置信息：  <span  style={{float:"right"}}>{this.state.location}</span></li>
                         <li>供应商&nbsp;&nbsp;&nbsp;：  <span  style={{float:"right"}}>{this.state.filterProvider}</span></li>
-                        <li>额定总进水量：  <span  style={{float:"right"}}>{this.state.alertThreshold}</span></li>
+                        <li>额定总净水量（吨）：  <span  style={{float:"right"}}>{this.state.alertThreshold}</span></li>
                     </div>
                     <div className="title">
                         <img src={require('./tit2.png')} alt="" style={{width:'8%',verticalAlign:"center",marginRight:'.1rem'}}/>
                         滤芯更换状况
                     </div>
                     <div className="list">
-                        <li>滤芯上次维护时间：  <span  style={{float:"right"}}>{this.state.lastTime}</span></li>
-                        <li>目前用水量：<span  style={{float:"right",color:this.state.color,fontWeight:this.state.weight,fontSize:this.state.size}}>{this.state.instantFlow}</span></li>
+                        <li>滤芯上次更换时间：  <span  style={{float:"right"}}>{this.state.lastTime}</span></li>
+                        <li>目前滤芯已处理净水量（吨）：<span  style={{float:"right",color:this.state.color,fontWeight:this.state.weight,fontSize:this.state.size}}>{this.state.instantFlow}</span></li>
                     </div>
                     <div className="title">
                         <img src={require('./tit3.png')} alt="" style={{width:'8%',verticalAlign:"center",marginRight:'.1rem'}}/>
@@ -120,6 +120,8 @@ export default class Devicedisplay extends Component{
                 监管单位:<img src={require('./foot2.png')} alt=""  className="footimg"/>上城区卫计监督所
                 </div>
                 <div  className="foot">
+                
+                网络支持:<img src={require('./foot4.png')} alt="" className="footimg"/>中国移动&nbsp;&nbsp;&nbsp;&nbsp;
                 技术支持:<img src={require('./foot3.png')} alt="" className="footimg"/>钛比科技
                 </div>
                 </div>

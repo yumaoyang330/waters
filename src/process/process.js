@@ -44,15 +44,18 @@ function onChange(date, dateString) {
 }
 class processbody extends Component {
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      organization: this.state.dataSource[index].resPerson.organization,
-      phone: this.state.dataSource[index].resPerson.phone,
-      name: this.state.dataSource[index].resPerson.name,
-      email: this.state.dataSource[index].resPerson.email,
-    });
-
+  showModal = (key) => {
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.data[i].key === key) {
+        this.setState({
+          visible: true,
+          organization: this.state.dataSource[i].resPerson.organization,
+          phone: this.state.dataSource[i].resPerson.phone,
+          name: this.state.dataSource[i].resPerson.name,
+          email: this.state.dataSource[i].resPerson.email,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     console.log(e);
@@ -89,7 +92,7 @@ class processbody extends Component {
       dataIndex: '',
       key: 'x',
       render: (text, record, index) => <div>
-        <a onClick={() => this.showModal(index)}
+        <a onClick={() => this.showModal(record.key)}
         >详情</a>
         <Modal
           title="联系方式"

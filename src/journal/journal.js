@@ -57,15 +57,19 @@ const Option = Select.Option;
 class journal extends React.Component {
 
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.dataSource[index].resPerson.phone,
-      name: this.state.dataSource[index].resPerson.name,
-      email: this.state.dataSource[index].resPerson.email,
-      organization: this.state.dataSource[index].resPerson.organization,
-      content: this.state.dataSource[index].resPerson.content,
-    });
+  showModal = (key) => {
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.dataSource[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.dataSource[i].resPerson.phone,
+          name: this.state.dataSource[i].resPerson.name,
+          email: this.state.dataSource[i].resPerson.email,
+          organization: this.state.dataSource[i].resPerson.organization,
+          content: this.state.dataSource[i].resPerson.content,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     console.log(e);
@@ -95,7 +99,7 @@ class journal extends React.Component {
       width: '5%',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModal(index)}
+          <a onClick={() => this.showModal(record.key)}
           >详情</a>
           <Modal
             title="联系方式"

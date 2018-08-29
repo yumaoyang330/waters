@@ -10,6 +10,8 @@ import QRCode from 'qrcode-react';
 import Layouts from '../component/layout';
 
 
+
+
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 const { Header, Sider, Content } = Layout;
@@ -23,6 +25,7 @@ const components = {
 };
 const Option = Select.Option;
 const dateFormat = 'YYYY/MM/DD HH:mm:ss';
+const dateFormats = 'YYYY/MM/DD';
 const dataSource = [];
 const number = '';
 for (let i = 0; i < 1; i++) {
@@ -94,90 +97,108 @@ class EditableCell extends React.Component {
 }
 class management extends Component {
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.dataSource[index].resPerson.phone,
-      name: this.state.dataSource[index].resPerson.name,
-      email: this.state.dataSource[index].resPerson.email,
-      organization: this.state.dataSource[index].resPerson.organization,
-      content: this.state.dataSource[index].resPerson.content,
-    });
+  showModal = (key) => {
+    console.log(key)
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.dataSource[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.dataSource[i].resPerson.phone,
+          name: this.state.dataSource[i].resPerson.name,
+          email: this.state.dataSource[i].resPerson.email,
+          organization: this.state.dataSource[i].resPerson.organization,
+          content: this.state.dataSource[i].resPerson.content,
+        });
+      }
+    }
   }
   state = { lookshow: false }
+  lookModal = (key) => {
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.dataSource[i].key === key) {
+        this.setState({
+          lookshow: true,
+          deviceId: this.state.dataSource[i].deviceId,
+        }, function () {
+          getlatestreportbydeviceid([
+            this.state.deviceId,
+          ]).then(res => {
+            if (res.data && res.data.status === 1) {
 
-  lookModal = (index) => {
-    this.setState({
-      lookshow: true,
-      deviceId: this.state.dataSource[index].deviceId,
-    }, function () {
-      getlatestreportbydeviceid([
-        this.state.deviceId,
-      ]).then(res => {
-        if (res.data && res.data.status === 1) {
-
-          if(res.data.reportInfo!=undefined){
-            if(res.data.reportInfo.gmtupdate=== undefined){
-              res.data.reportInfo.gmtupdate=""
+              if (res.data.reportInfo != undefined) {
+                if (res.data.reportInfo.gmtcreate === undefined) {
+                  res.data.reportInfo.gmtcreate = ""
+                }
+                if (res.data.reportInfo.testresult === undefined) {
+                  res.data.reportInfo.testresult = ""
+                }
+                if (res.data.reportInfo.testorg === undefined) {
+                  res.data.reportInfo.testorg = ""
+                }
+                this.setState({
+                  gmtcreate: res.data.reportInfo.gmtcreate,
+                  testresult: res.data.reportInfo.testresult,
+                  testorg: res.data.reportInfo.testorg,
+                });
+              }
+            } else if (res.data && res.data.status === 0) {
+              message.error("鉴权失败，需要用户重新登录");
+            } else if (res.data && res.data.status === 2) {
+              message.error("参数提取失败");
+            } else if (res.data && res.data.status === 3) {
+              message.error("服务器故障，请刷新再试");
             }
-            if(res.data.reportInfo.testresult=== undefined){
-              res.data.reportInfo.gmtupdate=""
-            }
-            if( res.data.reportInfo.testorg=== undefined){
-              res.data.reportInfo.testorg=""
-            }
-            this.setState({
-              gmtupdate: res.data.reportInfo.gmtupdate,
-              testresult: res.data.reportInfo.testresult,
-              testorg: res.data.reportInfo.testorg,
-            });
-          }
-
-        } else if (res.data && res.data.status === 0) {
-          message.error("鉴权失败，需要用户重新登录");
-        } else if (res.data && res.data.status === 2) {
-          message.error("参数提取失败");
-        } else if (res.data && res.data.status === 3) {
-          message.error("服务器故障，请刷新再试");
-        }
-      });
-
-      gethistoricalreportbydeviceid([
-        this.state.deviceId,
-      ]).then(res => {
-        if (res.data && res.data.status === 1) {
-          this.setState({
-            jcdata: res.data.reportInfoList,
           });
-        } else if (res.data && res.data.status === 0) {
-          message.error("鉴权失败，需要用户重新登录");
-        } else if (res.data && res.data.status === 2) {
-          message.error("参数提取失败");
-        } else if (res.data && res.data.status === 3) {
-          message.error("服务器故障，请刷新再试");
-        }
-      });
+
+          gethistoricalreportbydeviceid([
+            this.state.deviceId,
+          ]).then(res => {
+            if (res.data && res.data.status === 1) {
+              this.setState({
+                jcdata: res.data.reportInfoList,
+              });
+            } else if (res.data && res.data.status === 0) {
+              message.error("鉴权失败，需要用户重新登录");
+            } else if (res.data && res.data.status === 2) {
+              message.error("参数提取失败");
+            } else if (res.data && res.data.status === 3) {
+              message.error("服务器故障，请刷新再试");
+            }
+          });
 
 
-    });
+        });
+
+
+      }
+    }
+
+
+
 
 
   }
   state = { reportshow: false }
-  addreport = (index) => {
-    this.setState({
-      addindex: index,
-      reportshow: true,
-      deviceId: this.state.dataSource[index].deviceId,
-    });
+  addreport = (key) => {
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.dataSource[i].key === key) {
+        this.setState({
+          reportshow: true,
+          deviceId: this.state.dataSource[i].deviceId,
+        });
+      }
+    }
   }
   state = { visibles: false }
-  showcode = (index) => {
-    this.setState({
-      visibles: true,
-      deviceId: this.state.dataSource[index].deviceId,
-    });
-
+  showcode = (key) => {
+    for (var i = 0; i < this.state.dataSource.length; i++) {
+      if (this.state.dataSource[i].key === key) {
+        this.setState({
+          visibles: true,
+          deviceId: this.state.dataSource[i].deviceId,
+        });
+      }
+    }
   }
   handleOk = (e) => {
     console.log(e);
@@ -186,6 +207,9 @@ class management extends Component {
       visibles: false,
       lookshow: false,
       reportshow: false,
+      gmtcreate: '',
+      testresult: '',
+      testorg: '',
     });
   }
 
@@ -196,6 +220,9 @@ class management extends Component {
       visibles: false,
       lookshow: false,
       reportshow: false,
+      gmtcreate: '',
+      testresult: '',
+      testorg: '',
     });
   }
   reportreset = (e) => {
@@ -204,8 +231,8 @@ class management extends Component {
       visibles: false,
       lookshow: false,
       reportshow: false,
-      jcresult:'',
-      jccompany:'',
+      jcresult: '',
+      jccompany: '',
     });
   }
   timeonChange = (value, dateString) => {
@@ -223,8 +250,8 @@ class management extends Component {
       selectedRowKeys: [],
       editingKey: '',
       keylist: "",
-      jcresult:'',
-      jccompany:'',
+      jcresult: '',
+      jccompany: '',
       dataSource: '',
       province: '',
       city: '',
@@ -236,7 +263,7 @@ class management extends Component {
       jctime: '',
       report: [{
         title: '检测时间',
-        dataIndex: 'gmtupdate',
+        dataIndex: 'gmtcreate',
       }, {
         title: '检测结果',
         dataIndex: 'testresult',
@@ -391,15 +418,15 @@ class management extends Component {
                 display3: 'none',
                 display4: 'none',
                 display9: 'none',
-                school:'',
+                school: '',
               });
             }
             if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
                 disabled: false,
-                city:'',
-                area:'',
-                school:'',
+                city: '',
+                area: '',
+                school: '',
               });
             }
 
@@ -499,8 +526,8 @@ class management extends Component {
               visibles: false,
               lookshow: false,
               reportshow: false,
-              jcresult:'',
-              jccompany:'',
+              jcresult: '',
+              jccompany: '',
             });
           } else if (res.data && res.data.status === 0) {
             message.error("鉴权失败，需要用户重新登录");
@@ -547,20 +574,20 @@ class management extends Component {
   //     }
   //   });
   // }   
- jcresult=(e)=>{
-  this.setState({
-    jcresult:e.target.value,
-  },function(){
-    console.log(this.state.jcresult)
-  })
- }
- jccompany=(e)=>{
-  this.setState({
-    jccompany:e.target.value,
-  },function(){
-    console.log(this.state.jccompany)
-  })
- }
+  jcresult = (e) => {
+    this.setState({
+      jcresult: e.target.value,
+    }, function () {
+      console.log(this.state.jcresult)
+    })
+  }
+  jccompany = (e) => {
+    this.setState({
+      jccompany: e.target.value,
+    }, function () {
+      console.log(this.state.jccompany)
+    })
+  }
   render() {
     const { formLayout } = this.state;
     const { getFieldDecorator } = this.props.form;
@@ -635,7 +662,7 @@ class management extends Component {
       key: 'x',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModal(index)}
+          <a onClick={() => this.showModal(record.key)}
           >详情</a>
           <Modal
             title="联系方式"
@@ -668,7 +695,7 @@ class management extends Component {
       render: (text, record, index) =>
 
         <div>
-          <a onClick={() => this.lookModal(index)} style={{ marginRight: '10px' }}
+          <a onClick={() => this.lookModal(record.key)} style={{ marginRight: '10px' }}
           >查看</a>
           <Modal
             title="检测报告"
@@ -681,7 +708,7 @@ class management extends Component {
           >
             <Tabs type="card">
               <TabPane tab="最新报告" key="1">
-                <p>最新一次检测时间: &nbsp;&nbsp;&nbsp;{this.state.gmtupdate}</p>
+                <p>最新一次检测时间: &nbsp;&nbsp;&nbsp;{this.state.gmtcreate}</p>
                 <p>检测结果:&nbsp;&nbsp;&nbsp;{this.state.testresult}</p>
                 <p>检测单位:&nbsp;&nbsp;&nbsp;{this.state.testorg}</p>
               </TabPane>
@@ -695,7 +722,7 @@ class management extends Component {
               </TabPane>
             </Tabs>
           </Modal>
-          <a onClick={() => this.addreport(index)}
+          <a onClick={() => this.addreport(record.key)}
           >添加</a>
           <Modal
             title="添加检测报告"
@@ -710,13 +737,13 @@ class management extends Component {
             <p style={{ color: 'red' }}>*注：请仔细填写，一旦提交不得修改!!</p>
             最新一次检测时间:
             <DatePicker
-              format={dateFormat}
+              format={dateFormats}
               style={{ marginTop: '10px', marginBottom: '10px', width: '100%' }}
               onChange={this.timeonChange}
               placeholder="请选择时间"
             />
-            检测结果:<Input placeholder="请输入结果" className="jcresult" style={{ marginTop: '10px', marginBottom: '10px' }} onChange={this.jcresult} value={this.state.jcresult}/>
-            检测单位:<Input placeholder="请输入检测单位" className="jccompany" style={{ marginTop: '10px', marginBottom: '10px' }}  onChange={this.jccompany} value={this.state.jccompany}/>
+            检测结果:<Input placeholder="请输入结果" className="jcresult" style={{ marginTop: '10px', marginBottom: '10px' }} onChange={this.jcresult} value={this.state.jcresult} />
+            检测单位:<Input placeholder="请输入检测单位" className="jccompany" style={{ marginTop: '10px', marginBottom: '10px' }} onChange={this.jccompany} value={this.state.jccompany} />
           </Modal>
         </div>
     }, {
@@ -725,7 +752,7 @@ class management extends Component {
       render: (text, record, index) => {
         return (
           <div>
-            <a onClick={() => this.showcode(index)} style={{ color: '#1890ff' }}
+            <a onClick={() => this.showcode(record.key)} style={{ color: '#1890ff' }}
             >生成二维码</a>
             <Modal
               title="生成二维码"
@@ -807,7 +834,7 @@ class management extends Component {
                     </div>
                   ) : null
                 }
-        
+
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>

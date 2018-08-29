@@ -8,6 +8,7 @@ import moment from 'moment';
 import './lowalarm.css';
 import statustext from './../status'
 import statusnum from './../statusnum'
+import alerts from './../alerts'
 import adminTypeConst from '../config/adminTypeConst';
 import Layouts from '../component/layout';
 
@@ -118,21 +119,29 @@ class EditableCell extends React.Component {
 class lowalarm extends Component {
 
   state = { visible: false }
-  showModal = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.datas[index].resPerson.phone,
-      name: this.state.datas[index].resPerson.name,
-      email: this.state.datas[index].resPerson.email
-    });
+  showModal = (key) => {
+    for (var i = 0; i < this.state.datas.length; i++) {
+      if (this.state.datas[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.datas[i].resPerson.phone,
+          name: this.state.datas[i].resPerson.name,
+          email: this.state.datas[i].resPerson.email
+        });
+      }
+    }
   }
-  showModals = (index) => {
-    this.setState({
-      visible: true,
-      phone: this.state.data[index].resPerson.phone,
-      name: this.state.data[index].resPerson.name,
-      email: this.state.data[index].resPerson.email
-    });
+  showModals = (key) => {
+    for (var i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].key === key) {
+        this.setState({
+          visible: true,
+          phone: this.state.data[i].resPerson.phone,
+          name: this.state.data[i].resPerson.name,
+          email: this.state.data[i].resPerson.email
+        });
+      }
+    }
   }
   onChange = (date, dateString) => {
     let arr = [];
@@ -210,10 +219,22 @@ class lowalarm extends Component {
       }, {
         title: '处理阶段',
         dataIndex: 'process',
-        render: (text, record, index) =>
-          <Select defaultValue={[text]} onChange={this.handleChange} disabled={this.state.statustype} >
-            {statusOptions}
-          </Select>
+        render: (text, record, index) => {
+          const editable = this.isEditing(record);
+          return (
+            <div>
+              {editable ? (
+                <Select defaultValue={[text]} onChange={this.handleChange} disabled={false} >
+                  {statusOptions}
+                </Select>
+              ) : (
+                  <Select defaultValue={[text]} onChange={this.handleChange} disabled={true} >
+                    {statusOptions}
+                  </Select>
+                )
+              }</div>
+          )
+        }
       }, {
         title: '责任人',
         dataIndex: 'resPerson.name',
@@ -222,7 +243,7 @@ class lowalarm extends Component {
         keys: 'x',
         render: (text, record, index) =>
           <div>
-            <a onClick={() => this.showModal(index)}
+            <a onClick={() => this.showModal(record.key)}
             >详情</a>
             <Modal
               title="联系方式"
@@ -303,7 +324,7 @@ class lowalarm extends Component {
       key: 'x',
       render: (text, record, index) =>
         <div>
-          <a onClick={() => this.showModals(index)}
+          <a onClick={() => this.showModals(record.key)}
           >详情</a>
           <Modal
             title="联系方式"
@@ -450,6 +471,14 @@ class lowalarm extends Component {
   };
 
   save(form, key) {
+    for (var i = 0; i < this.state.datas.length; i++) {
+      if (this.state.datas[i].key === key) {
+        this.setState({
+          statustype: true,
+          alertStatus: alerts[this.state.datas[i].alertStatus],
+        });
+      }
+    }
     this.setState({
       statustype: true,
     });
@@ -467,23 +496,54 @@ class lowalarm extends Component {
         console.log(newData[0])
         this.props.form.validateFields({ force: true }, (error) => {
           if (!error) {
-            updatestatus([
-              key,
-              0,
-              this.state.selecttype,
-            ]).then(res => {
-              if (res.data && res.data.status === 1) {
-                message.success("信息编辑成功");
-                this.setState({
-                  statustype: true,
+            console.log(this.state.selecttype)
+            if (this.state.selecttype === '3') {
+              this.setState({
+                alertStatus: '0',
+              },function(){
+                updatestatus([
+                  key,
+                  this.state.alertStatus,
+                  this.state.selecttype,
+                ]).then(res => {
+                  if (res.data && res.data.status === 1) {
+                    message.success("信息编辑成功");
+                    this.setState({
+                      statustype: true,
+                    });
+                    setTimeout(() => {
+                      window.location.href = "/lowalarm";
+                    }, 1000);
+                  } else {
+                    message.error("信息编辑失败");
+                    this.setState({
+                      statustype: false,
+                    });
+                  }
                 });
-              } else {
-                message.error("信息编辑失败");
-                this.setState({
-                  statustype: false,
-                });
-              }
-            });
+              });
+            }else{
+              updatestatus([
+                key,
+                this.state.alertStatus,
+                this.state.selecttype,
+              ]).then(res => {
+                if (res.data && res.data.status === 1) {
+                  message.success("信息编辑成功");
+                  this.setState({
+                    statustype: true,
+                  });
+                  // setTimeout(() => {
+                  //   window.location.href = "/lowalarm";
+                  // }, 1000);
+                } else {
+                  message.error("信息编辑失败");
+                  this.setState({
+                    statustype: false,
+                  });
+                }
+              });
+            }  
           } else {
             message.error("获取接口失败");
             this.setState({
