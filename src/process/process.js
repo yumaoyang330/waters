@@ -486,7 +486,7 @@ class processbody extends Component {
                         {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
                       </span>条记录
                           列表记录总计： <span style={{ color: 'rgba(0, 51, 255, 0.647058823529412)', fontWeight: 'bold' }}>{this.state.num}</span> 条
-                      <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button>
+                      {/* <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button> */}
                     </div>
                     <div style={{ marginTop: '10px' }}>
                       <Table rowSelection={rowSelection} columns={columns} dataSource={dataSource} onSelect={this.onSelect} />

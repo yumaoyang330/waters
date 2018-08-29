@@ -92,7 +92,6 @@ class contact extends Component {
         this.setState({
           visible: true,
           content: this.state.data[i].detailVO.content,
-          organization: this.state.data[i].detailVO.organization,
           name: this.state.data[i].detailVO.name,
         });
       }
@@ -221,7 +220,7 @@ class contact extends Component {
       }
     },{
       title: '所属单位',
-      dataIndex: 'siteName',
+      dataIndex: 'detailVO.organization',
     }, {
       title: '用户名',
       dataIndex: 'userName',
@@ -257,7 +256,6 @@ class contact extends Component {
             onCancel={this.handleCancel}
             mask={false}
           >
-            <p>所属单位:{this.state.organization}</p>
             <p>备注:{this.state.content}</p>
           </Modal>
         </div>
@@ -723,7 +721,7 @@ class contact extends Component {
                         {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
                       </span>条记录
                         列表记录总计： <span style={{ color: 'rgba(0, 51, 255, 0.647058823529412)', fontWeight: 'bold' }}>{this.state.num}</span> 条
-                    <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button>
+                    {/* <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button> */}
                     </div>
                     <div style={{ marginTop: '10px' }}>
                       <Table

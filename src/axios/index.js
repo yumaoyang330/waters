@@ -3,8 +3,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom'
 import * as config from './config';
 
-const url='http://112.124.6.31:9090';
-// const url='http://192.168.31.158:9090';
+// const url='http://112.124.6.31:9090';
+const url='http://192.168.31.158:9090';
 
 //1.1登录界面
 export const login = (params) => myapi(url + '/login', {
