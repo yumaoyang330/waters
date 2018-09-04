@@ -127,9 +127,9 @@ class journal extends React.Component {
             }
             if (!error) {
               schoolget([
-                res.data.cascadedlocation[0].value,
-                res.data.cascadedlocation[0].children[0].value,
-                res.data.cascadedlocation[0].children[0].children[0].value,
+                this.state.province,
+                this.state.city,
+                this.state.area,
               ]).then(res => {
                 if (res.data && res.data.status === 1) {
                   console.log(res.data.schoolList[0])
