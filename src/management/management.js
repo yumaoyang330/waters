@@ -7,8 +7,6 @@ import { deleterecord, equipmentdelete, equipmentgets, gets, addreportbydeviceid
 import './management.css';
 import adminTypeConst from '../config/adminTypeConst';
 import QRCode from 'qrcode-react';
-import Layouts from '../component/layout';
-
 
 
 
@@ -408,6 +406,7 @@ class management extends Component {
                 display7: 'none',
                 display8: 'none',
                 display9: 'none',
+                display10: 'none',
                 disabled: true,
               });
             }
@@ -686,12 +685,15 @@ class management extends Component {
       title: '当前流量',
       dataIndex: 'totalFlow',
     }, {
-      title: '安装时间',
+      title: '激活时间',
       dataIndex: 'activiteTime',
       width: '10%'
     }, {
+      title: '刷新时间',
+      dataIndex: 'lastConnectTime',
+      width: '10%'
+    },{
       title: '检测报告',
-      dataIndex: 'activiteTime',
       render: (text, record, index) =>
 
         <div>
@@ -836,12 +838,13 @@ class management extends Component {
                 }
 
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
-                  <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
+                  <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
                   <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
                   <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
+                  <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
@@ -894,7 +897,7 @@ class management extends Component {
                         </Popconfirm> */}
                       </div>
                       <div style={{ marginTop: '10px', marginBottm: '10px' }}>
-                        设备编号:<Input placeholder="1234567890" style={{ width: '15%', marginLeft: '20px' }} id="querynumber" />
+                        设备编号:<Input placeholder="请输入设备编号" style={{ width: '15%', marginLeft: '20px' }} id="querynumber" />
                       </div>
 
                     </div>

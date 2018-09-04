@@ -1,0 +1,126 @@
+#offlinebody .ant-menu-root{
+    height: 950px;
+}
+#offlinebody .Lowalar-left{
+    margin-top: 24px;
+}
+#offlinebody .Administrator{
+    float: right;
+    height: 50px;
+    line-height: 40px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+}
+#offlinebody .Administrator i{
+    margin-right: 25px;
+}
+#offlinebody .ant-cascader-picker{
+    display: inline-block;
+    width: 50%;
+    margin-right: 20px;
+}
+#offlinebody .Administrator  span{
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+}
+#offlinebody .top{
+    height: 50px;
+    background: #00284D;
+    width: 100%;
+    line-height: 36px;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+    padding: 7px;
+    font-size: 13px;
+}
+#offlinebody .switch-btn{
+    float: left;
+}
+#offlinebody .Lowalar-right{
+    float: left;
+    margin-top: 24px;
+    width: 77%;
+}
+#offlinebody .Lowalar-rt{
+    border-bottom: 1px solid #999;
+    height: 50px;
+    width: 100%;
+    padding-left: 20px;
+}
+#offlinebody .nav{
+    height:30px;
+    line-height: 30px;
+    padding-left: 20px;
+    background: white;
+}
+#offlinebody .tit{
+    font-size: 20px;
+    background: white;
+    height: 50px;
+    line-height: 50px;
+    color: rgba(0, 0, 0, 0.847058823529412);
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+/*当前/历史*/
+#offlinebody .current{
+    float: left;
+    width: 100%;
+    background: #F0F2F5;
+}
+#offlinebody .ant-tabs-bar{
+    border:none;
+}
+#offlinebody .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab{
+    float: left;
+    margin-right: 0;
+    border:none;
+    border-radius: 0;
+}
+#offlinebody .ant-tabs-tab-active{
+    color: white !important;
+    background: #1890ff !important;
+}
+#offlinebody .current_text{
+    background: white;
+    width: 100%;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+#offlinebody .ant-select{
+    width: 110px ;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/*起始时间*/
+#offlinebody .current-time{
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+}
+/*导出*/
+#offlinebody .derive{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background:rgba(230, 247, 255, 1);
+    border:1px solid rgba(186, 231, 255, 1);
+    margin-top: 10px;
+    padding-left: 15px;
+    border-radius: 5px;
+    padding-right: 5px;
+}
+#offlinebody .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    padding: 10px 10px;
+    text-align: center
+}

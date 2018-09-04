@@ -173,7 +173,6 @@ class newadd extends Component {
                 display2: 'none',
                 display6: 'none',
                 display9: 'none',
-                display10: 'none',
                 disabled: true,
               });
             }
@@ -542,6 +541,7 @@ class newadd extends Component {
     let alertThreshold = document.getElementById('alertThreshold').value;
     let batteryThreshold = 10;
     let filterprovider = document.getElementById('filterprovider').value;
+    let filterMaintainer = document.getElementById('filterMaintainer').value;
     let reg = /[^\d]/g;
     for (var i = 0; i < this.state.dataSource.length; i++) {
       this.state.dataSource[i].deviceId = document.getElementsByClassName('deviceId')[i].value;
@@ -552,6 +552,7 @@ class newadd extends Component {
       this.state.dataSource[i].county = this.state.area;
       this.state.dataSource[i].school = this.state.school;
       this.state.dataSource[i].filterprovider = filterprovider;
+      this.state.dataSource[i].filterMaintainer = filterMaintainer;
       this.state.dataSource[i].type = type;
       this.state.dataSource[i].content = content;
       this.state.dataSource[i].preAlertThreshold = preAlertThreshold;
@@ -573,6 +574,8 @@ class newadd extends Component {
         message.error('请输入设备型号')
       } else if (filterprovider === "") {
         message.error('请输入滤芯供应商')
+      } else if (filterMaintainer === "") {
+        message.error('请输入滤芯维护服务商')
       }
       else if (preAlertThreshold === "") {
         message.error('请输入流量预报警值')
@@ -649,6 +652,7 @@ class newadd extends Component {
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
                   <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
                   <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
+                  <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
@@ -704,6 +708,9 @@ class newadd extends Component {
                     </div>
                     <div className='addinput'>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;滤芯供应商：<Input placeholder="请输入滤芯供应商" style={{ width: '60%' }} id="filterprovider" />
+                    </div>
+                    <div className='addinput'>
+                      &nbsp;&nbsp;&nbsp;滤芯维护服务商：<Input placeholder="请输入滤芯维护服务商" style={{ width: '60%' }} id="filterMaintainer" />
                     </div>
                     <div className='bjz'>
                       <Row gutter={16}>

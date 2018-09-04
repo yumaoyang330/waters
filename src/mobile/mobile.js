@@ -38,19 +38,19 @@ export default class Devicedisplay extends Component{
             url[0]
         ]).then(res => {
             if (res.data && res.data.status === 1) {
-            console.log(res.data.mobileInfo)
             this.setState({
                 school:res.data.mobileInfo.school,
                 imei:res.data.mobileInfo.imei,
                 type:res.data.mobileInfo.type,
                 location:res.data.mobileInfo.location,
                 filterProvider:res.data.mobileInfo.filterProvider,
+                filterMaintainer:res.data.mobileInfo.filterMaintainer,
                 name:res.data.mobileInfo.resPerson.name,
                 organization:res.data.mobileInfo.resPerson.organization,
                 phone:res.data.mobileInfo.resPerson.phone,
                 alertThreshold:res.data.mobileInfo.alertThreshold,
                 instantFlow:res.data.mobileInfo.instantFlow,
-                lastTime:res.data.mobileInfo.lastTime,
+                lastTime:res.data.mobileInfo.lastTime.substr(0, 11),
                 alertStatus:res.data.mobileInfo.alertStatus,
                 gmtcreate: res.data.mobileInfo.reportPO.gmtcreate,
                 testresult: res.data.mobileInfo.reportPO.testresult,
@@ -62,6 +62,26 @@ export default class Devicedisplay extends Component{
                         weight:"bold",
                         size:'18px'
                      })
+                  }
+                  if(this.state.lastTime===""){
+                    this.setState({
+                        lastTime:'待更新',
+                     })                      
+                  }                 
+                  if(this.state.testresult===""){
+                    this.setState({
+                        testresult:'待更新',
+                     })                      
+                  }
+                  if(this.state.gmtcreate===""){
+                    this.setState({
+                        gmtcreate:'待更新',
+                     })                      
+                  }
+                  if(this.state.testorg===""){
+                    this.setState({
+                        testorg:'待更新',
+                     })                      
                   }
               });  
                
@@ -89,10 +109,10 @@ export default class Devicedisplay extends Component{
                     </div>
                     <div className="list">
                         <li>所属单位：  <span  style={{float:"right"}}>{this.state.school}</span></li>
-                        <li>品牌型号：  <span  style={{float:"right"}}>{this.state.type}</span></li>
-                        <li>品牌编号：  <span  style={{float:"right"}}>{this.state.imei}</span></li>
+                        <li>饮水机型号：  <span  style={{float:"right"}}>{this.state.type}</span></li>
+                        <li>饮水机编号：  <span  style={{float:"right"}}>{this.state.imei}</span></li>
                         <li>位置信息：  <span  style={{float:"right"}}>{this.state.location}</span></li>
-                        <li>供应商&nbsp;&nbsp;&nbsp;：  <span  style={{float:"right"}}>{this.state.filterProvider}</span></li>
+                        <li>服务商&nbsp;&nbsp;&nbsp;：  <span  style={{float:"right"}}>{this.state.filterMaintainer}</span></li>
                         <li>额定总净水量（吨）：  <span  style={{float:"right"}}>{this.state.alertThreshold}</span></li>
                     </div>
                     <div className="title">
@@ -121,7 +141,7 @@ export default class Devicedisplay extends Component{
                 </div>
                 <div  className="foot">
                 
-                网络支持:<img src={require('./foot4.png')} alt="" className="footimg"/>中国移动&nbsp;&nbsp;&nbsp;&nbsp;
+                方案支持:<img src={require('./foot4.png')} alt="" className="footimg"/>中国移动&nbsp;&nbsp;&nbsp;&nbsp;
                 技术支持:<img src={require('./foot3.png')} alt="" className="footimg"/>钛比科技
                 </div>
                 </div>

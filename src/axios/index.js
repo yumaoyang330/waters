@@ -4,7 +4,8 @@ import { Redirect } from 'react-router-dom'
 import * as config from './config';
 
 // const url='http://112.124.6.31:9090';
-const url='http://192.168.31.158:9090';
+// const url='http://192.168.31.158:9090';
+const url='http://watersupervision.terabits.cn:9090';
 
 //1.1登录界面
 export const login = (params) => myapi(url + '/login', {
@@ -122,6 +123,18 @@ export const getrespersoninfo = (params) => myapi(url + '/devicemanage/devicelis
 	school: params[3],
 });
 
+
+//3.2.5 新增设备页面通过本批设备所属单位查询设备报警通知用户的信息以及维修通知用户的信息
+export const getdevicelog = (params) => myapi(url + '/devicemanage/devicelog/get', {
+	token: localStorage.getItem('token'),
+	province: params[0],
+	city: params[1],
+	county: params[2],
+	school: params[3],
+	beginTime: params[4],
+	endTime: params[5],
+	deviceId: params[6],
+});
 
 //3.3 移动端页面接口
 export const getdevicepropsbydeviceid = (params) => myapi(url + '/mobile/getdevicepropsbydeviceid', {

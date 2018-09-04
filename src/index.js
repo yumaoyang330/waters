@@ -22,6 +22,8 @@ import home from './home/home';
 import homepage from './homepage/homepage';
 import mobile from './mobile/mobile';
 import NoaMatch from './NoaMatch/NoaMatch';
+import equipmentlog from './equipmentlog/equipmentlog';
+
 
 
 require('./mock/mock.js')
@@ -51,6 +53,7 @@ ReactDOM.render(
       <Route path="/home" component={home} />
       <Route path="/homepage" component={homepage} />
       <Route path="/mobile" component={mobile} />
+      <Route path="/equipmentlog" component={equipmentlog} />
       <Route component={NoaMatch}/>
     </Switch>
   </Router>,

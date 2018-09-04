@@ -286,7 +286,6 @@ class devInfo extends Component {
                 display2: 'none',
                 display6: 'none',
                 display9: 'none',
-                display10: 'none',
                 disabled: true,
               });
             }
@@ -404,12 +403,13 @@ class devInfo extends Component {
                 }
 
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
-                  <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
+                  <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
                   <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
                   <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
+                  <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
@@ -462,7 +462,7 @@ class devInfo extends Component {
                       </div>
                     </div>
                     <div style={{ marginTop: '10px', marginBottm: '10px' }}>
-                      设备编号:<Input placeholder="1234567890" style={{ width: '15%', marginLeft: '20px' }} id="equipmentimei" />
+                      设备编号:<Input placeholder="请输入设备编号" style={{ width: '15%', marginLeft: '20px' }} id="equipmentimei" />
                     </div>
                     <p style={{ marginTop: '.1rem', fontWeight: 'bold', fontSize: '16px' }}>以下是离线设备列表:</p>
                     <div className="derive">
@@ -471,7 +471,7 @@ class devInfo extends Component {
                         {hasSelected ? `   ${selectedRowKeys.length}  ` : ''}
                       </span>条记录
                                 列表记录总计： <span style={{ color: 'rgba(0, 51, 255, 0.647058823529412)', fontWeight: 'bold' }}>{this.state.num}</span> 条
-                            <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button>
+                            {/* <Button type="primary" style={{ float: 'right', marginTop: '3px' }}>数据导出</Button> */}
                     </div>
                     <div style={{ marginTop: '10px' }}>
                       {/* <Table rowSelection={rowSelection} columns={columns} dataSource={data}  /> */}
