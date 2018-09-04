@@ -124,7 +124,7 @@ export const getrespersoninfo = (params) => myapi(url + '/devicemanage/devicelis
 });
 
 
-//3.2.5 新增设备页面通过本批设备所属单位查询设备报警通知用户的信息以及维修通知用户的信息
+//3.2.5 查询设备消息日志
 export const getdevicelog = (params) => myapi(url + '/devicemanage/devicelog/get', {
 	token: localStorage.getItem('token'),
 	province: params[0],
