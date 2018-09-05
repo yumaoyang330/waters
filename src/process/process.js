@@ -305,37 +305,6 @@ class processbody extends Component {
     });
   }
 
-  moredelete = (key) => {
-    const dataSource = [...this.state.dataSource];
-    this.props.form.validateFields({ force: true }, (error) => {
-      if (!error) {
-        deleterecord([
-          this.state.keylist,
-        ]).then(res => {
-          if (res.data && res.data.status === 1) {
-            console.log("提交信息成功");
-            this.setState({
-              selectedRowKeys: [],
-              num: this.state.dataSource.length,
-              dataSource:
-                dataSource.filter((item) => {
-                  for (let i = 0; i < key.length; i++) {
-                    if (item.key === key[i]) {
-                      return false
-                    }
-                  }
-                  return true
-                })
-            });
-          } else {
-            message.error("获取信息失败");
-          }
-        });
-      } else {
-        message.error("接口获取失败");
-      }
-    });
-  }
 
 
   processbtn = () => {
@@ -474,10 +443,6 @@ class processbody extends Component {
                       <div style={{ float: "right" }}>
                         <Button type="primary" style={{ marginRight: '20px' }} onClick={this.processbtn}>查询</Button>
                         <Button>重置</Button>
-                        <Popconfirm title="确定要删除吗?" onConfirm={() => this.moredelete()}>
-                          <Button style={{ background: "rgba(204, 0, 0, 1)", color: 'white', border: 'none', marginLeft: '20px' }} >
-                            批量删除</Button>
-                        </Popconfirm>
                       </div>
                     </div>
                     <div className="derive">

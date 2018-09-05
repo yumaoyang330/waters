@@ -357,7 +357,6 @@ class management extends Component {
         ]).then(res => {
           if (res.data && res.data.status === 1) {
             message.success("信息删除成功");
-            console.log(dataSource)
             const dataSource = [...this.state.dataSource];
             this.setState({
               num: this.state.num - 1,
@@ -542,37 +541,7 @@ class management extends Component {
     });
 
   }
-  // moredelete = (key) =>{
-  //   const dataSource = [...this.state.dataSource];
-  //   this.props.form.validateFields({ force: true }, (error) => {
-  //     if (!error) {
-  //       equipmentdelete([
-  //         JSON.stringify(this.state.keylist)
-  //       ]).then(res => {
-  //         if (res.data && res.data.status === 1) {
-  //            console.log("信息删除成功");
-  //            this.setState({ 
-  //             selectedRowKeys: [],
-  //             num:this.state.dataSource.length,
-  //             dataSource: 
-  //             dataSource.filter((item) => {
-  //             for (let i = 0; i < key.length; i++) {
-  //             if (item.key === key[i]) {
-  //             return false
-  //             }
-  //             }
-  //             return true
-  //             })
-  //           });
-  //         } else {
-  //           alert("信息删除失败");           
-  //         }
-  //       });
-  //     } else {
-  //       alert("删除失败");         
-  //     }
-  //   });
-  // }   
+
   jcresult = (e) => {
     this.setState({
       jcresult: e.target.value,
@@ -623,35 +592,6 @@ class management extends Component {
       }
 
     },
-    // {
-    //   title: '运行状态',
-    //   dataIndex: 'runningstate',
-    //   render: (text, record, index) => {
-    //     if (text === 0) {
-    //       return (
-    //         <div>
-    //           <span style={{
-    //             display: 'inline-block', width: "10px",
-    //             height: "10px", borderRadius: '50%', background: "red", marginRight: '8px'
-    //           }}></span>
-    //           <span>停止</span>
-    //         </div>
-    //       )
-    //     }
-    //     if (text === 1) {
-    //       return (
-    //         <div>
-    //           <span style={{
-    //             display: 'inline-block', width: "10px",
-    //             height: "10px", borderRadius: '50%', background: "green", marginRight: '8px'
-    //           }}></span>
-    //           <span>运行</span>
-    //         </div>
-    //       )
-    //     }
-    //   }
-
-    // },
     {
       title: '运营商',
       dataIndex: 'apn',
@@ -692,7 +632,7 @@ class management extends Component {
       title: '刷新时间',
       dataIndex: 'lastConnectTime',
       width: '10%'
-    },{
+    }, {
       title: '检测报告',
       render: (text, record, index) =>
 
@@ -770,12 +710,9 @@ class management extends Component {
               <div style={{ fontSize: "20px", fontWeight: "bold", color: '#000' }}>{this.state.deviceId}</div>
             </Modal>
             <span style={{ marginLeft: '10px' }}>
-              {dataSource.length > 1 ?
-                (
-                  <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
-                    <a href="javascript:;">删除</a>
-                  </Popconfirm>
-                ) : null}
+              <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
+                <a href="javascript:;">删除</a>
+              </Popconfirm>
             </span>
           </div>
         );

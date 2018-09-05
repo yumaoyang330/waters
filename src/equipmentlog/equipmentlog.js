@@ -164,7 +164,7 @@ class equipmentlog extends Component {
 
   componentWillMount = () => {
 
-    document.title = "设备在线查询";
+    document.title = "设备日志查询";
     function showTime() {
       let nowtime = new Date();
       let year = nowtime.getFullYear();

@@ -651,9 +651,9 @@ class lowalarm extends Component {
                   this.state.begintime,
                   this.state.endtime,
                   res.data.cascadedlocation[0].value,
-                  res.data.cascadedlocation[0].children[0].value,
-                  res.data.cascadedlocation[0].children[0].children[0].value,
-                  res.data.cascadedlocation[0].children[0].children[0].children[0].value,
+                  this.state.city,
+                  this.state.area,
+                  this.state.school,
                   '',
                 ]).then(res => {
                   if (res.data && res.data.status === 1) {

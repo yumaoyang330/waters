@@ -46,7 +46,7 @@ class newadd extends Component {
       render: (text, record) => {
         return (
           <div className="gutter-box" style={{ fontSize: '16px' }}>
-            设备编号:<Input type="text" className="deviceId" placeholder="123456789012345" style={{ width: '60%', marginLeft: '10px' }} />
+            设备编号:<Input type="text" className="deviceId" placeholder="请输入设备编号" style={{ width: '60%', marginLeft: '10px' }} />
           </div>
         );
       },
@@ -721,7 +721,7 @@ class newadd extends Component {
                         </Col>
                         <Col className="gutter-row" span={12}>
                           <div className="gutter-box">
-                            流量报警值:<Input placeholder="25L" style={{ width: '50%', marginLeft: '10px' }} id="alertThreshold"  addonAfter="t"/>
+                            流量报警值:<Input placeholder="25" style={{ width: '50%', marginLeft: '10px' }} id="alertThreshold"  addonAfter="t"/>
                           </div>
                         </Col>
                         {/* <Col className="gutter-row" span={8}>
