@@ -415,7 +415,7 @@ class contact extends Component {
                     </div>
                     <div className="btn">
                       <Button type="primary" style={{ marginRight: '20px' }} onClick={this.submit}>提交</Button>
-                      <Button><a href="">重置</a></Button>
+                      <Button>重置</Button>
                     </div>
                   </div>
                 </div>

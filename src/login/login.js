@@ -59,7 +59,7 @@ class logins extends Component {
           values.password,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-            console.log(res.data)
+            console.log(res.data.cascadedlocation)
             if(res.data.cascadedlocation[0].value===undefined){
               res.data.cascadedlocation[0].value=""
             }

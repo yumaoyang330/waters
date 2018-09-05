@@ -30,7 +30,6 @@ if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
   var accounttype = ['不限', '区级管理员', '单位管理员', '单位滤芯维护人员'];
 }
 
-
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 const EditableRow = ({ form, index, ...props }) => (
@@ -218,7 +217,7 @@ class contact extends Component {
             }</div>
         )
       }
-    },{
+    }, {
       title: '所属单位',
       dataIndex: 'detailVO.organization',
     }, {
@@ -261,7 +260,7 @@ class contact extends Component {
         </div>
     }, {
       title: '操作',
-      dataIndex: 'operation',
+      dataIndex: 'userType',
       width: '15%',
       render: (text, record, index) => {
         const editable = this.isEditing(record);
@@ -290,16 +289,24 @@ class contact extends Component {
             ) : (
                 <a onClick={(index) => this.edit(record.key, index)} disabled={this.state.amend}>修改资料</a>
               )}
-
-
-            <span style={{ marginLeft: '10px' }}>
-              {this.state.data.length > 1 ?
-                (
+            {
+              text === parseInt(localStorage.getItem('type')) ? (
+                <span style={{ marginLeft: '10px' }} >
                   <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
-                    <a href="javascript:;">删除</a>
+                    <a href="javascript:;" disabled={true}>删除</a>
                   </Popconfirm>
-                ) : null}
-            </span>
+                </span>) : (
+                  <span style={{ marginLeft: '10px' }} >
+                    <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
+                      <a href="javascript:;">删除</a>
+                    </Popconfirm>
+                  </span>
+
+                )
+
+
+            }
+
           </div>
         );
       },
@@ -336,8 +343,6 @@ class contact extends Component {
     console.log(this.state.data.length)
     for (var i = 0; i < this.state.data.length; i++) {
       if (this.state.data[i].key === key) {
-        document.getElementsByClassName('one')[i].disabled = false;
-        console.log(document.getElementsByClassName('one')[i])
         this.setState({
           selecttype: typetext[this.state.data[i].userType],
         });
@@ -353,17 +358,12 @@ class contact extends Component {
   };
 
   save(form, key) {
-    this.setState({
-      typedisabled: true,
-    });
     form.validateFields((error, row) => {
       if (error) {
         return;
       }
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
-
-
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -394,21 +394,12 @@ class contact extends Component {
               ]).then(res => {
                 if (res.data && res.data.status === 1) {
                   message.success("信息编辑成功");
-                  this.setState({
-                    typedisabled: true,
-                  });
                 } else {
                   message.error("信息编辑失败");
-                  this.setState({
-                    typedisabled: true,
-                  });
                 }
               });
             } else {
               message.error("信息保存失败");
-              this.setState({
-                typedisabled: true,
-              });
             }
           });
 
@@ -440,7 +431,7 @@ class contact extends Component {
             if (res.data && res.data.deleteResult === 1) {
               message.success('信息删除成功');
               setTimeout(() => {
-                window.location.href = "/contact/contact";
+                window.location.href = "/contact";
               }, 1000);
             }
           } else if (res.data && res.data.status === 0) {
@@ -508,6 +499,11 @@ class contact extends Component {
                       data: res.data.userList,
                       num: res.data.userList.length,
                     });
+                    // for(var i=0;i<res.data.userList.length;i++){
+                    //   if(res.data.userList[i].userType===localStorage.getItem('type')){
+                    //     res.data.userList[i].i===1
+                    //   }
+                    // }
                   } else if (res.data && res.data.status === 0) {
                     message.error("鉴权失败，需要用户重新登录");
                   } else if (res.data && res.data.status === 2) {
@@ -589,12 +585,12 @@ class contact extends Component {
   }
 
   render() {
-
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
 
     const judgeRenderDataV = () => {
       return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER || localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER
     }
+
     const provinceOptions = accounttype.map(province => <Option key={province}>{province}</Option>);
     const { selectedRowKeys } = this.state;
     const rowSelection = {
