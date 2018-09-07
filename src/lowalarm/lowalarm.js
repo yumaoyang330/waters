@@ -205,6 +205,9 @@ class lowalarm extends Component {
     const statusOptions = statustypes.map(type => <Option key={type}>{type}</Option>);
     this.columns1 = [
       {
+        title: '设备编号',
+        dataIndex: 'deviceId',
+      },{
         title: '所属单位',
         dataIndex: 'siteName',
       }, {
@@ -301,6 +304,9 @@ class lowalarm extends Component {
       }];
 
     this.columns = [{
+      title: '设备编号',
+      dataIndex: 'deviceId',
+    },{
       title: '所属单位',
       dataIndex: 'siteName',
     }, {

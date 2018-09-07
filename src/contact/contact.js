@@ -219,7 +219,7 @@ class contact extends Component {
       }
     }, {
       title: '所属单位',
-      dataIndex: 'detailVO.organization',
+      dataIndex: 'school',
     }, {
       title: '用户名',
       dataIndex: 'userName',
@@ -363,8 +363,10 @@ class contact extends Component {
         return;
       }
       const newData = [...this.state.data];
+      
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
+        console.log(newData[index].province)
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
@@ -376,16 +378,20 @@ class contact extends Component {
           password: newData[index].initPassword,
           phoneNumber: newData[index].phone,
           email: newData[index].email,
+          provinces: newData[index].province,
+          citys: newData[index].city,
+          countys: newData[index].county,
+          schools: newData[index].school,
         }, () => {
           console.log(newData[0])
           this.props.form.validateFields({ force: true }, (error) => {
             if (!error) {
               userupdate([
                 key,
-                this.state.province,
-                this.state.city,
-                this.state.area,
-                this.state.school,
+                this.state.provinces,
+                this.state.citys,
+                this.state.countys,
+                this.state.schools,
                 this.state.userName,
                 this.state.password,
                 this.state.phoneNumber,
@@ -465,8 +471,6 @@ class contact extends Component {
               area: res.data.cascadedlocation[0].children[0].children[0].value,
               school: res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
-
-
             if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
                 city: '',
@@ -499,11 +503,6 @@ class contact extends Component {
                       data: res.data.userList,
                       num: res.data.userList.length,
                     });
-                    // for(var i=0;i<res.data.userList.length;i++){
-                    //   if(res.data.userList[i].userType===localStorage.getItem('type')){
-                    //     res.data.userList[i].i===1
-                    //   }
-                    // }
                   } else if (res.data && res.data.status === 0) {
                     message.error("鉴权失败，需要用户重新登录");
                   } else if (res.data && res.data.status === 2) {
