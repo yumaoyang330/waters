@@ -372,7 +372,7 @@ class processbody extends Component {
                 {
                   judgeRenderDataV() ? (
                     <div className="homepage" style={{ display: this.state.display10 }}>
-                      <a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7"
+                      <a href="http://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7"
                         style={{ background: '#1890ff', color: 'white', display: "block", width: "100%", borderRadius: '5px' }}>总体信息预览</a>
                     </div>
                   ) : null

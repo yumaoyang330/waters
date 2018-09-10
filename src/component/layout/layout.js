@@ -27,7 +27,7 @@ render() {
               inlineCollapsed={this.state.collapsed}
               >   
               <div className="top"><span style={{display:"inline-block",width:'100%',height:"100%",borderRadius:'5px',background:'#1890ff',color:'white'}}>中小学直饮水机卫生监管平台</span></div>
-              <div className="homepage"><a href="https://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{color:'white'}}>总体信息预览</a></div>
+              <div className="homepage"><a href="http://datav.aliyun.com/share/d7d63263d774de3d38697367e3fbbdf7" style={{color:'white'}}>总体信息预览</a></div>
               <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" className="navbar1" style={{display:this.state.display1}}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{display:this.state.display2}}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
