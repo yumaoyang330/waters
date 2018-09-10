@@ -45,8 +45,9 @@ function onChange(date, dateString) {
 class processbody extends Component {
   state = { visible: false }
   showModal = (key) => {
+    console.log(key)
     for (var i = 0; i < this.state.dataSource.length; i++) {
-      if (this.state.data[i].key === key) {
+      if (this.state.dataSource[i].key === key) {
         this.setState({
           visible: true,
           organization: this.state.dataSource[i].resPerson.organization,
@@ -80,7 +81,7 @@ class processbody extends Component {
       dataIndex: 'deviceId',
     }, {
       title: '所属单位',
-      dataIndex: 'siteName',
+      dataIndex: 'deviceBelongs',
     }, {
       title: '设备位置',
       dataIndex: 'deviceLocation',
@@ -102,10 +103,10 @@ class processbody extends Component {
           onCancel={this.handleCancel}
           mask={false}
         >
-          <p>姓名:{this.state.name}</p>
-          <p>电话:{this.state.phone}</p>
-          <p>邮箱:{this.state.email}</p>
-          <p>地址:{this.state.organization}</p>
+          <p>姓名:&nbsp;&nbsp;{this.state.name}</p>
+          <p>电话:&nbsp;&nbsp;{this.state.phone}</p>
+          <p>邮箱:&nbsp;&nbsp;{this.state.email}</p>
+          <p>地址:&nbsp;&nbsp;{this.state.organization}</p>
         </Modal>
       </div>
     }, {
