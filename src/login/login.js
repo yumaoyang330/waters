@@ -121,7 +121,7 @@ class logins extends Component {
           <Button type="primary" htmlType="submit" className="login-form-button"  >
               登录
           </Button>
-          <a  style={{display:'block',textAlign:'right'}}  onClick={this.showModal}>联系管理员</a>
+          {/* <a  style={{display:'block',textAlign:'right'}}  onClick={this.showModal}>联系管理员</a> */}
           <Modal
             title="管理员信息"
             visible={this.state.visible}

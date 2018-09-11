@@ -464,6 +464,9 @@ class contact extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
+          if(localStorage.getItem('token')===null){
+            window.location.href = "/login";
+          }
           if (res.data && res.data.status === 1) {
             this.setState({
               province: res.data.cascadedlocation[0].value,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs,Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import adminTypeConst from '../config/adminTypeConst';
 import QRCode from 'qrcode-react';
 
 
-
+const text = <span>水表初次安装时的初始流量</span>;
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 const { Header, Sider, Content } = Layout;
@@ -381,6 +381,9 @@ class management extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
+          if(localStorage.getItem('token')===null){
+            window.location.href = "/login";
+          }
           if (res.data && res.data.status === 1) {
             this.setState({
               province: res.data.cascadedlocation[0].value,
@@ -619,7 +622,14 @@ class management extends Component {
           </Modal>
         </div>
     }, {
-      title: '结余流量',
+      title:  
+      
+      <div>
+        <span>结余流量</span>
+        <Tooltip placement="topLeft" title={text}>
+        <Icon type="question-circle"  />
+      </Tooltip>
+      </div>,
       dataIndex: 'initFlow',
     }, {
       title: '当前流量',

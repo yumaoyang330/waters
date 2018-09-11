@@ -632,6 +632,9 @@ class lowalarm extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
+          if(localStorage.getItem('token')===null){
+            window.location.href = "/login";
+          }
           if (res.data && res.data.status === 1) {
             this.setState({
               province: res.data.cascadedlocation[0].value,
@@ -780,6 +783,7 @@ class lowalarm extends Component {
 
           } else {
             message.error("获取信息失败");
+
           }
         });
       } else {

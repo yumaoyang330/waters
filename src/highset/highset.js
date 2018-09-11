@@ -22,6 +22,9 @@ class journal extends Component {
   }
 
   componentWillMount = () => {
+    if(localStorage.getItem('token')===null){
+      window.location.href = "/login";
+    }
     document.title = "高级设置";
     function showTime() {
       let nowtime = new Date();

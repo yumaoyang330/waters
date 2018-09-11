@@ -106,6 +106,9 @@ class journal extends React.Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
+          if(localStorage.getItem('token')===null){
+            window.location.href = "/login";
+          }
           if (res.data && res.data.status === 1) {
             localStorage.setItem('cascadedlocation', JSON.stringify(res.data.cascadedlocation))
             this.setState({

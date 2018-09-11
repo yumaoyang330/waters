@@ -33,7 +33,6 @@ export default class Devicedisplay extends Component{
         let url = window.location.href;
         url = url.split('=', 2);
         url = url[1].split('&', 2);
-
         getdevicepropsbydeviceid([
             url[0]
         ]).then(res => {
