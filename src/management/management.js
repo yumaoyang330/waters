@@ -9,7 +9,7 @@ import adminTypeConst from '../config/adminTypeConst';
 import QRCode from 'qrcode-react';
 
 
-const text = <span>水表初次安装时的初始流量</span>;
+const text = <span>安装的初始表读数或滤芯更换时的流量读数</span>;
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 const { Header, Sider, Content } = Layout;
