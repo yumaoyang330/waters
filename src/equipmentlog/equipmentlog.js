@@ -16,6 +16,14 @@ var hour = date.getHours();
 var minute = date.getMinutes();
 var second = date.getSeconds();
 
+var date1 = new Date();
+var year1 = date1.getFullYear();
+var month1 = date1.getMonth() + 1;
+var day1 = date1.getDate();
+var hour1 = date1.getHours();
+var minute1 = date1.getMinutes();
+var second1 = date1.getSeconds();
+
 
 const myDate = new Date();
 const { Header, Sider, Content } = Layout;
@@ -51,11 +59,11 @@ class equipmentlog extends Component {
       collapsed: false,
       size: 'small',
       selectedRowKeys: [],
-      endtime: myDate,
+      endtime: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
       begintime:year + '-' + month + '-' + day  + ' ' + hour + ':' + minute + ':' + second,
       num: '',
       province: '',
-      time: myDate,
+      time: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
       city: '',
       school: "",
       area: '',

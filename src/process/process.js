@@ -20,6 +20,15 @@ var minute = date.getMinutes();
 var second = date.getSeconds();
 
 
+var date1 = new Date();
+var year1 = date1.getFullYear();
+var month1 = date1.getMonth() + 1;
+var day1 = date1.getDate();
+var hour1 = date1.getHours();
+var minute1 = date1.getMinutes();
+var second1 = date1.getSeconds();
+
+
 const myDate = new Date();
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -124,8 +133,8 @@ class processbody extends Component {
       collapsed: false,
       size: 'small',
       selectedRowKeys: [],
-      time: myDate,
-      endtime: myDate,
+      time: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
+      endtime: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
       dataSource: dataSource,
       province: '',
       begintime:year + '-' + month + '-' + day  + ' ' + hour + ':' + minute + ':' + second,
