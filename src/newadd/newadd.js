@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader, message } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader, message, Upload } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import { equipmentadd, getrespersoninfo, gets } from '../axios';
@@ -10,7 +10,12 @@ import adminTypeConst from '../config/adminTypeConst';
 var _val = ""
 
 const TabPane = Tabs.TabPane;
-
+const fileList = [];
+const props = {
+  action: '//jsonplaceholder.typicode.com/posts/',
+  listType: 'picture',
+  defaultFileList: [...fileList],
+};
 function callback(key) {
   console.log(key);
 }
@@ -66,7 +71,7 @@ class newadd extends Component {
       render: (text, record) => {
         return (
           <div className="gutter-box" style={{ fontSize: '16px' }}>
-            初始流量:<Input placeholder="0" style={{ width: '40%', marginLeft: '10px' }} className="initFlow"  />
+            初始流量:<Input placeholder="0" style={{ width: '40%', marginLeft: '10px' }} className="initFlow" />
           </div>
         );
       },
@@ -114,7 +119,7 @@ class newadd extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -598,7 +603,7 @@ class newadd extends Component {
             ).then(res => {
               if (res.data && res.data.status === 1) {
                 message.success("设备添加成功");
-                window.location.href = "/management/management";
+                window.location.href = "/management";
               } else if (res.data && res.data.status === 0) {
                 message.error("鉴权失败，需要用户重新登录");
               } else if (res.data && res.data.status === 2) {
@@ -706,6 +711,14 @@ class newadd extends Component {
                     <div className='addinput'>
                       &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备型号：<Input placeholder="美的净水器V2018" style={{ width: '60%' }} id="equipmenttype" />
                     </div>
+                    {/* <div className='addinput'>
+                      &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备批件：
+                      <Upload {...props}>
+                        <Button>
+                          <Icon type="upload" /> 上传批件
+                        </Button>
+                      </Upload>
+                    </div> */}
                     <div className='addinput'>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备备注：<Input placeholder="本批设备寿命年限为3年" style={{ width: '60%' }} id="content" />
                     </div>
@@ -719,12 +732,12 @@ class newadd extends Component {
                       <Row gutter={16}>
                         <Col className="gutter-row" span={12}>
                           <div className="gutter-box"  >
-                            流量预报警值:<Input placeholder="20" style={{ width: '50%', marginLeft: '10px' }} id="preAlertThreshold"  addonAfter="t"/>
+                            流量预报警值:<Input placeholder="20" style={{ width: '50%', marginLeft: '10px' }} id="preAlertThreshold" addonAfter="t" />
                           </div>
                         </Col>
                         <Col className="gutter-row" span={12}>
                           <div className="gutter-box">
-                            流量报警值:<Input placeholder="25" style={{ width: '50%', marginLeft: '10px' }} id="alertThreshold"  addonAfter="t"/>
+                            流量报警值:<Input placeholder="25" style={{ width: '50%', marginLeft: '10px' }} id="alertThreshold" addonAfter="t" />
                           </div>
                         </Col>
                         {/* <Col className="gutter-row" span={8}>

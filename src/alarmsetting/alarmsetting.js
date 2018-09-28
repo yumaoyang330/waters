@@ -189,7 +189,28 @@ class alarmsetting extends Component {
       title: '报警域值',
       dataIndex: 'alertThreshold',
       editable: true,
-    }, {
+    },
+    // {
+    //   title: '查看批件',
+    //   dataIndex: 'alertThreshold',
+    //   render: (text, record, index) =>
+    //   <div>
+    //     <a onClick={() => this.lookModal(record.key)} 
+    //     >查看批件</a>
+    //     <Modal
+    //       title="批件"
+    //       visible={this.state.lookshow}
+    //       onOk={this.handleOk}
+    //       onCancel={this.handleCancel}
+    //       mask={false}
+    //       okText="确认"
+    //       cancelText="取消"
+    //     >
+    //       <img src="" />
+    //     </Modal>
+    //   </div>
+    // },
+   {
       title: '责任人',
       dataIndex: 'resPerson.name',
     }, {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Button, Tabs, Select, DatePicker, Table, Menu, Cascader, Modal, Layout, Row, Col, Popconfirm, InputNumber, Form, Input, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
-import { querydevicelist, gets, queryhistorylist, updatestatus, deleterecord } from '../axios';
+import { querydevicelist, gets, queryhistorylist, updatestatus, login } from '../axios';
 import './../mock/mock';
 import moment from 'moment';
 import './lowalarm.css';
@@ -207,7 +207,7 @@ class lowalarm extends Component {
       {
         title: '设备编号',
         dataIndex: 'deviceId',
-      },{
+      }, {
         title: '所属单位',
         dataIndex: 'siteName',
       }, {
@@ -306,7 +306,7 @@ class lowalarm extends Component {
     this.columns = [{
       title: '设备编号',
       dataIndex: 'deviceId',
-    },{
+    }, {
       title: '所属单位',
       dataIndex: 'siteName',
     }, {
@@ -410,8 +410,8 @@ class lowalarm extends Component {
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
         queryhistorylist([
-          this.state.begintime,
-          this.state.endtime,
+          this.state.lsbegin,
+          this.state.lsend,
           this.state.province,
           this.state.city,
           this.state.area,
@@ -443,9 +443,6 @@ class lowalarm extends Component {
                 num: res.data.alertEventList.length,
               });
             }
-
-
-
           } else {
             message.error("获取信息失败");
           }
@@ -506,7 +503,7 @@ class lowalarm extends Component {
             if (this.state.selecttype === '3') {
               this.setState({
                 alertStatus: '0',
-              },function(){
+              }, function () {
                 updatestatus([
                   key,
                   this.state.alertStatus,
@@ -528,7 +525,7 @@ class lowalarm extends Component {
                   }
                 });
               });
-            }else{
+            } else {
               updatestatus([
                 key,
                 this.state.alertStatus,
@@ -549,7 +546,7 @@ class lowalarm extends Component {
                   });
                 }
               });
-            }  
+            }
           } else {
             message.error("获取接口失败");
             this.setState({
@@ -572,13 +569,36 @@ class lowalarm extends Component {
   };
 
   componentWillMount = () => {
-    console.log(localStorage.getItem('type'))
-    console.log(data.cascadedlocation)
-    if (data.cascadedlocation === undefined) {
-      this.setState({
+    let url = window.location.href;
+    url = url.split('=', 2);
+    console.log(url[1])
+    if (url[1] != '' && url[1] != null) {
+      login([
+        'scqwjs',
+        '12345600',
+      ]).then(res => {
+        if (res.data && res.data.status === 1) {
+          console.log(res.data.cascadedlocation)
+          if (res.data.cascadedlocation[0].value === undefined) {
+            res.data.cascadedlocation[0].value = ""
+          }
+          if (res.data.cascadedlocation[0].children[0].value === undefined) {
+            res.data.cascadedlocation[0].children[0].value = ""
+          }
+          if (res.data.cascadedlocation[0].children[0].children[0].value === undefined) {
+            res.data.cascadedlocation[0].children[0].children[0].value = ""
+          }
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('type', res.data.type);
+          localStorage.setItem('realname', res.data.realName);
+          localStorage.setItem('cascadedlocation', JSON.stringify(res.data.cascadedlocation));
+        }
 
       });
     }
+    console.log(url)
+    console.log(localStorage.getItem('type'))
+    console.log(localStorage.getItem('token'))
     document.title = "流量报警";
     function showTime() {
       let nowtime = new Date();
@@ -632,7 +652,7 @@ class lowalarm extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -682,12 +702,11 @@ class lowalarm extends Component {
                       if (res.data.alertEventList[i].alertStatus === 2) {
                         res.data.alertEventList[i].alertStatus = "报警"
                       }
-                      this.setState({
-                        datas: res.data.alertEventList,
-                        num1: res.data.alertEventList.length,
-                      });
                     }
-
+                    this.setState({
+                      datas: res.data.alertEventList,
+                      num1: res.data.alertEventList.length,
+                    });
 
                   } else {
                     message.error("获取信息失败");
@@ -729,11 +748,11 @@ class lowalarm extends Component {
                     if (res.data.alertEventList[i].alertStatus === 2) {
                       res.data.alertEventList[i].alertStatus = "报警"
                     }
-                    this.setState({
-                      data: res.data.alertEventList,
-                      num: res.data.alertEventList.length,
-                    });
                   }
+                  this.setState({
+                    data: res.data.alertEventList,
+                    num: res.data.alertEventList.length,
+                  });
                 } else {
                   message.error("获取信息失败");
                 }
@@ -1005,7 +1024,7 @@ class lowalarm extends Component {
                           时间选择:
                               <RangePicker
                             style={{ marginLeft: '20px', marginRight: '20px' }}
-                            defaultValue={[moment().startOf('month'), moment(this.state.endtime, dateFormat)]}
+                            defaultValue={[moment(this.state.begintime, dateFormat), moment(this.state.endtime, dateFormat)]}
                             format={dateFormat}
                             ranges={{ 今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }}
                             onChange={this.timeonChange}

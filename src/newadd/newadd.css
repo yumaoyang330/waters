@@ -15,6 +15,9 @@
 #newaddbody .Administrator i{
     margin-right: 25px;
 }
+#newaddbody .ant-upload .ant-upload-select .ant-upload-select-text{
+    width: 60%;
+}
 #newaddbody .Administrator  span{
     margin-right: 10px;
     width: 20px;
@@ -38,6 +41,13 @@
     text-align: center;
     padding: 7px;
     font-size: 13px;
+}
+#newaddbody .ant-upload-select-picture{
+    width: 60%;
+}
+#newaddbody .ant-upload  button{
+    width: 100%;
+    text-align: left;
 }
 #newaddbody .switch-btn{
     float: left;

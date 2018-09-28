@@ -238,7 +238,7 @@ class devInfo extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -357,7 +357,9 @@ class devInfo extends Component {
 
 
   render() {
-
+    const equipmentlook = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER
+    }
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
 
     const { selectedRowKeys } = this.state;
@@ -417,20 +419,38 @@ class devInfo extends Component {
                   <Menu.Item key="1" className="navbar1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
-                  <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
-                  <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
-                  <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
-                </SubMenu>
+                {
+                  equipmentlook() ? (
+
+                    <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+                      <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
+                    </SubMenu>
+                  ) : (
+                      <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+                        <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+                        <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
+                        <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
+                      </SubMenu>)
+                }
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
-                  <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                  <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
-                  <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
-                </SubMenu>
+                {
+                  equipmentlook() ? (
+                    <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                      <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                      <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                      <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                    </SubMenu>
+                  ) : (
+                      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                        <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                        <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                        <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                        <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
+                      </SubMenu>)
+                }
+
               </Menu>
             </div>
           </Sider>

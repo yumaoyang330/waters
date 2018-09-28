@@ -144,8 +144,8 @@ class journal extends React.Component {
       collapsed: false,
       size: 'small',
       time: myDate,
-      begintime:year + '-' + month + '-' + day  + ' ' + hour + ':' + minute + ':' + second,
-      endtime: year1 + '-' + month1 + '-' + day1  + ' ' + hour1 + ':' + minute1 + ':' + second1,
+      begintime: year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second,
+      endtime: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
       selectedRowKeys: [],
       dataSource: dataSource,
       typetext: typetext[0],
@@ -160,13 +160,13 @@ class journal extends React.Component {
 
 
   componentWillMount = () => {
-    
+
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -176,16 +176,16 @@ class journal extends React.Component {
               area: res.data.cascadedlocation[0].children[0].children[0].value,
               school: res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
-                city:'',
-                area:'',
-                school:'',
+                city: '',
+                area: '',
+                school: '',
               });
             }
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
               this.setState({
-                school:'',
+                school: '',
               });
             }
 
@@ -390,9 +390,9 @@ class journal extends React.Component {
     var user = document.getElementById('user').value;
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
-        if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+        if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
           this.setState({
-            school:'',
+            school: '',
           });
         }
         querylogs([
@@ -439,7 +439,12 @@ class journal extends React.Component {
     });
   }
   render() {
-
+    const equipmentlook = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER
+    }
+    const schoollook = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_SCHOOL_MANAGER
+    }
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
 
     const { dataSource } = this.state;
@@ -489,12 +494,26 @@ class journal extends React.Component {
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                  <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
-                  <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                  <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
-                  <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
-                </SubMenu>
+                {
+                  equipmentlook() ? (
+                    <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                      <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                      <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                      <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                    </SubMenu>
+                  ) : schoollook() ? (
+                      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                        <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                        <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                      </SubMenu>):(
+                      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                      <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                      <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                      <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                      <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
+                    </SubMenu>                        
+                      )
+                }
               </Menu>
             </div>
           </Sider>

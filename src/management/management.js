@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs,Tooltip } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import moment from 'moment';
@@ -381,7 +381,7 @@ class management extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -559,7 +559,12 @@ class management extends Component {
       console.log(this.state.jccompany)
     })
   }
+
   render() {
+
+    const equipmentlook = () => {
+      return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER
+    }
     const { formLayout } = this.state;
     const { getFieldDecorator } = this.props.form;
     this.columns = [{
@@ -622,14 +627,14 @@ class management extends Component {
           </Modal>
         </div>
     }, {
-      title:  
-      
-      <div>
-        <span>结余流量</span>
-        <Tooltip placement="topLeft" title={text}>
-        <Icon type="question-circle"  />
-      </Tooltip>
-      </div>,
+      title:
+
+        <div>
+          <span>结余流量</span>
+          <Tooltip placement="topLeft" title={text}>
+            <Icon type="question-circle" />
+          </Tooltip>
+        </div>,
       dataIndex: 'initFlow',
     }, {
       title: '当前流量',
@@ -788,11 +793,22 @@ class management extends Component {
                   <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
-                  <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
-                  <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
-                  <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
-                </SubMenu>
+
+                {
+                  equipmentlook() ? (
+
+                    <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+                      <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
+                    </SubMenu>
+                  ) : (
+                      <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
+                        <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
+                        <Menu.Item key="4" style={{ display: this.state.display4 }}><Link to="/management">设备管理</Link></Menu.Item>
+                        <Menu.Item key="10" style={{ display: this.state.display10 }}><Link to="/equipmentlog">设备日志查询</Link></Menu.Item>
+                      </SubMenu>)
+                }
+
+
                 <SubMenu key="sub3" title={<span><Icon type="calendar" /><span>查询管理</span></span>}>
                   <Menu.Item key="5" style={{ display: this.state.display5 }}><Link to="/process">流程查询</Link></Menu.Item>
                 </SubMenu>
