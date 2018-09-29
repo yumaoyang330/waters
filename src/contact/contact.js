@@ -177,6 +177,11 @@ class contact extends Component {
           this.state.typenum,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
+            for(var i=0;i<res.data.userList.length;i++){
+              var pass = res.data.userList[i].initPassword;
+              var mphone = pass.substr(0, 2) + '****' + pass.substr(6);
+              res.data.userList[i].initPassword=mphone;
+            }
             this.setState({
               data: res.data.userList,
               num: res.data.userList.length,
@@ -227,7 +232,6 @@ class contact extends Component {
     }, {
       title: '姓名',
       dataIndex: 'realName',
-      editable: true,
     }, {
       title: '初始密码',
       dataIndex: 'initPassword',
@@ -502,6 +506,11 @@ class contact extends Component {
                   this.state.typenum,
                 ]).then(res => {
                   if (res.data && res.data.status === 1) {
+                    for(var i=0;i<res.data.userList.length;i++){
+                      var pass = res.data.userList[i].initPassword;
+                      var mphone = pass.substr(0, 2) + '****' + pass.substr(6);
+                      res.data.userList[i].initPassword=mphone;
+                    }
                     this.setState({
                       data: res.data.userList,
                       num: res.data.userList.length,

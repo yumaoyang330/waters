@@ -296,7 +296,7 @@ class contact extends Component {
               </div>
             </Header>
             <div className="nav">
-              账号管理 / 区域联系人管理 / 新建账号
+              系统管理 / 区域联系人管理 / 新建账号
           </div>
             <div className="tit">
               新建账号

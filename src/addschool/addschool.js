@@ -414,7 +414,7 @@ class journal extends Component {
               </div>
             </Header>
             <div className="nav">
-              账号管理 / 添加单位
+              系统管理 / 单位管理 / 添加单位
             </div>
             <div className="tit">
               添加单位

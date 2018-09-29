@@ -569,36 +569,6 @@ class lowalarm extends Component {
   };
 
   componentWillMount = () => {
-    let url = window.location.href;
-    url = url.split('=', 2);
-    console.log(url[1])
-    if (url[1] != '' && url[1] != null) {
-      login([
-        'scqwjs',
-        '12345600',
-      ]).then(res => {
-        if (res.data && res.data.status === 1) {
-          console.log(res.data.cascadedlocation)
-          if (res.data.cascadedlocation[0].value === undefined) {
-            res.data.cascadedlocation[0].value = ""
-          }
-          if (res.data.cascadedlocation[0].children[0].value === undefined) {
-            res.data.cascadedlocation[0].children[0].value = ""
-          }
-          if (res.data.cascadedlocation[0].children[0].children[0].value === undefined) {
-            res.data.cascadedlocation[0].children[0].children[0].value = ""
-          }
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('type', res.data.type);
-          localStorage.setItem('realname', res.data.realName);
-          localStorage.setItem('cascadedlocation', JSON.stringify(res.data.cascadedlocation));
-        }
-
-      });
-    }
-    console.log(url)
-    console.log(localStorage.getItem('type'))
-    console.log(localStorage.getItem('token'))
     document.title = "流量报警";
     function showTime() {
       let nowtime = new Date();

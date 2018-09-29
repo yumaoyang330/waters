@@ -10,6 +10,31 @@ const FormItem = Form.Item;
 
 class logins extends Component {
   componentWillMount = () => {
+    let url = window.location.href;
+    url = url.split('=', 2);
+    if (url[1] != '' && url[1] != null&& url[1] != undefined) {
+      login([
+        'scqwjs',
+        '12345600',
+      ]).then(res => {
+        if (res.data && res.data.status === 1) {
+          if (res.data.cascadedlocation[0].value === undefined) {
+            res.data.cascadedlocation[0].value = ""
+          }
+          if (res.data.cascadedlocation[0].children[0].value === undefined) {
+            res.data.cascadedlocation[0].children[0].value = ""
+          }
+          if (res.data.cascadedlocation[0].children[0].children[0].value === undefined) {
+            res.data.cascadedlocation[0].children[0].children[0].value = ""
+          }
+          window.location.href = "/lowalarm";
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('type', res.data.type);
+          localStorage.setItem('realname', res.data.realName);
+          localStorage.setItem('cascadedlocation', JSON.stringify(res.data.cascadedlocation));
+        }
+      });
+    }
     document.title = "登录页面";
     localStorage.clear();
   }
