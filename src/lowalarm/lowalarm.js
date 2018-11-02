@@ -10,8 +10,7 @@ import statustext from './../status'
 import statusnum from './../statusnum'
 import alerts from './../alerts'
 import adminTypeConst from '../config/adminTypeConst';
-import Layouts from '../component/layout';
-
+import Headers from '../header';
 
 
 
@@ -183,9 +182,10 @@ class lowalarm extends Component {
     }
   }
   timeonChange = (data, dateString) => {
+    console.log(dateString)
     this.setState({
-      begintime: dateString[0],
-      endtime: dateString[1],
+      lsbegin: dateString[0],
+      lsend: dateString[1],
     });
   }
   handleOk = (e) => {
@@ -419,6 +419,7 @@ class lowalarm extends Component {
           lsbh,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
+            console.log(res.data.alertEventList)
             for (var i = 0; i < res.data.alertEventList.length; i++) {
               if (res.data.alertEventList[i].process === 0) {
                 res.data.alertEventList[i].process = "未处理"
@@ -443,6 +444,10 @@ class lowalarm extends Component {
                 num: res.data.alertEventList.length,
               });
             }
+            this.setState({
+              data: res.data.alertEventList,
+              num: res.data.alertEventList.length,
+            });
           } else {
             message.error("获取信息失败");
           }
@@ -570,15 +575,6 @@ class lowalarm extends Component {
 
   componentWillMount = () => {
     document.title = "流量报警";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-    setInterval(showTime, 1000);
-
     this.state = {
       collapsed: false,
       keylist: '',
@@ -925,21 +921,13 @@ class lowalarm extends Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
-
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               流程监控 / 流量报警

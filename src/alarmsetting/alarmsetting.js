@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message } from 'antd';
 import { Link } from 'react-router-dom';
-import { updatealarm, querydevicelists, gets } from '../axios';
+import { updatealarm, querydevicelists, gets, getimg, url } from '../axios';
 import { createForm } from 'rc-form';
 import './alarmsetting.css';
 import adminTypeConst from '../config/adminTypeConst';
+import Headers from '../header';
 
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -95,15 +96,41 @@ class alarmsetting extends Component {
       }
     }
   }
+
+  lookModal = (text, record) => {
+    // this.setState({ lookshow: true });
+    this.setState({
+      imgCache: url + "/devicemanage/deviceapprovalimg/get?imgId=" + text,
+      none: 'block',
+    });
+  }
+
+  // lookimg = () => {
+  //   this.setState({
+  //     lookshow:false,
+
+  //   });
+  // }
+
+  hideimg = () => {
+    this.setState({
+      imgCache: '',
+      none: 'none',
+    });
+  }
+
+
   handleOk = (e) => {
     console.log(e);
     this.setState({
+      lookshow: false,
       visible: false,
     });
   }
   handleCancel = (e) => {
     console.log(e);
     this.setState({
+      lookshow: false,
       visible: false,
     });
   }
@@ -171,14 +198,16 @@ class alarmsetting extends Component {
       display7: '',
       display8: '',
       display9: '',
+      none: 'none',
+      imgCache: ""
     };
     this.columns = [{
       title: '设备编号',
       dataIndex: 'deviceId',
-    },{
+    }, {
       title: '所属单位',
       dataIndex: 'siteName',
-    },{
+    }, {
       title: '设备位置',
       dataIndex: 'location',
     }, {
@@ -190,27 +219,31 @@ class alarmsetting extends Component {
       dataIndex: 'alertThreshold',
       editable: true,
     },
-    // {
-    //   title: '查看批件',
-    //   dataIndex: 'alertThreshold',
-    //   render: (text, record, index) =>
-    //   <div>
-    //     <a onClick={() => this.lookModal(record.key)} 
-    //     >查看批件</a>
-    //     <Modal
-    //       title="批件"
-    //       visible={this.state.lookshow}
-    //       onOk={this.handleOk}
-    //       onCancel={this.handleCancel}
-    //       mask={false}
-    //       okText="确认"
-    //       cancelText="取消"
-    //     >
-    //       <img src="" />
-    //     </Modal>
-    //   </div>
-    // },
-   {
+    {
+      title: '查看批件',
+      dataIndex: 'imgId',
+      render: (text, record, index) =>
+        <div>
+          <a onClick={() => this.lookModal(text, record)}
+          >查看</a>
+          <Modal
+            title="批件"
+            visible={this.state.lookshow}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            style={{ zIndex: '888' }}
+            mask={false}
+            okText="确认"
+            cancelText="取消"
+          >
+            {/* <div style={{ width: '100%' }}>
+              <img src={this.state.imgCache} style={{ width: '100%' }} onClick={() => this.lookimg()}/>
+            </div> */}
+            {/* <ImageLoader file={this.state.imgCache} alt='some text'/> */}
+          </Modal>
+        </div>
+    },
+    {
       title: '责任人',
       dataIndex: 'resPerson.name',
     }, {
@@ -241,10 +274,8 @@ class alarmsetting extends Component {
       width: '15%',
       render: (text, record) => {
         const editable = this.isEditing(record);
-
         return (
           <div>
-
             {editable ? (
               <span>
                 <EditableContext.Consumer>
@@ -278,6 +309,7 @@ class alarmsetting extends Component {
     return record.key === this.state.editingKey;
   };
   edit(key) {
+    console.log(key)
     this.setState({
       editingKey: key
     });
@@ -340,7 +372,7 @@ class alarmsetting extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -351,16 +383,16 @@ class alarmsetting extends Component {
               school: res.data.cascadedlocation[0].children[0].children[0].children[0].value,
             });
 
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
-                city:'',
-                area:'',
-                school:'',
+                city: '',
+                area: '',
+                school: '',
               });
             }
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
               this.setState({
-                school:'',
+                school: '',
               });
             }
             this.props.form.validateFields({ force: true }, (error) => {
@@ -448,15 +480,6 @@ class alarmsetting extends Component {
       }
     });
     document.title = "流量报警设置";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-
-    setInterval(showTime, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -538,6 +561,10 @@ class alarmsetting extends Component {
     });
     return (
       <div id="alarmsettingbody" >
+        <img src={this.state.imgCache}
+          style={{ position: 'fixed', width: '80%', height: 'auto', zIndex: '999', left: '10%', top: "10px", display: this.state.none }}
+          onClick={() => this.hideimg()}
+        />
         <Layout>
           <Sider
             trigger={null}
@@ -565,6 +592,7 @@ class alarmsetting extends Component {
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
+                  <Menu.Item key="10" style={{ display: this.state.display11 }}><Link to="/alarmsetting">批件管理</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
                   <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>
@@ -584,25 +612,18 @@ class alarmsetting extends Component {
             </div>
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+          <Header style={{ background: '#fff', padding: 0 }}>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               流程监控 / 流量报警设置
-        </div>
+            </div>
             <div className="tit">
               流量报警设置
         </div>

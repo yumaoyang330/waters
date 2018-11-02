@@ -43,7 +43,21 @@
     font-size: 13px;
 }
 #newaddbody .ant-upload-select-picture{
+    float: left;
     width: 60%;
+}
+#newaddbody .ant-upload-list-item{
+    background: white;
+}
+.addinputs>span{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 60%;
+    z-index: 999;
+}
+.ant-upload-list-picture{
+    float: left;
 }
 #newaddbody .ant-upload  button{
     width: 100%;
@@ -109,8 +123,9 @@
 }
 #newaddbody .addinput{
     height: 50px;
-    line-height: 50px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #newaddbody .bjz{
     width: 75%;

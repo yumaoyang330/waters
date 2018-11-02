@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs, Tooltip } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Cascader, Popconfirm, InputNumber, Form, Modal, message, DatePicker, Tabs, Tooltip, Upload } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
 import moment from 'moment';
@@ -7,7 +7,14 @@ import { deleterecord, equipmentdelete, equipmentgets, gets, addreportbydeviceid
 import './management.css';
 import adminTypeConst from '../config/adminTypeConst';
 import QRCode from 'qrcode-react';
-
+import Headers from '../header';
+const props = {
+  // action: '//47.94.211.109:9090/devicemanage/deviceapprovalimg/upload',
+  // listType: 'picture',
+  // data: {
+  //   'token': localStorage.getItem('token')
+  // }
+};
 
 const text = <span>安装的初始表读数或滤芯更换时的流量读数</span>;
 const TabPane = Tabs.TabPane;
@@ -176,6 +183,29 @@ class management extends Component {
 
 
   }
+
+  pcitureload = (info) => {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} 上传成功`);
+      this.setState({
+        imgID: info.file.response.imgId
+      });
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  }
+  handleCancel = () => this.setState({ previewVisible: false })
+
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    });
+  }
+
   state = { reportshow: false }
   addreport = (key) => {
     for (var i = 0; i < this.state.dataSource.length; i++) {
@@ -480,14 +510,6 @@ class management extends Component {
 
 
     document.title = "设备管理";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-    setInterval(showTime, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -561,7 +583,7 @@ class management extends Component {
   }
 
   render() {
-
+    const { previewVisible, previewImage, fileList } = this.state;
     const equipmentlook = () => {
       return localStorage.getItem("type") === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER
     }
@@ -701,6 +723,19 @@ class management extends Component {
             />
             检测结果:<Input placeholder="请输入结果" className="jcresult" style={{ marginTop: '10px', marginBottom: '10px' }} onChange={this.jcresult} value={this.state.jcresult} />
             检测单位:<Input placeholder="请输入检测单位" className="jccompany" style={{ marginTop: '10px', marginBottom: '10px' }} onChange={this.jccompany} value={this.state.jccompany} />
+            上传报告: <br />
+            <Upload {...props}
+              onChange={this.pcitureload}
+              onPreview={this.handlePreview}
+
+            >
+              <Button style={{ marginTop: '10px' }}>
+                <Icon type="upload" /> 上传批件(只能上传一张图片)
+                        </Button>
+            </Upload>
+            <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+              <img alt="example" style={{ width: '100%' }} src={previewImage} />
+            </Modal>
           </Modal>
         </div>
     }, {
@@ -823,20 +858,13 @@ class management extends Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               设备管理 / 设备管理

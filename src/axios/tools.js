@@ -61,22 +61,17 @@ export default {
       }
       )
   },
-  get(url, params) {
-    const user = JSON.parse(localStorage.getItem('user')).token;
-    return axios({
-      method: 'get',
-      // baseURL: 'https://cnodejs.org/api/v1',
-      url,
-      params: { 'Authorization': user, ...params }, // get 请求时带的参数
-      timeout: 10000,
+  get(url, data) {
+    return axios.get(url,{
+      params: data
     }).then(
       (response) => {
-        return checkStatus(response)
+        return checkStatus(response);
       }
       ).then(
       (res) => {
-        return checkCode(res)
+        return checkCode(res);
       }
       )
-  }
+  },
 }

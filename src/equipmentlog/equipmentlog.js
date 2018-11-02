@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Icon, Button, Select, Table, Menu, Input, Layout, DatePicker, message, Form, Breadcrumb, Cascader, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
-import { userupdate, gets, equipmentget ,getdevicelog} from '../axios';
+import { userupdate, gets, equipmentget, getdevicelog } from '../axios';
 import './equipmentlog.css';
 import adminTypeConst from '../config/adminTypeConst';
 import moment from 'moment';
+import Headers from '../header';
 
 var now = new Date();
 var date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
@@ -60,7 +61,7 @@ class equipmentlog extends Component {
       size: 'small',
       selectedRowKeys: [],
       endtime: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
-      begintime:year + '-' + month + '-' + day  + ' ' + hour + ':' + minute + ':' + second,
+      begintime: year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second,
       num: '',
       province: '',
       time: year1 + '-' + month1 + '-' + day1 + ' ' + hour1 + ':' + minute1 + ':' + second1,
@@ -173,23 +174,12 @@ class equipmentlog extends Component {
   componentWillMount = () => {
 
     document.title = "设备日志查询";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-    setInterval(showTime, 1000);
-
-
-
     this.props.form.validateFields({ force: true }, (error) => {
       if (!error) {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -387,20 +377,13 @@ class equipmentlog extends Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               <Breadcrumb>
@@ -409,7 +392,7 @@ class equipmentlog extends Component {
               </Breadcrumb>
             </div>
             <div className="tit">
-            设备日志查询
+              设备日志查询
         </div>
             <Content style={{ margin: '24px 16px', background: '#fff', minHeight: 280, marginTop: '10px' }}>
               <div className="current">
@@ -420,11 +403,11 @@ class equipmentlog extends Component {
                       <div style={{ float: "right" }}>
                         <Button type="primary" style={{ marginRight: '20px' }} onClick={this.equipmentquery}>查询</Button>
                         <Button>重置</Button>
-                  
+
                       </div>
                     </div>
                     <div style={{ marginTop: '10px', marginBottm: '10px' }}>
-                    时间选择:
+                      时间选择:
                               <RangePicker
                         style={{ marginLeft: '20px', marginRight: '20px' }}
                         defaultValue={[moment(this.state.begintime, dateFormat), moment(this.state.time, dateFormat)]}

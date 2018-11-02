@@ -5,7 +5,7 @@ import { createForm } from 'rc-form';
 import { userupdate, userdelete, conactget, gets } from '../axios';
 import './contact.css';
 import adminTypeConst from '../config/adminTypeConst';
-
+import Headers from '../header';
 import typetext from './../type'
 import typenum from './../types'
 
@@ -177,10 +177,10 @@ class contact extends Component {
           this.state.typenum,
         ]).then(res => {
           if (res.data && res.data.status === 1) {
-            for(var i=0;i<res.data.userList.length;i++){
+            for (var i = 0; i < res.data.userList.length; i++) {
               var pass = res.data.userList[i].initPassword;
               var mphone = pass.substr(0, 2) + '****' + pass.substr(6);
-              res.data.userList[i].initPassword=mphone;
+              res.data.userList[i].initPassword = mphone;
             }
             this.setState({
               data: res.data.userList,
@@ -367,7 +367,7 @@ class contact extends Component {
         return;
       }
       const newData = [...this.state.data];
-      
+
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
         console.log(newData[index].province)
@@ -468,7 +468,7 @@ class contact extends Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -506,10 +506,10 @@ class contact extends Component {
                   this.state.typenum,
                 ]).then(res => {
                   if (res.data && res.data.status === 1) {
-                    for(var i=0;i<res.data.userList.length;i++){
+                    for (var i = 0; i < res.data.userList.length; i++) {
                       var pass = res.data.userList[i].initPassword;
                       var mphone = pass.substr(0, 2) + '****' + pass.substr(6);
-                      res.data.userList[i].initPassword=mphone;
+                      res.data.userList[i].initPassword = mphone;
                     }
                     this.setState({
                       data: res.data.userList,
@@ -576,14 +576,6 @@ class contact extends Component {
 
 
     document.title = "区域联系人管理";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-    setInterval(showTime, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -681,16 +673,16 @@ class contact extends Component {
                       <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
                     </SubMenu>
                   ) : schoollook() ? (
-                      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                        <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
-                        <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
-                      </SubMenu>):(
-                      <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
-                      <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                    <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
                       <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
                       <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
-                      <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
-                    </SubMenu>                        
+                    </SubMenu>) : (
+                        <SubMenu key="sub4" title={<span><Icon type="warning" /><span>系统管理</span></span>}>
+                          <Menu.Item key="6" style={{ display: this.state.display6 }}><Link to="/school">单位管理</Link></Menu.Item>
+                          <Menu.Item key="7" style={{ display: this.state.display7 }}><Link to="/contact">区域联系人管理</Link></Menu.Item>
+                          <Menu.Item key="8" style={{ display: this.state.display8 }}><Link to="/journal">操作日志查询</Link></Menu.Item>
+                          <Menu.Item key="9" style={{ display: this.state.display9 }}><Link to="/highset">高级设置</Link></Menu.Item>
+                        </SubMenu>
                       )
                 }
               </Menu>
@@ -698,20 +690,13 @@ class contact extends Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               账号管理 / 区域联系人管理

@@ -5,8 +5,7 @@ import { createForm } from 'rc-form';
 import './school.css';
 import { schooldelete, querylog, schoolget, gets } from '../axios';
 import adminTypeConst from '../config/adminTypeConst';
-
-
+import Headers from '../header';
 
 
 
@@ -54,7 +53,7 @@ class journal extends React.Component {
     }, {
       title: '设备数量',
       dataIndex: 'deviceQuantity',
-    },{
+    }, {
       title: '详细地址',
       dataIndex: 'address',
     }, {
@@ -106,7 +105,7 @@ class journal extends React.Component {
         gets([
           localStorage.getItem('token'),
         ]).then(res => {
-          if(localStorage.getItem('token')===null){
+          if (localStorage.getItem('token') === null) {
             window.location.href = "/login";
           }
           if (res.data && res.data.status === 1) {
@@ -116,16 +115,16 @@ class journal extends React.Component {
               city: res.data.cascadedlocation[0].children[0].value,
               area: res.data.cascadedlocation[0].children[0].children[0].value,
             });
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_SUPER_MANAGER) {
               this.setState({
-                city:'',
-                area:'',
-                school:'',
+                city: '',
+                area: '',
+                school: '',
               });
             }
-            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER){
+            if (localStorage.getItem('type') === adminTypeConst.ADMIN_TYPE_COUNTY_MANAGER) {
               this.setState({
-                school:'',
+                school: '',
               });
             }
             if (!error) {
@@ -201,15 +200,6 @@ class journal extends React.Component {
 
 
     document.title = "操作日志查询";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-
-    setInterval(showTime, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -405,20 +395,13 @@ class journal extends React.Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               系统管理 / 单位管理

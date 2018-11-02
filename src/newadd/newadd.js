@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
-import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader, message, Upload } from 'antd';
+import { Icon, Button, Select, Table, Menu, Input, Layout, Row, Col, Popconfirm, Tabs, Cascader, message, Upload, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { createForm } from 'rc-form';
-import { equipmentadd, getrespersoninfo, gets } from '../axios';
+import { equipmentadd, getrespersoninfo, gets, imgupload } from '../axios';
 import './newadd.css';
 import adminTypeConst from '../config/adminTypeConst';
 
-
+import Headers from '../header';
 var _val = ""
 
 const TabPane = Tabs.TabPane;
 const fileList = [];
 const props = {
-  action: '//jsonplaceholder.typicode.com/posts/',
+  action: '//47.94.211.109:9090/devicemanage/deviceapprovalimg/upload',
   listType: 'picture',
-  defaultFileList: [...fileList],
+  data: {
+    'token': localStorage.getItem('token')
+  }
 };
+
 function callback(key) {
   console.log(key);
 }
@@ -110,6 +113,7 @@ class newadd extends Component {
       alertorganization: '',
       alertemail: '',
       alertphone: '',
+      imgID: ''
     };
   }
 
@@ -238,15 +242,6 @@ class newadd extends Component {
     });
 
     document.title = "新增设备";
-    function showTime() {
-      let nowtime = new Date();
-      let year = nowtime.getFullYear();
-      let month = nowtime.getMonth() + 1;
-      let date = nowtime.getDate();
-      document.getElementById("mytime").innerText = year + "年" + month + "月" + date + " " + nowtime.toLocaleTimeString();
-    }
-
-    setInterval(showTime, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -256,6 +251,12 @@ class newadd extends Component {
     this.setState({
       collapsed: !this.state.collapsed,
     });
+  }
+  onUploadProgress = (progressEvent) => {
+    const { lengthComputable, loaded, total } = progressEvent
+    lengthComputable, //是否能够被读取长度
+      loaded// 已上传,
+    total //以下载    
   }
   changeVal = (e) => {
     var val = e.target.value;
@@ -287,6 +288,28 @@ class newadd extends Component {
       dataSource: [...dataSource, newData],
     });
     dataSource.length++
+  }
+
+  pcitureload = (info) => {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} 上传成功`);
+      this.setState({
+        imgID: info.file.response.imgId
+      });
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  }
+  handleCancel = () => this.setState({ previewVisible: false })
+
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    });
   }
   onChange = (date, dateString) => {
     let arr = [];
@@ -542,7 +565,8 @@ class newadd extends Component {
     window.location.href = "/newadd";
   }
   equipmentsubmit = () => {
-    console.log(parseInt(document.getElementsByClassName('deviceId')[0].value))
+
+    console.log(localStorage.getItem('imgID'))
     let type = document.getElementById('equipmenttype').value;
     let content = document.getElementById('content').value;
     let preAlertThreshold = document.getElementById('preAlertThreshold').value;
@@ -555,6 +579,7 @@ class newadd extends Component {
       this.state.dataSource[i].deviceId = document.getElementsByClassName('deviceId')[i].value;
       this.state.dataSource[i].location = document.getElementsByClassName('locations')[i].value;
       this.state.dataSource[i].initFlow = document.getElementsByClassName('initFlow')[i].value;
+      this.state.dataSource[i].imgId = this.state.imgID
       this.state.dataSource[i].province = this.state.province;
       this.state.dataSource[i].city = this.state.city;
       this.state.dataSource[i].county = this.state.area;
@@ -580,12 +605,13 @@ class newadd extends Component {
       }
       if (type === "") {
         message.error('请输入设备型号')
+      } else if (this.state.imgID === "") {
+        message.error('请上传批件')
       } else if (filterprovider === "") {
         message.error('请输入滤芯供应商')
       } else if (filterMaintainer === "") {
         message.error('请输入滤芯维护服务商')
-      }
-      else if (preAlertThreshold === "") {
+      } else if (preAlertThreshold === "") {
         message.error('请输入流量预报警值')
       } else if (alertThreshold === "") {
         message.error('请输入流量报警值')
@@ -621,6 +647,7 @@ class newadd extends Component {
 
   }
   render() {
+    const { previewVisible, previewImage, fileList } = this.state;
     const options = JSON.parse(localStorage.getItem('cascadedlocation'))
     const { dataSource } = this.state;
     const columns = this.columns;
@@ -676,20 +703,13 @@ class newadd extends Component {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <div className="switch-btn">
-                <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", }}>
-                  <Icon
-                    className="trigger"
-                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  />
-                </Button>
-              </div>
-              <span id="mytime" style={{ height: "100%", lineHeight: "64px", display: "inline-block", float: "left", borderRadius: '5px', color: '#333', marginLeft: '20px' }}></span>
-              <span style={{ display: "inline-block", marginLeft: '20%', height: "100%", borderRadius: '5px', fontSize: '25px', fontWeight: 'bold' }}>中小学直饮水机卫生监管平台</span>
-              <span style={{ float: 'right', height: '50px', lineHeight: "50px", marginRight: "2%", color: 'red', cursor: 'pointer' }} onClick={this.out}>退出</span>
-              <div className="Administrator">
-                <span></span>{localStorage.getItem('realname')}
-              </div>
+              <Button type="primary" onClick={this.toggle} style={{ marginLeft: "16px", float: 'left', marginTop: '15px' }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+              </Button>
+              <Headers />
             </Header>
             <div className="nav">
               设备管理 / 设备管理 / 新增设备
@@ -711,14 +731,20 @@ class newadd extends Component {
                     <div className='addinput'>
                       &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备型号：<Input placeholder="美的净水器V2018" style={{ width: '60%' }} id="equipmenttype" />
                     </div>
-                    {/* <div className='addinput'>
+                    <div className='addinput addinputs'>
                       &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备批件：
-                      <Upload {...props}>
+                      <Upload {...props}
+                        onChange={this.pcitureload}
+                        onPreview={this.handlePreview}
+                      >
                         <Button>
-                          <Icon type="upload" /> 上传批件
+                          <Icon type="upload" /> 上传批件(只能上传一张图片)
                         </Button>
                       </Upload>
-                    </div> */}
+                      <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                      </Modal>
+                    </div>
                     <div className='addinput'>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本批设备备注：<Input placeholder="本批设备寿命年限为3年" style={{ width: '60%' }} id="content" />
                     </div>
