@@ -1,4 +1,4 @@
-
+/* 
 #mainbody{
     background: url(bj2.png) no-repeat; 
     background-size: 100%;
@@ -78,4 +78,115 @@ width: 100%;
     #mainbody .shu{
         display: none;
      }
+} */
+
+
+
+
+#mobilebody .head{
+    background: url(header.png) no-repeat;
+    width: 100%;
+    background-size: 100%;
+    height: 2.2rem;
+    padding-top: .3rem;
 }
+#mobilebody .text{
+    margin-left: .25rem;
+    color: white;
+    font-size:.3rem;
+}
+#mobilebody .nav{
+    width: 90%;
+    margin:0 auto;
+    height: 1rem;
+    background: white;
+    border-radius: 10px;
+    margin-top:.25rem;
+    box-shadow:  3px 3px 5px #888888;
+    display: flex;
+    align-items: center;
+}
+#mobilebody  .navbar{
+    width: 33%;
+    float: left;
+    height: .4rem;
+    text-align: center;
+    font-size: .2rem;
+    font-family: '微软雅黑';
+    border-right:2px solid #3098f0;
+}
+#mobilebody  .navbar img{
+    margin-top: -.2rem;
+    margin-bottom: .1rem;
+}
+#mobilebody  .navbar span{
+    margin-top: -.15rem;
+}
+#mobilebody  .content{
+    width: 90%;
+    margin: 0 auto;
+}
+#mobilebody .contenthead{
+    padding-bottom: .1rem;
+    border-bottom: 2px solid #f7f7f7;
+    font-size: .25rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+#mobilebody .list li{
+    list-style: none;
+}
+#mobilebody .list li span{
+    color:#999;
+}
+#mobilebody .list{
+    font-size: .2rem;
+    line-height: .45rem;
+    margin-top: .1rem;
+    padding-bottom: .1rem;
+}
+#mobilebody .dash{
+    width: 100%;
+    height:.2rem;
+    background: #f7f7f7;
+}
+#mobilebody .footer{
+    width: 100%;
+    margin:0 auto;
+    font-size: .2rem;
+    color:white;
+    background: #3098f0;
+}
+#mobilebody .foot{
+display: flex;
+height: .5rem;
+justify-content: center;
+align-items: center;
+width: 100%;
+}
+#mobilebody .footimg{
+    width: 4%;
+    vertical-align: middle;
+    margin-left: .1rem;
+    margin-right: .1rem;
+    }
+
+    @media screen and (max-width: 348px) {
+        #mobilebody .footer{
+            width: 100%;
+        }
+        #mobilebody .foot{
+            height: .5rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        #mobilebody .footimg{
+            margin-left: .1rem;
+            margin-right: .1rem;
+        }
+        #mobilebody .shu{
+            display: none;
+         }
+    }

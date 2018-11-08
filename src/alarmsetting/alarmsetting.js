@@ -219,30 +219,30 @@ class alarmsetting extends Component {
       dataIndex: 'alertThreshold',
       editable: true,
     },
-    {
-      title: '查看批件',
-      dataIndex: 'imgId',
-      render: (text, record, index) =>
-        <div>
-          <a onClick={() => this.lookModal(text, record)}
-          >查看</a>
-          <Modal
-            title="批件"
-            visible={this.state.lookshow}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            style={{ zIndex: '888' }}
-            mask={false}
-            okText="确认"
-            cancelText="取消"
-          >
-            {/* <div style={{ width: '100%' }}>
-              <img src={this.state.imgCache} style={{ width: '100%' }} onClick={() => this.lookimg()}/>
-            </div> */}
-            {/* <ImageLoader file={this.state.imgCache} alt='some text'/> */}
-          </Modal>
-        </div>
-    },
+    // {
+    //   title: '查看批件',
+    //   dataIndex: 'imgId',
+    //   render: (text, record, index) =>
+    //     <div>
+    //       <a onClick={() => this.lookModal(text, record)}
+    //       >查看</a>
+    //       <Modal
+    //         title="批件"
+    //         visible={this.state.lookshow}
+    //         onOk={this.handleOk}
+    //         onCancel={this.handleCancel}
+    //         style={{ zIndex: '888' }}
+    //         mask={false}
+    //         okText="确认"
+    //         cancelText="取消"
+    //       >
+    //         {/* <div style={{ width: '100%' }}>
+    //           <img src={this.state.imgCache} style={{ width: '100%' }} onClick={() => this.lookimg()}/>
+    //         </div> */}
+    //         {/* <ImageLoader file={this.state.imgCache} alt='some text'/> */}
+    //       </Modal>
+    //     </div>
+    // },
     {
       title: '责任人',
       dataIndex: 'resPerson.name',
@@ -592,7 +592,7 @@ class alarmsetting extends Component {
                 <SubMenu key="sub1" title={<span><Icon type="clock-circle-o" /><span>流程监控</span></span>}>
                   <Menu.Item key="1" style={{ display: this.state.display1 }}><Link to="/lowalarm">流量报警</Link></Menu.Item>
                   <Menu.Item key="2" style={{ display: this.state.display2 }}><Link to="/alarmsetting">流量报警设置</Link></Menu.Item>
-                  <Menu.Item key="10" style={{ display: this.state.display11 }}><Link to="/alarmsetting">批件管理</Link></Menu.Item>
+                  {/* <Menu.Item key="10" style={{ display: this.state.display11 }}><Link to="/alarmsetting">批件管理</Link></Menu.Item> */}
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="edit" /><span>设备管理</span></span>}>
                   <Menu.Item key="3" style={{ display: this.state.display3 }}><Link to="/devInfo">设备在线查询</Link></Menu.Item>

@@ -120,7 +120,7 @@ class logins extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div id="loginmbody" >
-        <img src="http://watersupervision.terabits.cn:8000/logo.png" alt="" style={{ width: '10%', marginTop: "20px", marginLeft: '20px' }} />
+        <img src="http://watersupervision.terabits.cn:7000/picture/logo.png" alt="" style={{ width: '10%', marginTop: "20px", marginLeft: '20px' }} />
         <div style={{ position: "absolute", top: "0", left: "0", right: '0', bottom: '0', height: '346px', margin: 'auto' }}>
           <Form onSubmit={this.handleSubmit} className="login-form" style={{ padding: '40px', background: 'white', borderRadius: '10px', paddingTop: '30px' }}>
             <div className="title">中小学直饮水机卫生监管平台</div>
