@@ -111,7 +111,7 @@ width: 100%;
     float: left;
     height: .4rem;
     text-align: center;
-    font-size: .2rem;
+    font-size: .22rem;
     font-family: '微软雅黑';
     border-right:2px solid #3098f0;
 }
@@ -141,8 +141,8 @@ width: 100%;
     color:#999;
 }
 #mobilebody .list{
-    font-size: .2rem;
-    line-height: .45rem;
+    font-size: .22rem;
+    line-height: .5rem;
     margin-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -160,7 +160,7 @@ width: 100%;
 }
 #mobilebody .foot{
 display: flex;
-height: .5rem;
+height: .55rem;
 justify-content: center;
 align-items: center;
 width: 100%;
@@ -189,4 +189,22 @@ width: 100%;
         #mobilebody .shu{
             display: none;
          }
+    }
+    @media screen and (min-height: 800px) {
+        #mobilebody .head{
+            height: 2.4rem;
+        }
+        #mobilebody .nav{
+            height: 1.2rem;
+        }
+        #mobilebody .list {
+            font-size: .25rem;
+            line-height: .6rem;
+        }
+        #mobilebody .footer{
+            font-size: .22rem;
+        }
+        #mobilebody .foot{
+            height: .6rem;
+            }
     }

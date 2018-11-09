@@ -4,8 +4,8 @@ import { Redirect } from 'react-router-dom'
 import * as config from './config';
 
 // const url='http://112.124.6.31:9090';
-export const url='http://47.94.211.109:9090';
-// export const url='https://watersupervision.terabits.cn:9090';
+// export const url='http://47.94.211.109:9090';
+export const url='https://watersupervision.terabits.cn:9091';
 
 //1.1登录界面
 export const login = (params) => myapi(url + '/login', {
